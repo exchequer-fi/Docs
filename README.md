@@ -1,72 +1,25 @@
-# Table of contents
+# Exchequer Protocol Overview
 
-* [Exchequer Protocol Overview](README.md)
+## Introduction
 
-## Protocol Concepts
+The Exchequer protocol is a peer-to-peer system designed for cryptocurrencies ([ERC-20 Tokens](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/)) to build liquidity on any AMM (e.g. [Uniswap](https://app.uniswap.org/), [Balancer,](https://app.balancer.fi/#/) [Curve](https://curve.fi/#/ethereum/swap), etc...).  The protocol is implemented as a set of persistent, non-upgradeable smart contracts; designed to prioritize censorship resistance, security, self-custody, and to function without any trusted intermediaries.
 
-* [Downside Protection](protocol-concepts/downside-protection.md)
-* [Liquidity Note](protocol-concepts/liquidity-note.md)
-* [Fixed Price Sale / Auction](protocol-concepts/fixed-price-sale-auction.md)
-* [Yield Distribution](protocol-concepts/yield-distribution.md)
-* [Upside Boost](protocol-concepts/upside-boost.md)
-* [Redemption](protocol-concepts/redemption.md)
+## How does the Exchequer protocol compare to traditional crypto liquidity building?
 
-## Note Types
+The core characteristic of an Automated Market Maker (AMM) is that buyers and sellers trade directly with a liquidity pool. The deeper the liquidity pool, the less slippage traders experience during transactions. Therefore, building deep liquidity on an AMM is crucial for any cryptocurrency.
 
-* [Liquidity Note](note-types/liquidity-note.md)
-* [Convertible Note](note-types/convertible-note.md)
-* [Incentive Note](note-types/incentive-note.md)
+After the popularization of Automated Market Makers (AMMs) by Uniswap, **token incentives** became a common strategy for building liquidity pools. These incentives are used in two primary ways:
 
-## Note Features
+### **1. On-Chain Yield farming**
 
-* [Note Types](note-features/note-types.md)
-* [Maturity](note-features/maturity.md)
-* [Upside Boost](note-features/upside-boost.md)
-* [Downside Protection](note-features/downside-protection.md)
-* [Safety Margin](note-features/safety-margin.md)
-* [Boosted Yield](note-features/boosted-yield.md)
-* [7-Day Yield](note-features/7-day-yield.md)
-* [Time Left](note-features/time-left.md)
-* [Underlying Token](note-features/underlying-token.md)
-* [Pay Token](note-features/pay-token.md)
-* [Protection Status](note-features/protection-status.md)
-* [Collateral Dex](note-features/collateral-dex.md)
-* [Note Price](note-features/note-price.md)
-* [Project Obligation](note-features/project-obligation.md)
-* [Collateral (LP) Gain/Loss](note-features/collateral-lp-gain-loss.md)
+\
+Cryptocurrencies can build liquidity directly on-chain by asking users to deposit assets into liquidity pools.  In return, users receive token rewards from the project's treasury, a method known as **yield farming**.
 
-## Offering Features
+Exchequer Protocol takes a different approach. Instead of offering token incentives, project treasuries  **insures the downside price risk** of their cryptocurrency for a fixed period. This means that if the price of the project's cryptocurrency declines, liquidity providers receive either full or partial principal protection.
 
-* [Signaled Interest](offering-features/signaled-interest.md)
-* [Term](offering-features/term.md)
-* [Offering Size](offering-features/offering-size.md)
-* [Issue Size](offering-features/issue-size.md)
-* [Funding Progress](offering-features/funding-progress.md)
-* [Liquidity Created](offering-features/liquidity-created.md)
-* [Sale Duration](offering-features/sale-duration.md)
-* [Offering Type](offering-features/offering-type.md)
-* [Offering Price](offering-features/offering-price.md)
-* [Note Quantity](offering-features/note-quantity.md)
+### **2. Off-Chain Market Makers**
 
-## Signaling Features
+\
+Traditionally, cryptocurrencies have engaged **centralized market makers** to build liquidity on AMMs or centralized exchanges (CEXs). Projects pay for these market-making services using tokens from their treasuries. Market makers often sell these tokens to make a profit.
 
-* [Intended Investment](signaling-features/intended-investment.md)
-* [Signal Interest](signaling-features/signal-interest.md)
-
-## Redemption Features
-
-* [Note Extension](redemption-features/note-extension.md)
-* [Note Redemption](redemption-features/note-redemption.md)
-
-***
-
-* [Whitepapers/Research](whitepapers-research.md)
-* [Glossary](glossary.md)
-
-## Integrate with Exchequer
-
-* [Integrate with Exchequer](integrate-with-exchequer/integrate-with-exchequer.md)
-
-## APIs
-
-* [Exchequer Subgraph](apis/exchequer-subgraph.md)
+The **Exchequer Protocol** offers a different approach. Its permissionless and immutable design allows cryptocurrencies to build liquidity transparently on-chain without intermediaries. This eliminates the need to issue token incentives or rely on centralized entities.
