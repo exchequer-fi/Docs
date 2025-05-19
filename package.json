@@ -1,0 +1,17 @@
+{
+  "name": "honkit",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "docs:build": "honkit build",
+    "docs:serve": "honkit serve",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "honkit": "^6.0.3"
+  }
+}
