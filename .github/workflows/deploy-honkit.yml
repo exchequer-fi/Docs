@@ -1,11 +1,12 @@
-name: Deploy HonKit to GitHub Pages
+name: Deploy HonKit to GitHub Pages (Source on Main, Deploy to gh-pages)
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push events but only for the main branch
+  # Triggers the workflow on push events but only for your main source branch
   push:
     branches:
-      - Docs # Or 'master', or whatever your default branch is named
+      - main # IMPORTANT: This workflow now triggers on pushes to the 'main' branch.
+             # 'main' should contain your HonKit source files (Markdown, package.json, etc.).
 
   # Allows you to run this workflow manually from the Actions tab on GitHub
   workflow_dispatch:
@@ -19,19 +20,20 @@ jobs:
 
     # Permissions needed by the job
     permissions:
-      contents: write # Allow the job to write to the repository (to push to gh-pages)
+      contents: write # Allow the job to write to the repository (to push to the gh-pages branch)
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Step 1: Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout repository
+      # Step 1: Checks-out your source branch ('main') under $GITHUB_WORKSPACE
+      - name: Checkout main (source) repository
         uses: actions/checkout@v4
+        # This will checkout the 'main' branch because the workflow is triggered by a push to 'main'.
 
       # Step 2: Sets up Node.js in the runner environment
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Using Node.js version 20 (current LTS as of May 2025). You can use '18' or other LTS versions.
+          node-version: '20' # Using Node.js version 20. You can use '18' or other LTS versions.
           cache: 'npm' # Caches npm dependencies to speed up future builds
 
       # Step 3: Installs your project dependencies (including HonKit)
@@ -43,14 +45,17 @@ jobs:
       - name: Build HonKit site
         run: npm run docs:build
 
-      # Step 5: Deploys the built site (from the _book directory) to the gh-pages branch
-      - name: Deploy to GitHub Pages
+      # Step 5: Deploys the built site (from the _book directory) to the 'gh-pages' branch
+      - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_book # The directory HonKit builds to
-          # publish_branch: gh-pages # This is the default, branch will be created if it doesn't exist
+          publish_branch: gh-pages # <<< CHANGED: Deploy to the 'gh-pages' branch
           # user_name: 'github-actions[bot]' # Optional: Name of the committer
           # user_email: 'github-actions[bot]@users.noreply.github.com' # Optional: Email of the committer
           # cname: your.customdomain.com # Optional: if you use a custom domain, uncomment and set this
           # allow_empty_commit: false # Default is false; set to true if you want to push even if no changes
+          # keep_files: false # Default is false. If true, existing files on 'gh-pages' not in _book won't be removed.
+                             # Usually for a clean site deployment, false is desired.
+
