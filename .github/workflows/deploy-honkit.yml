@@ -5,7 +5,7 @@ on:
   # Triggers the workflow on push events but only for the main branch
   push:
     branches:
-      - main # Or 'master', or whatever your default branch is named
+      - Docs # Or 'master', or whatever your default branch is named
 
   # Allows you to run this workflow manually from the Actions tab on GitHub
   workflow_dispatch:
@@ -45,7 +45,7 @@ jobs:
 
       # Step 5: Deploys the built site (from the _book directory) to the gh-pages branch
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: exchequer-fi/Docs@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_book # The directory HonKit builds to
