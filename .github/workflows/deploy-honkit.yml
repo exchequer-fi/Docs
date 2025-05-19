@@ -45,7 +45,7 @@ jobs:
 
       # Step 5: Deploys the built site (from the _book directory) to the gh-pages branch
       - name: Deploy to GitHub Pages
-        uses: exchequer-fi/Docs@v4
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_book # The directory HonKit builds to
