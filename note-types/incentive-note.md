@@ -1,2 +1,0 @@
-# Incentive Note
-

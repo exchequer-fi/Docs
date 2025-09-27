@@ -1,102 +1,65 @@
 # Downside Protection
 
-## Introduction
+## What “downside protection” means (in Exchequer)
 
-The defining idea of Exchequer Protocol is downside protection:  Instead of compensating users for providing liquidity through token incentives, Exchequer allows projects to reduces risk by **insuring the downside** for liquidity providers.
+Instead of paying emissions to tempt mercenary liquidity, Exchequer lets a project **subsidize risk** for buyers of its Downside-Protected Notes (DPNs). The project posts on-chain collateral so that, **at maturity**, buyers have a **capped worst-case** outcome.
 
-For many cryptocurrencies, the risks associated with providing liquidity in an AMM liquidity pool are not justified by the trading yields obtained. Consequently, project treasuries often need to:
+* **Partial protection only, up to 75% drawdown.** The highest setting any issuer can choose is **75% protection**.
+* **Settlement asset is LP tokens.** When protection pays, the buyer **receives LP tokens** from the collateral stack. These LP tokens are immediately sellable or holdable by the buyer.
 
-* **Engage Centralized Market Makers**
-* **Conduct Yield Farming Campaigns**
+In practice, this turns yield-spray PvP into an explicit, transparent **risk-transfer contract** between a project and its community.
 
-However, token incentives can create a **PvP (Player vs. Player) scenario**, where your profit and loss (PnL) as a liquidity provider is directly impacted by when you sell your tokens. This dynamic often results in a significant portion of liquidity providers incurring losses.
+***
 
-Exchequer Protocol offers a different approach. By providing downside protection, project treasuries insure liquidity providers against price declines of their cryptocurrency over a fixed period. This means:
+## How the protection is collateralized (trustless by construction)
 
-* **No Token Incentives to Sell:** Eliminating the need to issue additional tokens reduces sell pressure and avoids diluting token value.
-* **Elimination of PvP Market Structures:** With downside protection in place, liquidity providers are less likely to lose money, fostering a more cooperative and stable ecosystem.
+1. **Matched deposits form collateral.**
+   * Buyers bring stablecoins/ETH (the “cash leg”).
+   * The project contributes its own tokens (the “token leg”).
+   * Together they mint a **project-owned, full-range LP position** (plus any supplemental assets the issuer specifies).
+2. **LP tokens are escrowed as protection.**\
+   The LP position is held on-chain to underwrite the protection.
+3. **At maturity, the note settles.**
+   * If the market performed well, buyers receive the **upside payoff** defined by the note type.
+   * If the market fell, buyers receive **LP tokens per the protection schedule**, capping their loss up to the chosen level (max 75%).
 
-## LP collateral
+This design is **permissionless**, **auditable**, and removes counterparty risk: the collateral is visible and bound to the note’s terms.
 
-To make downside protection both permissionless and trustless, it's essential to have collateral that underwrites the protection. In the Exchequer Protocol, the **liquidity pool itself serves as the collateral**.
+***
 
-**Collateral Composition**
+## The 75% protection cap (the important bit)
 
-* **Project Treasury Contribution (50%)**
-  * The project's treasury contributes its own cryptocurrency to the liquidity pool.
-  * This portion is used to insure the downside risk of the asset.
-* **User Contribution (50%)**
-  * Users contribute stablecoins or ETH to the liquidity pool.
-  * This represents the user's stake and potential exposure.
+“75% protection” means the note is structured so that **if the token is down 75% at maturity, the buyer redeems LP tokens whose then-market value equals their original principal** (i.e., full principal back, paid in LP).
 
-Typically, the liquidity pool is a **uniformly distributed full-range pool**, meaning assets are available across all price ranges within the AMM.
+**If the drawdown is ≤ 75%.** The buyer’s **principal is fully protected**. At maturity they redeem **LP tokens worth their original principal**.
 
-## Mechanism for Trustless Downside Protection
+**If the drawdown is > 75%.** Protection is **capped** at the 75% floor. The buyer begins to take losses beyond that point, **but still redeems LP tokens per the schedule and is strictly better off than being unprotected** over the same market move.
 
-For downside protection to be trustlessly ensured, the **total value of the collateral** must exceed the value of the cryptocurrency contributed by the user. This guarantees that:
+> Protection never creates free money; it **reassigns** tail risk from the buyer to the issuer, with the cap clearly stated up front.
 
-* **Sufficient Coverage:** In the event of a price decline, there's enough collateral to provide partial principal protection to the user.
-* **Elimination of Counterparty Risk:** Since the collateral is on-chain and locked within the liquidity pool, users don't need to trust a third party to honor the protection.
-* **Permissionless Access:** Any user can participate without needing approval from intermediaries.
+***
 
-## Calculating Protection vs Collateral
+## Walkthrough example (numbers you can sanity-check)
 
-To illustrate how the Exchequer Protocol provides downside protection, let's walk through an example.
+**Initial:**
 
-**Initial Setup**
+* Buyer deposits **100 USDC**.
+* Project contributes **100 TOKEN** at **$1.00** each.
+* A full-range LP is minted with **100 USDC + 100 TOKEN** (total $200).
 
-* **User Contribution:** 100 USDC
-* **Project Contribution:** 100 TOKEN
-* **Initial TOKEN Price:** 1 USDC per TOKEN
-* **Liquidity Pool Composition:**
-  * 100 USDC (from the user)
-  * 100 TOKEN (from the project)
-* **Total Pool Value:** 200 USDC
+**Market at maturity:** token price is **$0.25** (a **75% drop**).
 
-The liquidity pool is a **uniformly distributed full-range pool**, meaning assets are available across all price ranges within the AMM.
+* Constant-product arbitrage rebalances the pool to about **200 TOKEN + 50 USDC**.
+* Total LP value ≈ **$100**.
 
-**Scenario: TOKEN Price Declines by 75%**
+**Protection outcome:** With **75% protection**, the buyer can redeem **LP tokens worth $100**, i.e., **their full principal**, paid **in LP tokens**. (If the drop were worse than 75%, the redeemed LP would be worth less than $100.
 
-* **New TOKEN Price:** 0.25 USDC per TOKEN
-* **Value of TOKEN in Pool:** 200 TOKEN × 0.25 USDC = 50 USDC
-* **Value of USDC in Pool:** 50 USDC
-* **Total Pool Value:** 50 USDC (from TOKEN) + 50 USDC = **100 USDC**
+***
 
-\*To DIY calculate see ["Impermanent Loss Calculator"](https://dailydefi.org/tools/impermanent-loss-calculator/), understand the maths see, Uniswap V2 documentation on ["Understanding Returns"](https://docs.uniswap.org/contracts/v2/concepts/advanced-topics/understanding-returns).
+## Choosing a protection level (issuer guidance)
 
-**Impact on the User**
+* **Treasury capacity vs. acquisition goals.** Higher protection (toward 75%) attracts more cautious users but consumes more treasury risk budget.
+* **Token volatility.** More volatile assets typically warrant higher protection to convert fence-sitters.
+* **Target audience.** DPN-Yield appeals to yield seekers; DPN-Growth appeals to newcomers wanting a **simple “floor + upside”** story.
 
-Under normal circumstances, the user would suffer a loss due to the price decline. However, with the Exchequer Protocol's downside protection:
-
-* **Maximum Downside Protection Offered:** **75%**
-* **User's Initial Contribution:** 100 USDC
-* **Protected Amount:** Up to 75% price decline
-
-Since the TOKEN price declined by exactly 75%, the protocol ensures that the user can redeem their **full principal of 100 USDC** upon withdrawal.
-
-The liquidity pool's assets act as collateral to secure the user's principal.
-
-## Considerations for Determining the Level of Downside Protection in a Liquidity Note
-
-When configuring a Liquidity Note, one of the critical parameters to define is the **level of downside protection** offered to investors.&#x20;
-
-1. **Risk Appetite of the Project**
-   * **Assessment**: Determine the project's willingness to assume financial risk in providing downside protection.
-   * **Impact**: Higher downside protection levels increase the project's financial obligations, requiring a robust treasury to cover potential losses.
-   * **Example**: A project with a strong treasury may opt for 75% downside protection, while a project with limited reserves might choose a lower protection level, such as 20%.
-2. **Market Volatility of the Underlying Token**
-   * **Assessment**: Analyze the historical and expected volatility of the underlying token.
-   * **Impact**: Higher volatility may necessitate higher downside protection to attract risk-averse investors.
-   * **Example**: If the underlying token has exhibited monthly price swings of ±20%, offering 70% downside protection can provide a safety buffer for investors.
-3. **Investor Demand and Expectations**
-   * **Assessment**: Gauge investor preferences and the competitive landscape of similar cryptocurrencies.
-   * **Impact**: Aligning downside protection levels with investor expectations can enhance the attractiveness of the Liquidity Notes.
-   * **Example**: If other competitor cryptocurrencies offer 60% downside protection, setting a similar or slightly higher protection level (e.g., 70%) can position the project favorably in the market.
-4. **Yield Distribution and Upside Boost Configuration**
-   * **Assessment**: Balance downside protection with other features like yield distribution and upside boost.
-   * **Impact**: Higher downside protection may mean adjustments to be more conservative in yield distribution or upside boost.
-   * **Example**: Offering 70% downside protection might be paired with a 20% upside boost, ensuring that the project's obligations remain manageable while providing attractive returns to investors.
-5. **Regulatory and Compliance Factors**
-   * **Assessment**: Consider legal and regulatory requirements governing financial instruments and protections in relevant jurisdictions.
-   * **Impact**: Compliance with regulations may dictate minimum or maximum levels of protection that can be offered.
-   * **Example**: Regulatory guidelines might require a minimum of 50% downside protection, influencing the project's configuration choices.
+Keep it explicit on your docs and launch post: **protection percentage (≤75%), settlement in LP tokens, term, and payoff style (Yield vs. Growth).** Clarity here is what converts strangers into holders.

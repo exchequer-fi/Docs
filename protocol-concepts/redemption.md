@@ -1,27 +1,46 @@
 # Redemption
 
-Liquidity Notes come with a fixed maturity date, which means the downside protection they offer is not perpetual but ends at a specified date and time. This fixed term allows the downside protection and other features of each Liquidity Note to conclude as scheduled.
+Downside-Protected Notes (DPNs) — both **DPN-Yield** and **DPN-Growth** — have a **fixed maturity date**. Protection is **not perpetual**; it applies at settlement on that date. Fixed terms let issuers align notes with launches, listings, and treasury timelines while keeping risk and cost bounded.
 
-Having a fixed maturity enables cryptocurrency projects to tailor each Liquidity Note according to their specific needs and the prevailing market conditions. By adjusting the maturity date, projects can align the Liquidity Notes with strategic timelines, market events, or liquidity requirements, providing flexibility in how they manage risk and incentivize participation.
+### Redemption Mechanism
 
-## Redemption Mechanism
+When a DPN reaches maturity, settlement uses a manipulation-resistant price:
 
-When a Liquidity Note reaches its maturity date, holders have two options:
+**Price measure:** the **72-hour VWAP** of the project token immediately **prior** to the maturity timestamp.
 
-### 1. Redemption
+Given that price, redemption follows this logic:
 
-On the specified maturity date, holders can redeem their Liquidity Notes based on the Volume Weighted Average Price (VWAP) of the underlying asset over the 72 hours directly prior to the maturity date/time. Using a 72-hour VWAP helps prevent price manipulation that could influence the redemption price at a specific moment.
+#### A) Market up or flat (no drawdown)
 
-Upon redemption, holders receive the underlying Liquidity Provider (LP) collateral associated with their Liquidity Notes. They can then choose to:
+* **DPN-Yield:** Holder redeems the **LP position** (LP tokens), including any accrued trading fees per terms.
+* **DPN-Growth:** Holder receives the **defined upside payoff** (spot-like participation per the note’s participation/cap).
 
-* **Retain the LP Position**: Continue holding the LP tokens if they wish to remain invested in the liquidity pool.
-* **Withdraw Underlying Assets**: Redeem the LP tokens for the constituent cryptocurrencies, effectively exiting the liquidity position.
+#### B) Market down, drawdown **≤ 75%**
 
-### 2. Rollover Extension
+* **Full principal protection.** The holder redeems **LP tokens whose current market value equals their original principal** (protection pays in LP).
+* Applies identically to **DPN-Yield** and **DPN-Growth**.
 
-The cryptocurrency project may offer a rollover option to Liquidity Note holders. In this scenario, the project presents a new Liquidity Note with a new maturity date and potentially revised features, such as adjusted levels of downside protection, upside potential, and yield distribution.
+#### C) Market down, drawdown **> 75%**
 
-**Holder's Decision**:
+* **Protection is capped.** The holder redeems **LP tokens per the protection schedule**, which absorbs losses up to the 75% floor.
+* Any loss **beyond** 75% is borne by the holder; however, the redeemed LP value remains **strictly better** than being unprotected over the same move.
 
-* **Accepting the Rollover**: If the holder accepts the rollover extension, their existing Liquidity Note is replaced with the new one, which includes the updated terms and extended maturity date.
-* **Declining the Rollover**: If the holder does not accept the new terms, they can redeem their Liquidity Note as per the default redemption mechanics outlined above.
+> **Settlement asset:** The protection leg **always settles in LP tokens** backed by the on-chain collateral. Holders can instantly withdraw LP to constituents if they prefer spot assets.
+
+***
+
+### Rollover / Extension (Optional)
+
+Issuers may offer a **rollover** into a new series with a new maturity and parameters (floor up to 75%, participation/cap, term):
+
+* **Accept rollover:** The old note is burned; a new note is issued with the updated terms.
+* **Decline rollover:** Redeem under the default mechanics above (72-hour VWAP, settlement as specified).
+
+***
+
+#### Post-Redemption Choices (for both note types)
+
+* **Retain LP Position:** Continue holding LP tokens to stay in the pool.
+* **Withdraw Underlying Assets:** Burn LP to receive the constituent tokens and exit the position.
+
+This structure keeps settlement **permissionless, auditable, and predictable**, while making the downside floor and settlement asset crystal clear to holders.
