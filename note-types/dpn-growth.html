@@ -1,0 +1,472 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>DPN-Growth · HonKit</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 6.0.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/@honkit/honkit-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="dpn-yield.html" />
+    
+    
+    <link rel="prev" href="../protocol-concepts/redemption.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Exchequer Protocol Overview
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">Protocol Concepts</li>
+        
+        
+    
+        <li class="chapter " data-level="2.1" data-path="../protocol-concepts/downside-protection.html">
+            
+                <a href="../protocol-concepts/downside-protection.html">
+            
+                    
+                    Downside Protection
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="../protocol-concepts/downside-protected-note-s.html">
+            
+                <a href="../protocol-concepts/downside-protected-note-s.html">
+            
+                    
+                    Downside Protected Note(s)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="../protocol-concepts/redemption.html">
+            
+                <a href="../protocol-concepts/redemption.html">
+            
+                    
+                    Redemption
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">Note Types</li>
+        
+        
+    
+        <li class="chapter active" data-level="3.1" data-path="dpn-growth.html">
+            
+                <a href="dpn-growth.html">
+            
+                    
+                    DPN-Growth
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" data-path="dpn-yield.html">
+            
+                <a href="dpn-yield.html">
+            
+                    
+                    DPN-Yield
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="divider"></li>
+        
+        
+    
+        <li class="chapter " data-level="4.1" data-path="../whitepapers-research.html">
+            
+                <a href="../whitepapers-research.html">
+            
+                    
+                    Whitepapers/Research
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >DPN-Growth</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="dpn-growth">DPN-Growth</h1>
+<h2 id="summary-tldr"><strong>Summary (TL;DR)</strong></h2>
+<ul>
+<li>Fixed‑term ERC‑20 note with a <strong>downside floor (max 75% drawdown)</strong> and <strong>spot‑like upside participation</strong>.</li>
+<li><strong>No coupon/yield</strong> during the term; all value settles at maturity.</li>
+<li><strong>No impermanent loss on the upside</strong> — upside is replicated, not held as an LP.</li>
+<li><strong>Protection settles in LP tokens</strong> at maturity using a <strong>72‑hour VWAP</strong> to determine settlement amounts.</li>
+</ul>
+<hr></hr>
+<h2 id="what-it-is">What it is</h2>
+<p>A DPN‑Growth gives buyers a <strong>defined floor</strong> on principal at maturity (capped at a 75% drawdown) <strong>and</strong> participation in upside without the rebalancing drag typical of AMM LPs. It is issued and collateralized entirely on‑chain, with transparent parameters and auditable collateral.</p>
+<p><strong>Who it’s for</strong></p>
+<ul>
+<li>New or cautious users who want a <strong>simple “floor + upside”</strong> profile rather than yield.</li>
+<li>Projects that want to <strong>deepen on‑chain DEX liquidity</strong> without opaque MM/CEX deals.</li>
+</ul>
+<hr></hr>
+<h2 id="key-properties">Key Properties</h2>
+<ul>
+<li><strong>Term:</strong> Fixed maturity date (e.g., 3–12 months).</li>
+<li><strong>Protection:</strong> Partial, <strong>up to 75% drawdown</strong>. If the token is down <strong>≤ 75%</strong> at maturity, holder redeems <strong>LP tokens worth original principal</strong>; <strong>&gt; 75%</strong> drawdown is uncapped for the residual portion (see Payoff Logic).</li>
+<li><strong>Upside:</strong> <strong>Spot‑like participation</strong> per an issuer‑set participation rate and optional cap; <strong>no IL on the upside</strong>.</li>
+<li><strong>Yield:</strong> <strong>None</strong> during the term (zero coupon).</li>
+<li><strong>Settlement asset:</strong> Protection pays out in <strong>LP tokens</strong> backed by on‑chain collateral; holders can keep LP or withdraw to constituents.</li>
+<li><strong>Price measure:</strong> <strong>72‑hour VWAP</strong> ending at the maturity timestamp to reduce price‑manipulation risk.</li>
+</ul>
+<hr></hr>
+<h2 id="creation-mechanism">Creation Mechanism</h2>
+<ol>
+<li><strong>Issue Notes (ERC‑20).</strong> The project publishes terms and sells DPN‑Growth notes to buyers.</li>
+<li><strong>Collateralize &amp; Replicate.</strong> Issuer combines proceeds with treasury assets to:<ul>
+<li>(a) <strong>Fund the downside floor</strong> (up to 75%) via escrowed LP collateral; and</li>
+<li>(b) <strong>Replicate spot‑like upside</strong> <em>without</em> relying on LP exposure for the upside leg.</li>
+</ul>
+</li>
+<li><strong>LP formation.</strong> Project form project‑owned LP as part of the collateral stack; any yield remains in collateral and is <strong>not</strong> paid as a coupon.</li>
+<li><strong>On‑chain escrow.</strong> Collateral (including LP tokens) is locked in protocol contracts and auditable by anyone.</li>
+<li><strong>Settle at maturity.</strong> Redemption follows the <strong>Payoff Logic</strong> below using the 72‑hour VWAP.</li>
+</ol>
+<hr></hr>
+<h2 id="configurable-parameters-issuer-knobs">Configurable Parameters (Issuer “knobs”)</h2>
+<ul>
+<li><strong>Term</strong> (date/time)</li>
+<li><strong>Protection floor</strong> (any value up to the 75% drawdown limit)</li>
+<li><strong>Upside participation</strong> (e.g., 100%, 125%); <strong>optional cap</strong></li>
+<li><strong>AMM/pool selection</strong> for LP collateral</li>
+<li><strong>Rollover offer</strong> (optional) at or prior to maturity</li>
+</ul>
+<hr></hr>
+<h2 id="payoff-logic-at-maturity">Payoff Logic at Maturity</h2>
+<p>Let <em>P0</em> be the VWAP at issuance (or the reference notional used) and <em>Pm</em> the <strong>72‑hour VWAP</strong> immediately prior to maturity.</p>
+<p><strong>A) Drawdown ≤ 75%</strong></p>
+<ul>
+<li>Holder redeems <strong>LP tokens worth the original principal</strong> (full principal back, paid in LP). If upside conditions also apply (e.g., Pm ≥ P0), the upside payoff is delivered per terms; otherwise the floor applies.</li>
+</ul>
+<p><strong>B) Drawdown &gt; 75%</strong></p>
+<ul>
+<li>Protection is <strong>capped</strong>. Holder redeems <strong>LP tokens per the protection schedule</strong>, absorbing losses beyond 75%. The outcome remains <strong>strictly better than unprotected spot</strong> over the same move.</li>
+</ul>
+<p><strong>C) Token up or flat</strong></p>
+<ul>
+<li>Holder receives the <strong>defined upside payoff</strong> based on participation (and any cap). No coupon is paid for the term.</li>
+</ul>
+<blockquote>
+<p>Protection reallocates tail risk from buyer to issuer. It is funded by on‑chain collateral and <strong>does not</strong> create free money.</p>
+</blockquote>
+<hr></hr>
+<h2 id="numerical-walkthrough">Numerical Walkthrough</h2>
+<p><strong>Setup:</strong></p>
+<ul>
+<li>Buyer deposits <strong>100 USDC</strong>.</li>
+<li>Project posts <strong>100 TOKEN</strong> at $1.00 and forms collateral including a full‑range LP.</li>
+<li>Total initial collateral ≈ <strong>$200</strong>.</li>
+</ul>
+<p><strong>Case 1 — 75% drawdown:</strong> TOKEN = <strong>$0.25</strong> at maturity.</p>
+<ul>
+<li>Constant‑product rebalancing implies LP ≈ <strong>200 TOKEN + 50 USDC</strong> (≈ <strong>$100</strong> total).</li>
+<li><strong>Redemption:</strong> Buyer receives <strong>LP tokens worth $100</strong> → <strong>full principal back</strong> in LP.</li>
+</ul>
+<p><strong>Case 2 — 50% drawdown:</strong> TOKEN = <strong>$0.50</strong>.</p>
+<ul>
+<li>LP value ≈ <strong>$141.4</strong>. Protection <strong>≤ 75%</strong> ⇒ <strong>full principal</strong> back in LP (<strong>$100</strong>), plus upside leg per terms if applicable.</li>
+</ul>
+<p><strong>Case 3 — 90% drawdown:</strong> TOKEN = <strong>$0.10</strong>.</p>
+<ul>
+<li>LP value ≈ <strong>$63.2</strong>.</li>
+<li><strong>Redemption:</strong> Buyer receives LP per schedule; loss beyond 75% is borne by holder. Outcome is still better than unprotected spot.</li>
+</ul>
+<p><em>(Illustrative only; exact amounts depend on pool, fee tier, and final VWAP.)</em></p>
+<hr></hr>
+<h2 id="redemption--rollover">Redemption &amp; Rollover</h2>
+<ul>
+<li><strong>Price input:</strong> <strong>72‑hour VWAP</strong> immediately prior to maturity.</li>
+<li><strong>Settlement asset:</strong> LP tokens backed by collateral (holder may burn LP for constituents).</li>
+<li><strong>Rollover (optional):</strong> Issuer can offer a new series with fresh terms; holders may accept the rollover or redeem.</li>
+</ul>
+<hr></hr>
+<h2 id="risks--considerations">Risks &amp; Considerations</h2>
+<ul>
+<li><strong>Residual tail risk:</strong> Losses <strong>beyond</strong> the 75% floor are borne by the holder.</li>
+<li><strong>LP‑token settlement:</strong> Payout is in LP; market value is determined by the AMM state at maturity (using VWAP). Holders can immediately withdraw to spot.</li>
+<li><strong>Smart‑contract risk:</strong> Contracts are immutable and audited, but risk cannot be reduced to zero.</li>
+<li><strong>Liquidity &amp; slippage:</strong> AMM/pool choice and depth affect realized unwind when burning LP.</li>
+</ul>
+<hr></hr>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../protocol-concepts/redemption.html" class="navigation navigation-prev " aria-label="Previous page: Redemption">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="dpn-yield.html" class="navigation navigation-next " aria-label="Next page: DPN-Yield">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"DPN-Growth","level":"3.1","depth":1,"next":{"title":"DPN-Yield","level":"3.2","depth":1,"path":"note-types/dpn-yield.md","ref":"note-types/dpn-yield.md","articles":[]},"previous":{"title":"Redemption","level":"2.3","depth":1,"path":"protocol-concepts/redemption.md","ref":"protocol-concepts/redemption.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"note-types/dpn-growth.md","mtime":"2025-09-27T07:40:59.588Z","type":"markdown"},"gitbook":{"version":"6.0.3","time":"2025-09-27T07:41:12.885Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/@honkit/honkit-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
