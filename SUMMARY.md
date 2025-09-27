@@ -13,6 +13,6 @@
 * [DPN-Growth](note-types/dpn-growth.md)
 * [DPN-Yield](note-types/dpn-yield.md)
 
-***
+## Research
 
-* [Whitepapers/Research](whitepapers-research.md)
+* [Whitepapers](research/whitepapers.md)
