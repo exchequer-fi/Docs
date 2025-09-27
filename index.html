@@ -181,16 +181,16 @@
 
     
         
-        <li class="divider"></li>
+        <li class="header">Research</li>
         
         
     
-        <li class="chapter " data-level="4.1" data-path="whitepapers-research.html">
+        <li class="chapter " data-level="4.1" data-path="research/whitepapers.html">
             
-                <a href="whitepapers-research.html">
+                <a href="research/whitepapers.html">
             
                     
-                    Whitepapers/Research
+                    Whitepapers
             
                 </a>
             
@@ -245,33 +245,39 @@
                                 
                                 <h1 id="exchequer-protocol-overview">Exchequer Protocol Overview</h1>
 <h2 id="introduction">Introduction</h2>
-<p>Exchequer is the issuer standard for a new on-chain asset class: <strong>Downside Protected Notes (DPNs)</strong>.\
-\
-Any ERC-20 project can issue DPNs with its token to give holders a defined outcome: <strong>participate in upside while receiving partial principal protection against drawdowns over a fixed term</strong>, with on-chain, auditable collateral and no trusted intermediaries. DPNs are built from first-principles LP-derivatives (LP forwards, LP calls/puts) plus a zero-coupon bond and a yield stream, letting projects replace blunt token incentives with precise, transparent risk transfer.</p>
+<p>Exchequer is the issuer standard for a new on-chain asset class: <strong>Downside-Protected Notes (DPNs)</strong>.</p>
+<p>Any ERC-20 project can issue DPNs with its token to give holders a defined outcome: <strong>participate in upside while receiving partial principal protection against drawdowns (up to 75%) over a fixed term</strong>, with on-chain, auditable collateral and no trusted intermediaries. DPNs are built from first-principles LP-derivatives (LP forwards, LP calls/puts) and structured-note design, letting projects replace blunt token incentives with precise, transparent risk transfer.</p>
 <p>The protocol is implemented as persistent, non-upgradeable smart contracts designed for censorship resistance, security, and self-custody. Issuance and settlement are fully on-chain and permissionless.</p>
-<h2 id="what-is-a-downside-protected-note">What is a Downside Protected Note?</h2>
-<p>A <strong>Downside-Protected Note</strong> delivers two things over a fixed term:</p>
+<h2 id="what-is-a-downside-protected-note">What is a Downside-Protected Note?</h2>
+<p>A DPN delivers two things over a fixed term:</p>
 <ul>
-<li><strong>Downside protection:</strong> a predefined floor (e.g., 0–75% principal protection) at maturity.</li>
+<li><strong>Downside protection:</strong> a predefined floor at maturity (<strong>0–75%</strong> protection).</li>
 <li><strong>Upside participation:</strong> if the token appreciates, the note tracks upside per the issuance terms.</li>
 </ul>
-<h3 id="1-why-issue-dpns"><strong>1.</strong> Why issue DPNs?</h3>
-<p>\
-<strong>Stronger holder alignment than emissions.</strong>\
-DPNs explicitly <strong>subsidize downside</strong> at maturity, shifting part of the price risk from buyers to the project on terms you control (floor, term, participation/cap). That credible protection attracts <strong>longer-horizon, conviction holders</strong> without spraying perpetual token rewards or renting mercenary TVL. Costs are transparent and budgetable up front, rather than open-ended emissions.</p>
+<p><strong>Two flavors (at a glance):</strong></p>
+<ul>
+<li><strong>DPN-Yield</strong> — downside floor + <strong>trading-fee yield during the term</strong>; upside sourced via LP exposure.</li>
+<li><strong>DPN-Growth</strong> — downside floor + <strong>spot-like upside with no IL on the upside</strong>, <strong>no coupon</strong> during the term.</li>
+</ul>
+<p><em>(Details, payoff diagrams, and examples are covered on the Note Types pages.)</em></p>
+<h2 id="1-why-issue-dpns">1) Why issue DPNs?</h2>
+<p><strong>Stronger holder alignment than emissions.</strong>\
+DPNs explicitly <strong>subsidize downside</strong> at maturity, shifting part of price risk from buyers to the project on terms you control (floor, term, participation/cap). That credible protection attracts longer-horizon holders without spraying perpetual rewards. Costs are clear and budgetable.</p>
 <p><strong>AMM-native liquidity without rent-seeking.</strong>\
-Issuance collateral deepen <strong>on-chain DEX liquidity</strong> as a by-product, reducing reliance on expensive, opaque arrangements with centralized market makers and CEXs. You keep liquidity <strong>transparent, programmable, and on-chain</strong>, while avoiding token loans, retainers, and hidden inventory risk.</p>
-<p><strong>New-user acquisition that actually converts.</strong>\
-Because the <strong>risk is subsidized</strong>, DPNs are <strong>highly FOMO-inducing</strong> compared with vanilla token buys. They give newcomers a clear floor plus upside participation, making it far easier to onboard users <strong>outside your current community,</strong> people who won’t touch uncushioned spot exposure but will try a defined-outcome note with protection.</p>
-<h3 id="2-how-dpns-work-high-level"><strong>2.</strong> How DPNs work (high level)</h3>
+Issuance collateral <strong>deepens on-chain DEX liquidity</strong> as a by-product, reducing reliance on opaque, expensive MM/CEX arrangements. Liquidity stays transparent, programmable, and on-chain.</p>
+<p><strong>New-user acquisition that converts.</strong>\
+Because risk is subsidized, DPNs provide a clear <strong>floor + upside</strong> offer that appeals to users outside your current community—people who avoid uncushioned spot exposure but will try a defined-outcome note.</p>
+<h2 id="2-how-dpns-work-high-level">2) How DPNs work (high level)</h2>
 <ol>
 <li><strong>Issue</strong> the note on-chain and raise stablecoins/ETH from buyers.</li>
-<li><strong>Create project-owned liquidity</strong> by pairing proceeds with treasury tokens, up to a 1:1 match, to form an AMM LP position without slippage.</li>
-<li><strong>Collateralize</strong> the note with the resulting LP tokens, calibrated to the chosen protection level.</li>
-<li><strong>Settle</strong> at maturity: noteholders receive par (to the protection threshold) plus any defined upside per terms.</li>
+<li><strong>Post on-chain collateral</strong> to fund the protection floor and specify upside per the note type\
+&amp;#xNAN;<em>(for DPN-Yield this includes a project-owned LP position; for DPN-Growth, upside is replicated without IL on the upside; LP may still be part of collateral).</em></li>
+<li><strong>Settle at maturity</strong> using a manipulation-resistant price input (e.g., 72-hour VWAP): holders receive the <strong>protection floor (paid in LP tokens) or the defined upside payoff</strong>, whichever is greater.</li>
 </ol>
-<h3 id="3-amm-agnostic-by-design">3. AMM-agnostic by design</h3>
-<p>DPNs work alongside any constant-product AMM (e.g., Uniswap, Balancer, Curve, etc...).  Liquidity depth on the chosen venue is a <strong>by-product</strong> of issuance, not the product itself.</p>
+<h2 id="3-amm-agnostic-by-design">3) AMM-agnostic by design</h2>
+<p>DPNs work alongside major constant-product AMMs (e.g., Uniswap, Balancer, Curve). Liquidity depth on the chosen venue is a <strong>by-product of issuance</strong>, not the product itself.</p>
+<hr></hr>
+<p><em>(For specifics on redemption, LP-token settlement, ≤75% protection, and the differences between DPN-Yield and DPN-Growth, see the Note Types and Downside Protection pages.)</em></p>
 
                                 
                                 </section>
@@ -311,7 +317,7 @@ Because the <strong>risk is subsidized</strong>, DPNs are <strong>highly FOMO-in
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Exchequer Protocol Overview","level":"1.1","depth":1,"next":{"title":"Downside Protection","level":"2.1","depth":1,"path":"protocol-concepts/downside-protection.md","ref":"protocol-concepts/downside-protection.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2025-09-27T07:40:59.587Z","type":"markdown"},"gitbook":{"version":"6.0.3","time":"2025-09-27T07:41:12.885Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Exchequer Protocol Overview","level":"1.1","depth":1,"next":{"title":"Downside Protection","level":"2.1","depth":1,"path":"protocol-concepts/downside-protection.md","ref":"protocol-concepts/downside-protection.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2025-09-27T07:54:44.401Z","type":"markdown"},"gitbook":{"version":"6.0.3","time":"2025-09-27T07:54:50.015Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
