@@ -248,108 +248,132 @@
                                 <h1 id="dpn-growth">DPN-Growth</h1>
 <h2 id="summary-tldr"><strong>Summary (TL;DR)</strong></h2>
 <ul>
-<li>Fixed‑term ERC‑20 note with a <strong>downside floor (max 75% drawdown)</strong> and <strong>spot‑like upside participation</strong>.</li>
+<li>Fixed-term ERC-20 note with a downside floor (max 75% drawdown) and spot-equivalent upside participation.</li>
 <li><strong>No coupon/yield</strong> during the term; all value settles at maturity.</li>
-<li><strong>No impermanent loss on the upside</strong> — upside is replicated, not held as an LP.</li>
+<li><strong>No impermanent loss on the upside</strong> — upside is delivered from a <strong>reserved token tranche</strong>, not from LP rebalancing.</li>
 <li><strong>Protection settles in LP tokens</strong> at maturity using a <strong>72‑hour VWAP</strong> to determine settlement amounts.</li>
+<li><strong>Collateral structure:</strong> per 100 USDC of notes sold, the issuer<ul>
+<li>pairs <strong>100 USDC + 100 TOKEN</strong> in LP to fund the floor, and</li>
+<li>holds an <strong>additional 100 TOKEN in reserve</strong> to pay spot-equivalent upside.\
+→ Total on-chain collateral at issue ≈ <strong>$300 notional</strong> (at par), of which <strong>$200</strong> sits in LP and <strong>$100</strong> is a token reserve.</li>
+</ul>
+</li>
 </ul>
 <hr></hr>
 <h2 id="what-it-is">What it is</h2>
-<p>A DPN‑Growth gives buyers a <strong>defined floor</strong> on principal at maturity (capped at a 75% drawdown) <strong>and</strong> participation in upside without the rebalancing drag typical of AMM LPs. It is issued and collateralized entirely on‑chain, with transparent parameters and auditable collateral.</p>
-<p><strong>Who it’s for</strong></p>
+<p>A DPN-Growth gives buyers a defined principal floor at maturity (capped at a 75% drawdown) and <strong>linear, spot-equivalent</strong> upside without the rebalancing drag of AMM LPs. Issuance and collateralization are entirely on-chain, with transparent parameters and auditable collateral.</p>
+<h2 id="who-its-for">Who it’s for</h2>
 <ul>
-<li>New or cautious users who want a <strong>simple “floor + upside”</strong> profile rather than yield.</li>
-<li>Projects that want to <strong>deepen on‑chain DEX liquidity</strong> without opaque MM/CEX deals.</li>
+<li>Users who want a simple <strong>“floor + linear upside”</strong> payoff rather than mid-term yield.</li>
+<li>Projects that want to deepen on-chain DEX liquidity without opaque MM/CEX deals — while keeping upside payments outside LP to avoid IL.</li>
 </ul>
 <hr></hr>
 <h2 id="key-properties">Key Properties</h2>
 <ul>
-<li><strong>Term:</strong> Fixed maturity date (e.g., 3–12 months).</li>
-<li><strong>Protection:</strong> Partial, <strong>up to 75% drawdown</strong>. If the token is down <strong>≤ 75%</strong> at maturity, holder redeems <strong>LP tokens worth original principal</strong>; <strong>&gt; 75%</strong> drawdown is uncapped for the residual portion (see Payoff Logic).</li>
-<li><strong>Upside:</strong> <strong>Spot‑like participation</strong> per an issuer‑set participation rate and optional cap; <strong>no IL on the upside</strong>.</li>
-<li><strong>Yield:</strong> <strong>None</strong> during the term (zero coupon).</li>
-<li><strong>Settlement asset:</strong> Protection pays out in <strong>LP tokens</strong> backed by on‑chain collateral; holders can keep LP or withdraw to constituents.</li>
-<li><strong>Price measure:</strong> <strong>72‑hour VWAP</strong> ending at the maturity timestamp to reduce price‑manipulation risk.</li>
+<li><strong>Term:</strong> Fixed maturity (e.g., 3–12 months).</li>
+<li><strong>Protection:</strong> Partial principal protection up to a 75% drawdown. If the token is down ≤ 75% vs reference at maturity, the holder redeems LP worth original principal; losses beyond 75% are borne by the holder (see Payoff Logic).</li>
+<li><strong>Upside:</strong> <strong>Spot-equivalent</strong> (issuer-set participation, e.g., 100%, 125%) with optional cap; <strong>funded from the reserved token tranche</strong> (not via LP).</li>
+<li><strong>Yield:</strong> None during the term (zero coupon).</li>
+<li><strong>Settlement assets:</strong><ul>
+<li><strong>Floor</strong> pays in LP tokens backed by on-chain collateral (holder may withdraw to constituents).</li>
+<li><strong>Upside</strong> is delivered from the <strong>reserved TOKEN</strong> based on the 72-hour VWAP.</li>
+</ul>
+</li>
+<li><strong>Price measure:</strong> 72-hour VWAP ending at the maturity timestamp to reduce manipulation risk.</li>
+<li><strong>Collateral structure:</strong> Two token tranches from treasury: <strong>(A) LP tranche</strong> to pair with buyer USDC, <strong>(B) Reserve tranche</strong> to fund upside.</li>
 </ul>
 <hr></hr>
 <h2 id="creation-mechanism">Creation Mechanism</h2>
 <ol>
-<li><strong>Issue Notes (ERC‑20).</strong> The project publishes terms and sells DPN‑Growth notes to buyers.</li>
-<li><strong>Collateralize &amp; Replicate.</strong> Issuer combines proceeds with treasury assets to:<ul>
-<li>(a) <strong>Fund the downside floor</strong> (up to 75%) via escrowed LP collateral; and</li>
-<li>(b) <strong>Replicate spot‑like upside</strong> <em>without</em> relying on LP exposure for the upside leg.</li>
-</ul>
-</li>
-<li><strong>LP formation.</strong> Project form project‑owned LP as part of the collateral stack; any yield remains in collateral and is <strong>not</strong> paid as a coupon.</li>
-<li><strong>On‑chain escrow.</strong> Collateral (including LP tokens) is locked in protocol contracts and auditable by anyone.</li>
-<li><strong>Settle at maturity.</strong> Redemption follows the <strong>Payoff Logic</strong> below using the 72‑hour VWAP.</li>
+<li><strong>Issue Notes (ERC-20).</strong> Project publishes terms and sells DPN-Growth to buyers.</li>
+<li><strong>Form LP for the floor (Tranche A).</strong> Pair buyer <strong>USDC 1:1 with TOKEN</strong> to create project-owned LP that funds the floor.</li>
+<li><strong>Set aside a reserved token tranche for upside (Tranche B).</strong> Hold an <strong>equal-sized TOKEN batch</strong> off-LP to deliver <strong>spot-equivalent upside</strong> at maturity (participation per terms). This avoids upside IL because the upside isn’t sourced from a rebalancing LP.</li>
+<li><strong>On-chain escrow.</strong> LP and reserve tokens are locked in protocol contracts, fully auditable.</li>
+<li><strong>Settle at maturity.</strong> Redemption follows the Payoff Logic using the 72-hour VWAP.</li>
 </ol>
 <hr></hr>
 <h2 id="configurable-parameters-issuer-knobs">Configurable Parameters (Issuer “knobs”)</h2>
 <ul>
-<li><strong>Term</strong> (date/time)</li>
-<li><strong>Protection floor</strong> (any value up to the 75% drawdown limit)</li>
-<li><strong>Upside participation</strong> (e.g., 100%, 125%); <strong>optional cap</strong></li>
-<li><strong>AMM/pool selection</strong> for LP collateral</li>
-<li><strong>Rollover offer</strong> (optional) at or prior to maturity</li>
+<li>Term (maturity date/time)</li>
+<li>Protection floor (up to the 75% drawdown limit)</li>
+<li>Upside participation (e.g., 100%, 125%) and optional cap</li>
+<li>AMM/pool selection for LP tranche</li>
+<li><strong>Reserve sizing policy</strong> (default: reserve TOKEN sized for 100% participation)</li>
+<li>Optional rollover offer at or prior to maturity</li>
 </ul>
 <hr></hr>
 <h2 id="payoff-logic-at-maturity">Payoff Logic at Maturity</h2>
-<p>Let <em>P0</em> be the VWAP at issuance (or the reference notional used) and <em>Pm</em> the <strong>72‑hour VWAP</strong> immediately prior to maturity.</p>
-<p><strong>A) Drawdown ≤ 75%</strong></p>
+<p>Let <strong>P₀</strong> be the reference price (VWAP at issuance or specified reference) and <strong>Pₘ</strong> the 72-hour VWAP immediately prior to maturity.</p>
+<p><strong>A) Drawdown ≤ 75% (Pₘ ≥ 0.25·P₀)</strong></p>
 <ul>
-<li>Holder redeems <strong>LP tokens worth the original principal</strong> (full principal back, paid in LP). If upside conditions also apply (e.g., Pm ≥ P0), the upside payoff is delivered per terms; otherwise the floor applies.</li>
+<li><strong>Floor:</strong> Holder redeems <strong>LP worth original principal</strong> (paid in LP).</li>
+<li><strong>Upside:</strong> If <strong>Pₘ ≥ P₀</strong>, deliver <strong>spot-equivalent upside</strong> from the reserved TOKEN per participation and any cap; if <strong>Pₘ &lt; P₀</strong>, no upside is due.</li>
 </ul>
-<p><strong>B) Drawdown &gt; 75%</strong></p>
+<p><strong>B) Drawdown &gt; 75% (Pₘ &lt; 0.25·P₀)</strong></p>
 <ul>
-<li>Protection is <strong>capped</strong>. Holder redeems <strong>LP tokens per the protection schedule</strong>, absorbing losses beyond 75%. The outcome remains <strong>strictly better than unprotected spot</strong> over the same move.</li>
-</ul>
-<p><strong>C) Token up or flat</strong></p>
-<ul>
-<li>Holder receives the <strong>defined upside payoff</strong> based on participation (and any cap). No coupon is paid for the term.</li>
+<li><strong>Floor is capped.</strong> Holder redeems LP per the protection schedule and absorbs losses beyond the 75% floor. Outcome remains strictly better than unprotected spot for the same move.</li>
+<li>Reserve tokens were earmarked for upside; if none is due, they are released per terms after settlement.</li>
 </ul>
 <blockquote>
-<p>Protection reallocates tail risk from buyer to issuer. It is funded by on‑chain collateral and <strong>does not</strong> create free money.</p>
+<p>The floor reallocates tail risk from buyer to issuer and is funded by on-chain collateral. Upside is delivered from a <strong>non-LP reserve</strong>, so the buyer’s upside is linear and <strong>not subject to IL</strong>.</p>
 </blockquote>
 <hr></hr>
-<h2 id="numerical-walkthrough">Numerical Walkthrough</h2>
-<p><strong>Setup:</strong></p>
+<h2 id="numerical-walkthrough-illustrative">Numerical Walkthrough (Illustrative)</h2>
+<p><strong>Setup</strong></p>
 <ul>
 <li>Buyer deposits <strong>100 USDC</strong>.</li>
-<li>Project posts <strong>100 TOKEN</strong> at $1.00 and forms collateral including a full‑range LP.</li>
-<li>Total initial collateral ≈ <strong>$200</strong>.</li>
+<li>Project posts <strong>200 TOKEN at $1.00</strong> from treasury, split into:<ul>
+<li><strong>Tranche A (100 TOKEN)</strong> → paired with <strong>100 USDC</strong> to form LP for the floor.</li>
+<li><strong>Tranche B (100 TOKEN)</strong> → held <strong>in reserve</strong> to pay upside.</li>
 </ul>
-<p><strong>Case 1 — 75% drawdown:</strong> TOKEN = <strong>$0.25</strong> at maturity.</p>
+</li>
+<li><strong>Total initial collateral ≈ $300</strong> (LP ≈ $200 + reserve ≈ $100).</li>
+</ul>
+<p><strong>Case 1 — 75% drawdown (TOKEN = $0.25 at maturity)</strong>\
+Constant-product rebalancing ⇒ LP ≈ <strong>200 TOKEN + 50 USDC</strong> (≈ <strong>$100</strong> total).</p>
 <ul>
-<li>Constant‑product rebalancing implies LP ≈ <strong>200 TOKEN + 50 USDC</strong> (≈ <strong>$100</strong> total).</li>
-<li><strong>Redemption:</strong> Buyer receives <strong>LP tokens worth $100</strong> → <strong>full principal back</strong> in LP.</li>
+<li><strong>Redemption:</strong> Holder receives <strong>LP worth $100</strong> → full principal back (in LP).</li>
+<li><strong>Upside:</strong> None (Pₘ &lt; P₀). Reserve is unused and released per terms.</li>
 </ul>
-<p><strong>Case 2 — 50% drawdown:</strong> TOKEN = <strong>$0.50</strong>.</p>
+<p><strong>Case 2 — 50% drawdown (TOKEN = $0.50)</strong>\
+LP value ≈ <strong>$141.4</strong>.</p>
 <ul>
-<li>LP value ≈ <strong>$141.4</strong>. Protection <strong>≤ 75%</strong> ⇒ <strong>full principal</strong> back in LP (<strong>$100</strong>), plus upside leg per terms if applicable.</li>
+<li><strong>Redemption:</strong> <strong>Full principal back in LP ($100)</strong> (drawdown ≤ 75%).</li>
+<li><strong>Upside:</strong> None (Pₘ &lt; P₀). Reserve is unused and released per terms.</li>
 </ul>
-<p><strong>Case 3 — 90% drawdown:</strong> TOKEN = <strong>$0.10</strong>.</p>
+<p><strong>Case 3 — 90% drawdown (TOKEN = $0.10)</strong>\
+LP value ≈ <strong>$63.2</strong>.</p>
 <ul>
-<li>LP value ≈ <strong>$63.2</strong>.</li>
-<li><strong>Redemption:</strong> Buyer receives LP per schedule; loss beyond 75% is borne by holder. Outcome is still better than unprotected spot.</li>
+<li><strong>Redemption:</strong> Holder receives LP per schedule; loss beyond the 75% floor is borne by holder.</li>
+<li><strong>Upside:</strong> None. Reserve unused; released per terms.</li>
 </ul>
-<p><em>(Illustrative only; exact amounts depend on pool, fee tier, and final VWAP.)</em></p>
-<hr></hr>
+<p><strong>Case 4 — 50% up (TOKEN = $1.50)</strong></p>
+<ul>
+<li><strong>Floor:</strong> Not needed.</li>
+<li><strong>Upside (100% participation, uncapped):</strong> Spot-equivalent payoff on 100 USDC is <strong>$150</strong>.<ul>
+<li>Deliver <strong>$50 of upside</strong> from the reserve at $1.50 ⇒ <strong>33.33 TOKEN</strong> from Tranche B.</li>
+<li>Holder’s net economic outcome matches <strong>linear spot</strong> without taking IL on the upside.</li>
+</ul>
+</li>
+</ul>
+<p><em>(Exact amounts depend on pool, fee tier, and final VWAP; participation/caps alter the reserve usage.)</em></p>
 <h2 id="redemption--rollover">Redemption &amp; Rollover</h2>
 <ul>
-<li><strong>Price input:</strong> <strong>72‑hour VWAP</strong> immediately prior to maturity.</li>
-<li><strong>Settlement asset:</strong> LP tokens backed by collateral (holder may burn LP for constituents).</li>
-<li><strong>Rollover (optional):</strong> Issuer can offer a new series with fresh terms; holders may accept the rollover or redeem.</li>
+<li><strong>Price input:</strong> 72-hour VWAP immediately prior to maturity.</li>
+<li><strong>Settlement assets:</strong><ul>
+<li><strong>Floor:</strong> LP tokens backed by collateral (holder may burn LP for constituents).</li>
+<li><strong>Upside:</strong> Delivered from the <strong>reserved TOKEN</strong> (or cash-settled per terms).</li>
 </ul>
-<hr></hr>
+</li>
+<li><strong>Rollover (optional):</strong> Issuer can offer a new series; holders may roll or redeem.</li>
+</ul>
 <h2 id="risks--considerations">Risks &amp; Considerations</h2>
 <ul>
-<li><strong>Residual tail risk:</strong> Losses <strong>beyond</strong> the 75% floor are borne by the holder.</li>
-<li><strong>LP‑token settlement:</strong> Payout is in LP; market value is determined by the AMM state at maturity (using VWAP). Holders can immediately withdraw to spot.</li>
-<li><strong>Smart‑contract risk:</strong> Contracts are immutable and audited, but risk cannot be reduced to zero.</li>
-<li><strong>Liquidity &amp; slippage:</strong> AMM/pool choice and depth affect realized unwind when burning LP.</li>
+<li><strong>Residual tail risk:</strong> Losses beyond the 75% floor are borne by the holder.</li>
+<li><strong>IL avoidance applies to upside only:</strong> The upside is reserve-funded; the LP tranche is exclusively for the floor.</li>
+<li><strong>Smart-contract risk:</strong> Contracts are immutable/audited, but risk ≠ 0.</li>
+<li><strong>Liquidity &amp; slippage:</strong> AMM/pool depth affects realized unwind when burning LP.</li>
 </ul>
-<hr></hr>
 
                                 
                                 </section>
@@ -393,7 +417,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"DPN-Growth","level":"3.1","depth":1,"next":{"title":"DPN-Yield","level":"3.2","depth":1,"path":"note-types/dpn-yield.md","ref":"note-types/dpn-yield.md","articles":[]},"previous":{"title":"Redemption","level":"2.3","depth":1,"path":"protocol-concepts/redemption.md","ref":"protocol-concepts/redemption.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"note-types/dpn-growth.md","mtime":"2025-09-27T07:54:44.402Z","type":"markdown"},"gitbook":{"version":"6.0.3","time":"2025-09-27T07:54:50.015Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"DPN-Growth","level":"3.1","depth":1,"next":{"title":"DPN-Yield","level":"3.2","depth":1,"path":"note-types/dpn-yield.md","ref":"note-types/dpn-yield.md","articles":[]},"previous":{"title":"Redemption","level":"2.3","depth":1,"path":"protocol-concepts/redemption.md","ref":"protocol-concepts/redemption.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"note-types/dpn-growth.md","mtime":"2025-09-28T14:11:07.287Z","type":"markdown"},"gitbook":{"version":"6.0.3","time":"2025-09-28T14:11:19.046Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
