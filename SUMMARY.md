@@ -10,8 +10,8 @@
 
 ## Note Types
 
-* [DPN-Growth](note-types/dpn-growth.md)
-* [DPN-Yield](note-types/dpn-yield.md)
+* [Growth D-Pro](note-types/growth-d-pro.md)
+* [Yield D-Pro](note-types/yield-d-pro.md)
 
 ## Research
 

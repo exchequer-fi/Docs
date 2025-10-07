@@ -2,7 +2,7 @@
 
 ## What “downside protection” means (in Exchequer)
 
-Instead of paying emissions to tempt mercenary liquidity, Exchequer lets a project **subsidize risk** for buyers of its Downside-Protected Notes (DPNs). The project posts on-chain collateral so that, **at maturity**, buyers have a **capped worst-case** outcome.
+Instead of paying emissions to tempt mercenary liquidity, Exchequer lets a project **subsidize risk** for buyers of its Downside-Protected Notes (D-Pros). The project posts on-chain collateral so that, **at maturity**, buyers have a **capped worst-case** outcome.
 
 * **Partial protection only, up to 75% drawdown.** The highest setting any issuer can choose is **75% protection**.
 * **Settlement asset is LP tokens.** When protection pays, the buyer **receives LP tokens** from the collateral stack. These LP tokens are immediately sellable or holdable by the buyer.
@@ -60,6 +60,6 @@ This design is **permissionless**, **auditable**, and removes counterparty risk:
 
 * **Treasury capacity vs. acquisition goals.** Higher protection (toward 75%) attracts more cautious users but consumes more treasury risk budget.
 * **Token volatility.** More volatile assets typically warrant higher protection to convert fence-sitters.
-* **Target audience.** DPN-Yield appeals to yield seekers; DPN-Growth appeals to newcomers wanting a **simple “floor + upside”** story.
+* **Target audience.** Yield D-Pros appeals to yield seekers; Growth D-Pros appeals to newcomers wanting a **simple “floor + upside”** story.
 
 Keep it explicit on your docs and launch post: **protection percentage (≤75%), settlement in LP tokens, term, and payoff style (Yield vs. Growth).** Clarity here is what converts strangers into holders.

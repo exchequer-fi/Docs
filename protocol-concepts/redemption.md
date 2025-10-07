@@ -1,10 +1,10 @@
 # Redemption
 
-Downside-Protected Notes (DPNs) — both **DPN-Yield** and **DPN-Growth** — have a **fixed maturity date**. Protection is **not perpetual**; it applies at settlement on that date. Fixed terms let issuers align notes with launches, listings, and treasury timelines while keeping risk and cost bounded.
+Downside-Protected Notes (D-Pros) — both **Yield D-Pros** and **Growth D-Pros** — have a **fixed maturity date**. Protection is **not perpetual**; it applies at settlement on that date. Fixed terms let issuers align notes with launches, listings, and treasury timelines while keeping risk and cost bounded.
 
 ### Redemption Mechanism
 
-When a DPN reaches maturity, settlement uses a manipulation-resistant price:
+When a D-Pro reaches maturity, settlement uses a manipulation-resistant price:
 
 **Price measure:** the **72-hour VWAP** of the project token immediately **prior** to the maturity timestamp.
 
@@ -12,13 +12,13 @@ Given that price, redemption follows this logic:
 
 #### A) Market up or flat (no drawdown)
 
-* **DPN-Yield:** Holder redeems the **LP position** (LP tokens), including any accrued trading fees per terms.
-* **DPN-Growth:** Holder receives the **defined upside payoff** (spot-like participation per the note’s participation/cap).
+* **Yield** D-Pr&#x6F;**:** Holder redeems the **LP position** (LP tokens), including any accrued trading fees per terms.
+* **Growth** D-Pr&#x6F;**:** Holder receives the **defined upside payoff** (spot-like participation per the note’s participation/cap).
 
 #### B) Market down, drawdown **≤ 75%**
 
 * **Full principal protection.** The holder redeems **LP tokens whose current market value equals their original principal** (protection pays in LP).
-* Applies identically to **DPN-Yield** and **DPN-Growth**.
+* Applies identically to **Yield D-Pros** and **Growth D-Pros**.
 
 #### C) Market down, drawdown **> 75%**
 

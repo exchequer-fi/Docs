@@ -1,4 +1,4 @@
-# DPN-Yield
+# Yield D-Pro
 
 ## **Summary (TL;DR)**
 
@@ -11,7 +11,7 @@
 
 ### What it is
 
-DPN‑Yield gives buyers a **floor at maturity** and **yield during the term** by anchoring the note to a project‑owned LP position. It is issued and collateralized entirely on‑chain, with transparent parameters and auditable collateral. The protection leg pays out **in LP tokens** from the collateral stack.
+Yield D-Pro gives buyers a **floor at maturity** and **yield during the term** by anchoring the note to a project‑owned LP position. It is issued and collateralized entirely on‑chain, with transparent parameters and auditable collateral. The protection leg pays out **in LP tokens** from the collateral stack.
 
 **Who it’s for**
 
@@ -33,7 +33,7 @@ DPN‑Yield gives buyers a **floor at maturity** and **yield during the term** b
 
 ### Creation Mechanism
 
-1. **Issue Notes (ERC‑20).** Project publishes terms and sells DPN‑Yield to buyers.
+1. **Issue Notes (ERC‑20).** Project publishes terms and sells Yield D-Pro to buyers.
 2. **Form LP.** Proceeds are **paired with treasury tokens** to mint a **project‑owned, full‑range LP position** (AMM/pool/fee‑tier disclosed).
 3. **Post Collateral.** LP tokens are escrowed on‑chain to **back the floor**.
 4. **Accrue Trading Fees.** LP trading fees accrue per the note’s distribution method (streamed vs. on‑settlement accounting).

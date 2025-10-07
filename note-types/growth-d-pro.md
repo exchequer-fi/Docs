@@ -1,4 +1,4 @@
-# DPN-Growth
+# Growth D-Pro
 
 ## **Summary (TL;DR)**
 
@@ -15,7 +15,7 @@
 
 ## What it is
 
-A DPN-Growth gives buyers a defined principal floor at maturity (capped at a 75% drawdown) and **linear, spot-equivalent** upside without the rebalancing drag of AMM LPs. Issuance and collateralization are entirely on-chain, with transparent parameters and auditable collateral.
+A Growth D-Pro gives buyers a defined principal floor at maturity (capped at a 75% drawdown) and **linear, spot-equivalent** upside without the rebalancing drag of AMM LPs. Issuance and collateralization are entirely on-chain, with transparent parameters and auditable collateral.
 
 ## Who it’s for
 
@@ -40,7 +40,7 @@ A DPN-Growth gives buyers a defined principal floor at maturity (capped at a 75%
 
 ## Creation Mechanism
 
-1. **Issue Notes (ERC-20).** Project publishes terms and sells DPN-Growth to buyers.
+1. **Issue Notes (ERC-20).** Project publishes terms and sells Growth D-Pro to buyers.
 2. **Form LP for the floor (Tranche A).** Pair buyer **USDC 1:1 with TOKEN** to create project-owned LP that funds the floor.
 3. **Set aside a reserved token tranche for upside (Tranche B).** Hold an **equal-sized TOKEN batch** off-LP to deliver **spot-equivalent upside** at maturity (participation per terms). This avoids upside IL because the upside isn’t sourced from a rebalancing LP.
 4. **On-chain escrow.** LP and reserve tokens are locked in protocol contracts, fully auditable.
