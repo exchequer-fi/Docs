@@ -245,39 +245,57 @@
                                 
                                 <h1 id="exchequer-protocol-overview">Exchequer Protocol Overview</h1>
 <h2 id="introduction">Introduction</h2>
-<p>Exchequer is the issuer standard for a new on-chain asset class: <strong>Downside-Protected Notes (D-Pros)</strong>.</p>
-<p>Any ERC-20 project can issue D-Pros with its token to give holders a defined outcome: <strong>participate in upside while receiving partial principal protection against drawdowns (up to 75%) over a fixed term</strong>, with on-chain, auditable collateral and no trusted intermediaries. D-Pros are built from first-principles LP-derivatives (LP forwards, LP calls/puts) and structured-note design, letting projects replace blunt token incentives with precise, transparent risk transfer.</p>
-<p>The protocol is implemented as persistent, non-upgradeable smart contracts designed for censorship resistance, security, and self-custody. Issuance and settlement are fully on-chain and permissionless.</p>
-<h2 id="what-is-a-downside-protected-note">What is a Downside-Protected Note?</h2>
-<p>A D-Pro delivers two things over a fixed term:</p>
+<p>Exchequer is the issuer standard for a new on-chain asset class: <strong>Exchequer Notes</strong>.   Any ERC-20 project—especially actively traded tokens—can issue a <strong>Protected Growth Token (PGT)</strong> with its native token to give holders a defined outcome: participate in upside while receiving partial principal protection against drawdowns (up to 75%) over a fixed term, with on-chain, auditable collateral and no trusted intermediaries. </p>
+<p>Think of it as TGE magic without the sell pressure—repeatable, campaign-style issuance that pulls in net-new users and renews attention for mature tokens without re-running emissions. </p>
+<p>PGTs are built from first-principles LP-derivatives (LP forwards, LP calls/puts) and structured-note design, letting teams replace blunt token incentives with precise, transparent risk transfer.</p>
+<p>\
+The protocol is implemented as persistent, non-upgradeable smart contracts designed for censorship resistance, security, and self-custody.  Issuance and settlement are fully on-chain and permissionless.</p>
+<h2 id="what-is-a-protected-growth-token">What is a Protected Growth Token?</h2>
+<p>A PGT delivers two things over a fixed term:</p>
 <ul>
 <li><strong>Downside protection:</strong> a predefined floor at maturity (<strong>0–75%</strong> protection).</li>
 <li><strong>Upside participation:</strong> if the token appreciates, the note tracks upside per the issuance terms.</li>
 </ul>
-<p><strong>Two flavors (at a glance):</strong></p>
+<p>PGT variants (at a glance):</p>
 <ul>
-<li><strong>Yield D-Pro</strong> — downside floor + <strong>trading-fee yield during the term</strong>; upside sourced via LP exposure.</li>
-<li><strong>Growth D-Pro</strong> — downside floor + <strong>spot-like upside with no IL on the upside</strong>, <strong>no coupon</strong> during the term.</li>
+<li><strong>PGT</strong> — downside floor + <strong>spot-like upside with no IL on the upside</strong>, <strong>no coupon</strong> during the term.</li>
+<li><strong>Power PGT</strong> — downside floor + jackpot-style upside distribution (prize-linked mechanics).  If the underlying collateral token appreciates, a share of the upside is pooled and distributed by an on-chain, provably fair drawing to winning holders at maturity; all other holders still receive the protection floor. </li>
 </ul>
 <p><em>(Details, payoff diagrams, and examples are covered on the Note Types pages.)</em></p>
-<h2 id="1-why-issue-d-pros">1) Why issue D-Pros?</h2>
-<p><strong>Stronger holder alignment than emissions.</strong>\
-D-Pros explicitly <strong>subsidize downside</strong> at maturity, shifting part of price risk from buyers to the project on terms you control (floor, term, participation/cap). That credible protection attracts longer-horizon holders without spraying perpetual rewards. Costs are clear and budgetable.</p>
-<p><strong>AMM-native liquidity without rent-seeking.</strong>\
-Issuance collateral <strong>deepens on-chain DEX liquidity</strong> as a by-product, reducing reliance on opaque, expensive MM/CEX arrangements. Liquidity stays transparent, programmable, and on-chain.</p>
-<p><strong>New-user acquisition that converts.</strong>\
-Because risk is subsidized, D-Pros provide a clear <strong>floor + upside</strong> offer that appeals to users outside your current community—people who avoid uncushioned spot exposure but will try a defined-outcome note.</p>
-<h2 id="2-how-d-pros-work-high-level">2) How D-Pros work (high level)</h2>
+<h2 id="tge-magic—without-the-sell-pressure">TGE Magic—Without the Sell Pressure</h2>
+<p>Run repeatable, time-boxed PGT campaigns to reignite discovery, onboard new cohorts, and reward patient holders—without the long-tail dilution and mercenary behavior typical of launch-era incentives. </p>
+<p>Each campaign deliberately compounds deep, stable on-chain DEX liquidity for your token as a designed consequence, strengthening price discovery and execution quality while you grow users.</p>
+<h2 id="1-why-issue-protected-growth-tokens">1) Why issue Protected Growth Tokens?</h2>
+<h4 id="stronger-holder-alignment-than-emissions"><strong>Stronger holder alignment than emissions.</strong></h4>
+<p>\
+PGTs explicitly subsidize downside at maturity, shifting part of price risk from buyers to the project on terms you control (floor, term, participation/cap). That credible protection attracts longer-horizon holders without spraying perpetual rewards. Costs are clear and budgetable.</p>
+<h4 id="amm-native-liquidity-without-rent-seeking"><strong>AMM-native liquidity without rent-seeking.</strong></h4>
+<p>\
+Issuance collateral compacts into deeper, more stable on-chain DEX liquidity as campaigns run, reducing reliance on opaque, expensive MM/CEX arrangements. Liquidity stays transparent, programmable, and on-chain—and can be improved continuously across campaigns.</p>
+<h4 id="new-user-acquisition-that-converts"><strong>New-user acquisition that converts.</strong></h4>
+<p>\
+Because risk is subsidized, PGTs provide a clear floor + upside offer that appeals to users outside your current community—people who avoid uncushioned spot exposure but will try a defined-outcome note. The Power variant adds lottery-like excitement without compromising principal protection.</p>
+<h4 id="for-established-tokens">For established tokens.</h4>
+<p>• You’ve already paid for liquidity—now turn it into repeatable user acquisition without long-term sell pressure.\
+• Run seasonal/quarterly PGT programs to refresh attention, segment cohorts, and bootstrap aligned holders.\
+• Choose Growth for spot-equivalent upside or Power for jackpot-style upside to galvanize dormant audiences.\
+• Coexist with existing venues and market-makers; issuance is on-chain and permissionless.\
+• Replace one-off “events” with a programmable, data-driven funnel: calibrate protection levels by volatility regime and iterate each campaign.</p>
+<h2 id="2-how-protected-growth-tokens-work-high-level">2) How Protected Growth Tokens work (high level)</h2>
 <ol>
 <li><strong>Issue</strong> the note on-chain and raise stablecoins/ETH from buyers.</li>
 <li><strong>Post on-chain collateral</strong> to fund the protection floor and specify upside per the note type\
-&amp;#xNAN;<em>(for Yield D-Pros this includes a project-owned LP position; for Growth D-Pros, upside is replicated without IL on the upside; LP may still be part of collateral).</em></li>
+&amp;#xNAN;<em>For the PGT variant, upside is replicated without IL on the upside (LP may still be part of collateral). For the Power PGT variant, the protocol allocates a defined share of upside accruals into a prize pool throughout the term.</em></li>
 <li><strong>Settle at maturity</strong> using a manipulation-resistant price input (e.g., 72-hour VWAP): holders receive the <strong>protection floor (paid in LP tokens) or the defined upside payoff</strong>, whichever is greater.</li>
 </ol>
+<h4 id="established-token-scenario-illustrative">Established-token scenario (illustrative).</h4>
+<p>A two-year-old token issues a 6-month Power PGT with a 50% floor to rekindle discovery ahead of a roadmap milestone. Proceeds pair with treasury tokens to collateralize and, as campaigns recur, compound deep, stable on-chain DEX liquidity. </p>
+<p>Throughout the term, a portion of upside accrual feeds the prize pool. At maturity, every participant receives at least the floor; winners receive additional upside from the pool—no drip emissions, no lingering sell pressure. </p>
+<p>The team reruns issuance quarterly, alternating between Growth and Power based on market conditions and campaign goals.</p>
 <h2 id="3-amm-agnostic-by-design">3) AMM-agnostic by design</h2>
-<p>D-Pros work alongside major constant-product AMMs (e.g., Uniswap, Balancer, Curve). Liquidity depth on the chosen venue is a <strong>by-product of issuance</strong>, not the product itself.</p>
+<p>PGTs work alongside major constant-product AMMs (e.g., Uniswap, Balancer, Curve). Liquidity depth on the chosen venue is the designed consequence of running PGT programs and can be tuned and compounded per campaign.</p>
 <hr></hr>
-<p><em>(For specifics on redemption, LP-token settlement, ≤75% protection, and the differences between Yield D-Pro and Growth D-Pro, see the Note Types and Downside Protection pages.)</em></p>
+<p><em>(For specifics on redemption, LP-token settlement, ≤75% protection, and the differences between the PGT  and Power PGT variants, see the Note Types and Protection pages.)</em></p>
 
                                 
                                 </section>
@@ -317,7 +335,7 @@ Because risk is subsidized, D-Pros provide a clear <strong>floor + upside</stron
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Exchequer Protocol Overview","level":"1.1","depth":1,"next":{"title":"Downside Protection","level":"2.1","depth":1,"path":"protocol-concepts/downside-protection.md","ref":"protocol-concepts/downside-protection.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2025-10-07T12:19:21.648Z","type":"markdown"},"gitbook":{"version":"6.0.3","time":"2025-10-07T12:19:29.287Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Exchequer Protocol Overview","level":"1.1","depth":1,"next":{"title":"Downside Protection","level":"2.1","depth":1,"path":"protocol-concepts/downside-protection.md","ref":"protocol-concepts/downside-protection.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2025-10-26T08:43:52.043Z","type":"markdown"},"gitbook":{"version":"6.0.3","time":"2025-10-26T08:44:02.267Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
