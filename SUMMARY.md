@@ -5,7 +5,7 @@
 ## Protocol Concepts
 
 * [Downside Protection](protocol-concepts/downside-protection.md)
-* [Downside Protected Note(s)](protocol-concepts/downside-protected-note-s.md)
+* [Exchequer Note(s)](protocol-concepts/exchequer-note-s.md)
 * [Redemption](protocol-concepts/redemption.md)
 
 ## Note Types
