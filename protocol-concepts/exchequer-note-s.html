@@ -3,7 +3,7 @@
 <html lang="" >
     <head>
         <meta charset="UTF-8">
-        <title>Downside Protected Note(s) · HonKit</title>
+        <title>Exchequer Note(s) · HonKit</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="HonKit 6.0.3">
@@ -121,12 +121,12 @@
             
         </li>
     
-        <li class="chapter active" data-level="2.2" data-path="downside-protected-note-s.html">
+        <li class="chapter active" data-level="2.2" data-path="exchequer-note-s.html">
             
-                <a href="downside-protected-note-s.html">
+                <a href="exchequer-note-s.html">
             
                     
-                    Downside Protected Note(s)
+                    Exchequer Note(s)
             
                 </a>
             
@@ -230,7 +230,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Downside Protected Note(s)</a>
+        <a href=".." >Exchequer Note(s)</a>
     </h1>
 </div>
 
@@ -245,13 +245,15 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="downside-protected-notes">Downside Protected Note(s)</h1>
-<p>Exchequer supports two note types. Both are ERC-20s with <strong>on-chain, transparent collateral</strong> and a <strong>downside protection floor at maturity</strong>. They differ in whether the buyer receives <strong>yield during the term</strong> and how <strong>upside</strong> is synthesized.</p>
-<h2 id="1-growth-downside-protected-note-growth-d-pro">1) Growth Downside-Protected Note (Growth D-Pro)</h2>
-<p>A Growth D-Pros delivers a <strong>protection floor (max 75%)</strong> plus <strong>upside participation</strong> during the term.  Returns (if any) are realized at <strong>settlement</strong> via the defined participation.</p>
+                                <h1 id="exchequer-notes">Exchequer Note(s)</h1>
+<p>Exchequer supports two note types. Both are ERC-20s with on-chain, transparent collateral and a downside protection floor at maturity.  They differ in how upside is delivered. \
+\
+Any already-launched token can issue these Exchequer Notes to run repeatable acquisition campaigns—think TGE magic without the sell pressure—while compounding deep, stable on-chain DEX liquidity as a designed consequence.</p>
+<h2 id="1-protected-growth-token-pgt">1) Protected Growth Token (PGT)</h2>
+<p>A PGT delivers a <strong>protection floor (max 75%)</strong> plus spot-equivalent <strong>upside</strong> during the term.  Returns (if any) are realized at <strong>settlement</strong> via the defined participation.</p>
 <h4 id="creation-mechanism">Creation Mechanism</h4>
 <ol>
-<li><strong>Issue Notes</strong> — Project sells Growth D-Pros to buyers (ERC-20).</li>
+<li><strong>Issue Notes</strong> — Project sells PGT to buyers (ERC-20).</li>
 <li><strong>Collateralize &amp; Replicate</strong> — Proceeds and treasury assets are posted on-chain to (a) <strong>fund the floor</strong>, and (b) <strong>replicate spot-like upside</strong> (no LP rebalancing).</li>
 <li><strong>LP</strong> — Project forms project-owned LP as part of the collateral plan.</li>
 <li><strong>Settle</strong> — At maturity, buyers receive <strong>the floor or the specified upside payoff</strong>, whichever is greater.</li>
@@ -265,24 +267,24 @@
 <li><strong>Issuer levers:</strong> term, floor level, participation rate, optional upside cap.</li>
 </ul>
 <p><strong>Typical fit:</strong> <strong>New-user acquisition</strong> and conviction holders who want <strong>clean “floor + upside”</strong> instead of yield; ideal when minimizing complexity and <strong>avoiding IL</strong> is paramount.</p>
-<h2 id="2-yield-downside-protected-note-yield-d-pro">2) Yield Downside-Protected Note (Yield D-Pro)</h2>
-<p>A Yield D-Pros represents a <strong>collateralized LP position with a protection floor</strong>. Buyers earn <strong>trading-fee yield</strong> during the term, and principal is protected <strong>up to a 75% drawdown</strong> at maturity via LP-token settlement. Upside comes via LP exposure and may experience <strong>impermanent loss relative to pure spot</strong> in strong rallies.</p>
+<h2 id="2-power-protected-growth-token-power-pgt">2) Power Protected Growth Token (Power PGT)</h2>
+<p>A Power PGT delivers a protection floor (max 75%) plus jackpot-style upside distribution using prize-linked mechanics. If the token appreciates, a defined share of upside accrual is pooled and distributed to winners by an on-chain, provably fair drawing at settlement; all holders receive at least the protection floor.</p>
 <h4 id="creation-mechanism">Creation Mechanism</h4>
 <ol>
-<li><strong>Issue Notes</strong> — Project sells Yield D-Pros to buyers (ERC-20).</li>
-<li><strong>Form LP</strong> — Proceeds are <strong>paired with treasury tokens</strong> to mint a <strong>project-owned LP position</strong> on the chosen AMM.</li>
-<li><strong>Accrue Yield</strong> — <strong>Trading fees</strong> generated by the LP accrue per the note’s terms.</li>
-<li><strong>Settle</strong> — At maturity, buyers receive the <strong>greater of</strong> the protection floor or the value defined by the LP exposure per terms.</li>
+<li><strong>Issue Notes</strong> — Project sells Power PGT to buyers (ERC-20).</li>
+<li><strong>Form LP</strong> — Proceeds and treasury assets are posted on-chain to (a) fund the floor, and (b) define the upside accrual that feeds a prize pool per program rules.</li>
+<li><strong>Prize Pool Accrual</strong> — Throughout the term, the protocol allocates a specified share of upside accrual into the on-chain prize pool.</li>
+<li><strong>Settle</strong> — At maturity, every holder receives at least the floor; the prize pool is distributed to winners via a transparent, on-chain drawing..</li>
 </ol>
 <h4 id="features">Features</h4>
 <ul>
-<li><strong>Partial downside protection (≤75% drawdown floor)</strong> settling in LP tokens.</li>
-<li><strong>Yield during the term</strong> from LP trading fees.</li>
-<li><strong>AMM-native liquidity</strong> as a by-product of issuance (deepens on-chain books).</li>
-<li><strong>Transparent, permissionless design</strong> (no CEX/MM retainers or token loans).</li>
-<li><strong>Issuer levers:</strong> term, floor level, AMM/pool selection, fee routing.</li>
+<li>Partial downside protection (≤75% drawdown floor) settling in LP tokens.</li>
+<li>Jackpot-style upside distribution adds event energy without long-tail emissions.</li>
+<li>Designed to galvanize dormant audiences while compounding stable on-chain DEX liquidity across campaigns.</li>
+<li>Transparent, permissionless construction (no CEX/MM retainers or token loans).</li>
+<li>Issuer levers: term, floor level, prize-pool share, weighting rules, participation/cap.</li>
 </ul>
-<p><strong>Typical fit:</strong> Yield-seeking users and teams that want to <strong>buy on-chain liquidity</strong> while avoiding opaque MM deals.</p>
+<p><strong>Typical fit:</strong> User-acquisition campaigns, roadmap moments, or seasonal programs where gamified upside with principal protection converts new cohorts.</p>
 
                                 
                                 </section>
@@ -326,7 +328,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Downside Protected Note(s)","level":"2.2","depth":1,"next":{"title":"Redemption","level":"2.3","depth":1,"path":"protocol-concepts/redemption.md","ref":"protocol-concepts/redemption.md","articles":[]},"previous":{"title":"Downside Protection","level":"2.1","depth":1,"path":"protocol-concepts/downside-protection.md","ref":"protocol-concepts/downside-protection.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"protocol-concepts/downside-protected-note-s.md","mtime":"2025-10-26T08:43:52.044Z","type":"markdown"},"gitbook":{"version":"6.0.3","time":"2025-10-26T08:44:02.267Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Exchequer Note(s)","level":"2.2","depth":1,"next":{"title":"Redemption","level":"2.3","depth":1,"path":"protocol-concepts/redemption.md","ref":"protocol-concepts/redemption.md","articles":[]},"previous":{"title":"Downside Protection","level":"2.1","depth":1,"path":"protocol-concepts/downside-protection.md","ref":"protocol-concepts/downside-protection.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"protocol-concepts/exchequer-note-s.md","mtime":"2025-10-26T09:12:41.209Z","type":"markdown"},"gitbook":{"version":"6.0.3","time":"2025-10-26T09:12:50.221Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
