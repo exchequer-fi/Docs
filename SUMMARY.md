@@ -10,8 +10,8 @@
 
 ## Note Types
 
-* [Growth D-Pro](note-types/growth-d-pro.md)
-* [Yield D-Pro](note-types/yield-d-pro.md)
+* [Protected Growth Token(PGT)](note-types/protected-growth-token-pgt.md)
+* [Power Protected Growth Token (Power PGT)](note-types/power-protected-growth-token-power-pgt.md)
 
 ## Research
 

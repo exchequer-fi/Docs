@@ -1,8 +1,8 @@
-# Growth D-Pro
+# Protected Growth Token(PGT)
 
 ## **Summary (TL;DR)**
 
-* Fixed-term ERC-20 note with a downside floor (max 75% drawdown) and spot-equivalent upside participation.
+* Fixed-term ERC-20 Exchequer note with a downside floor (max 75% drawdown) and spot-equivalent upside participation.
 * **No coupon/yield** during the term; all value settles at maturity.
 * **No impermanent loss on the upside** — upside is delivered from a **reserved token tranche**, not from LP rebalancing.
 * **Protection settles in LP tokens** at maturity using a **72‑hour VWAP** to determine settlement amounts.
@@ -15,12 +15,19 @@
 
 ## What it is
 
-A Growth D-Pro gives buyers a defined principal floor at maturity (capped at a 75% drawdown) and **linear, spot-equivalent** upside without the rebalancing drag of AMM LPs. Issuance and collateralization are entirely on-chain, with transparent parameters and auditable collateral.
+A PGT gives buyers a defined principal floor at maturity (capped at a 75% drawdown) and **linear, spot-equivalent** upside without the rebalancing drag of AMM LPs. Issuance and collateralization are entirely on-chain, with transparent parameters and auditable collateral. &#x20;
+
+For already-launched tokens, it enables repeatable, time-boxed campaigns—think TGE magic without the sell pressure—that reignite attention and acquisition while compounding deep, stable on-chain DEX liquidity as a designed consequence.
 
 ## Who it’s for
 
-* Users who want a simple **“floor + linear upside”** payoff rather than mid-term yield.
-* Projects that want to deepen on-chain DEX liquidity without opaque MM/CEX deals — while keeping upside payments outside LP to avoid IL.
+* **Issuers (projects & treasuries)**.&#x20;
+  * Best for clean, easy-to-explain “floor + upside” campaigns that convert cautious users and conviction holders without emissions. Predictable risk budget (term, floor ≤75%, participation/cap).&#x20;
+  * Ideal around roadmap moments where clarity beats spectacle. Avoids IL on the upside; each cycle compounds deep, stable on-chain DEX liquidity as a designed outcome.
+* **Buyers (allocators & users)**.&#x20;
+  * Long-term believers and funds who prefer defined exposure with linear upside and a stated worst-case at maturity.&#x20;
+  * Suitable for larger tickets newcomers who want a simple, auditable payoff.&#x20;
+  * High signal for wallets sizing into positions with an explicit drawdown limit.
 
 ***
 
@@ -35,12 +42,13 @@ A Growth D-Pro gives buyers a defined principal floor at maturity (capped at a 7
   * **Upside** is delivered from the **reserved TOKEN** based on the 72-hour VWAP.
 * **Price measure:** 72-hour VWAP ending at the maturity timestamp to reduce manipulation risk.
 * **Collateral structure:** Two token tranches from treasury: **(A) LP tranche** to pair with buyer USDC, **(B) Reserve tranche** to fund upside.
+* **Liquidity outcome:** Each note adds to deep, stable on-chain DEX liquidity as a designed, cumulative consequence of the collateral plan.
 
 ***
 
 ## Creation Mechanism
 
-1. **Issue Notes (ERC-20).** Project publishes terms and sells Growth D-Pro to buyers.
+1. **Issue Notes (ERC-20).** Project publishes terms and sells PGT to buyers.
 2. **Form LP for the floor (Tranche A).** Pair buyer **USDC 1:1 with TOKEN** to create project-owned LP that funds the floor.
 3. **Set aside a reserved token tranche for upside (Tranche B).** Hold an **equal-sized TOKEN batch** off-LP to deliver **spot-equivalent upside** at maturity (participation per terms). This avoids upside IL because the upside isn’t sourced from a rebalancing LP.
 4. **On-chain escrow.** LP and reserve tokens are locked in protocol contracts, fully auditable.
