@@ -3,7 +3,7 @@
 <html lang="" >
     <head>
         <meta charset="UTF-8">
-        <title>Growth D-Pro · HonKit</title>
+        <title>Protected Growth Token(PGT) · HonKit</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="HonKit 6.0.3">
@@ -56,7 +56,7 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="yield-d-pro.html" />
+    <link rel="next" href="power-protected-growth-token-power-pgt.html" />
     
     
     <link rel="prev" href="../protocol-concepts/redemption.html" />
@@ -154,12 +154,12 @@
         
         
     
-        <li class="chapter active" data-level="3.1" data-path="growth-d-pro.html">
+        <li class="chapter active" data-level="3.1" data-path="protected-growth-token-pgt.html">
             
-                <a href="growth-d-pro.html">
+                <a href="protected-growth-token-pgt.html">
             
                     
-                    Growth D-Pro
+                    Protected Growth Token(PGT)
             
                 </a>
             
@@ -167,12 +167,12 @@
             
         </li>
     
-        <li class="chapter " data-level="3.2" data-path="yield-d-pro.html">
+        <li class="chapter " data-level="3.2" data-path="power-protected-growth-token-power-pgt.html">
             
-                <a href="yield-d-pro.html">
+                <a href="power-protected-growth-token-power-pgt.html">
             
                     
-                    Yield D-Pro
+                    Power Protected Growth Token (Power PGT)
             
                 </a>
             
@@ -230,7 +230,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Growth D-Pro</a>
+        <a href=".." >Protected Growth Token(PGT)</a>
     </h1>
 </div>
 
@@ -245,10 +245,10 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="growth-d-pro">Growth D-Pro</h1>
+                                <h1 id="protected-growth-tokenpgt">Protected Growth Token(PGT)</h1>
 <h2 id="summary-tldr"><strong>Summary (TL;DR)</strong></h2>
 <ul>
-<li>Fixed-term ERC-20 note with a downside floor (max 75% drawdown) and spot-equivalent upside participation.</li>
+<li>Fixed-term ERC-20 Exchequer note with a downside floor (max 75% drawdown) and spot-equivalent upside participation.</li>
 <li><strong>No coupon/yield</strong> during the term; all value settles at maturity.</li>
 <li><strong>No impermanent loss on the upside</strong> — upside is delivered from a <strong>reserved token tranche</strong>, not from LP rebalancing.</li>
 <li><strong>Protection settles in LP tokens</strong> at maturity using a <strong>72‑hour VWAP</strong> to determine settlement amounts.</li>
@@ -261,11 +261,21 @@
 </ul>
 <hr></hr>
 <h2 id="what-it-is">What it is</h2>
-<p>A Growth D-Pro gives buyers a defined principal floor at maturity (capped at a 75% drawdown) and <strong>linear, spot-equivalent</strong> upside without the rebalancing drag of AMM LPs. Issuance and collateralization are entirely on-chain, with transparent parameters and auditable collateral.</p>
+<p>A PGT gives buyers a defined principal floor at maturity (capped at a 75% drawdown) and <strong>linear, spot-equivalent</strong> upside without the rebalancing drag of AMM LPs. Issuance and collateralization are entirely on-chain, with transparent parameters and auditable collateral.  </p>
+<p>For already-launched tokens, it enables repeatable, time-boxed campaigns—think TGE magic without the sell pressure—that reignite attention and acquisition while compounding deep, stable on-chain DEX liquidity as a designed consequence.</p>
 <h2 id="who-its-for">Who it’s for</h2>
 <ul>
-<li>Users who want a simple <strong>“floor + linear upside”</strong> payoff rather than mid-term yield.</li>
-<li>Projects that want to deepen on-chain DEX liquidity without opaque MM/CEX deals — while keeping upside payments outside LP to avoid IL.</li>
+<li><strong>Issuers (projects &amp; treasuries)</strong>. <ul>
+<li>Best for clean, easy-to-explain “floor + upside” campaigns that convert cautious users and conviction holders without emissions. Predictable risk budget (term, floor ≤75%, participation/cap). </li>
+<li>Ideal around roadmap moments where clarity beats spectacle. Avoids IL on the upside; each cycle compounds deep, stable on-chain DEX liquidity as a designed outcome.</li>
+</ul>
+</li>
+<li><strong>Buyers (allocators &amp; users)</strong>. <ul>
+<li>Long-term believers and funds who prefer defined exposure with linear upside and a stated worst-case at maturity. </li>
+<li>Suitable for larger tickets newcomers who want a simple, auditable payoff. </li>
+<li>High signal for wallets sizing into positions with an explicit drawdown limit.</li>
+</ul>
+</li>
 </ul>
 <hr></hr>
 <h2 id="key-properties">Key Properties</h2>
@@ -281,11 +291,12 @@
 </li>
 <li><strong>Price measure:</strong> 72-hour VWAP ending at the maturity timestamp to reduce manipulation risk.</li>
 <li><strong>Collateral structure:</strong> Two token tranches from treasury: <strong>(A) LP tranche</strong> to pair with buyer USDC, <strong>(B) Reserve tranche</strong> to fund upside.</li>
+<li><strong>Liquidity outcome:</strong> Each note adds to deep, stable on-chain DEX liquidity as a designed, cumulative consequence of the collateral plan.</li>
 </ul>
 <hr></hr>
 <h2 id="creation-mechanism">Creation Mechanism</h2>
 <ol>
-<li><strong>Issue Notes (ERC-20).</strong> Project publishes terms and sells Growth D-Pro to buyers.</li>
+<li><strong>Issue Notes (ERC-20).</strong> Project publishes terms and sells PGT to buyers.</li>
 <li><strong>Form LP for the floor (Tranche A).</strong> Pair buyer <strong>USDC 1:1 with TOKEN</strong> to create project-owned LP that funds the floor.</li>
 <li><strong>Set aside a reserved token tranche for upside (Tranche B).</strong> Hold an <strong>equal-sized TOKEN batch</strong> off-LP to deliver <strong>spot-equivalent upside</strong> at maturity (participation per terms). This avoids upside IL because the upside isn’t sourced from a rebalancing LP.</li>
 <li><strong>On-chain escrow.</strong> LP and reserve tokens are locked in protocol contracts, fully auditable.</li>
@@ -406,7 +417,7 @@ LP value ≈ <strong>$63.2</strong>.</p>
                 </a>
                 
                 
-                <a href="yield-d-pro.html" class="navigation navigation-next " aria-label="Next page: Yield D-Pro">
+                <a href="power-protected-growth-token-power-pgt.html" class="navigation navigation-next " aria-label="Next page: Power Protected Growth Token (Power PGT)">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -417,7 +428,7 @@ LP value ≈ <strong>$63.2</strong>.</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Growth D-Pro","level":"3.1","depth":1,"next":{"title":"Yield D-Pro","level":"3.2","depth":1,"path":"note-types/yield-d-pro.md","ref":"note-types/yield-d-pro.md","articles":[]},"previous":{"title":"Redemption","level":"2.3","depth":1,"path":"protocol-concepts/redemption.md","ref":"protocol-concepts/redemption.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"note-types/growth-d-pro.md","mtime":"2025-10-26T09:12:41.208Z","type":"markdown"},"gitbook":{"version":"6.0.3","time":"2025-10-26T09:12:50.221Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Protected Growth Token(PGT)","level":"3.1","depth":1,"next":{"title":"Power Protected Growth Token (Power PGT)","level":"3.2","depth":1,"path":"note-types/power-protected-growth-token-power-pgt.md","ref":"note-types/power-protected-growth-token-power-pgt.md","articles":[]},"previous":{"title":"Redemption","level":"2.3","depth":1,"path":"protocol-concepts/redemption.md","ref":"protocol-concepts/redemption.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"note-types/protected-growth-token-pgt.md","mtime":"2025-10-27T02:43:32.253Z","type":"markdown"},"gitbook":{"version":"6.0.3","time":"2025-10-27T02:43:37.445Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

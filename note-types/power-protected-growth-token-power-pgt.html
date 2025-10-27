@@ -1,0 +1,534 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Power Protected Growth Token (Power PGT) · HonKit</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 6.0.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/@honkit/honkit-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../research/whitepapers.html" />
+    
+    
+    <link rel="prev" href="protected-growth-token-pgt.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Exchequer Protocol Overview
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">Protocol Concepts</li>
+        
+        
+    
+        <li class="chapter " data-level="2.1" data-path="../protocol-concepts/downside-protection.html">
+            
+                <a href="../protocol-concepts/downside-protection.html">
+            
+                    
+                    Downside Protection
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="../protocol-concepts/exchequer-note-s.html">
+            
+                <a href="../protocol-concepts/exchequer-note-s.html">
+            
+                    
+                    Exchequer Note(s)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="../protocol-concepts/redemption.html">
+            
+                <a href="../protocol-concepts/redemption.html">
+            
+                    
+                    Redemption
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">Note Types</li>
+        
+        
+    
+        <li class="chapter " data-level="3.1" data-path="protected-growth-token-pgt.html">
+            
+                <a href="protected-growth-token-pgt.html">
+            
+                    
+                    Protected Growth Token(PGT)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="3.2" data-path="power-protected-growth-token-power-pgt.html">
+            
+                <a href="power-protected-growth-token-power-pgt.html">
+            
+                    
+                    Power Protected Growth Token (Power PGT)
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">Research</li>
+        
+        
+    
+        <li class="chapter " data-level="4.1" data-path="../research/whitepapers.html">
+            
+                <a href="../research/whitepapers.html">
+            
+                    
+                    Whitepapers
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Power Protected Growth Token (Power PGT)</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="power-protected-growth-token-power-pgt">Power Protected Growth Token (Power PGT)</h1>
+<h2 id="summary-tldr"><strong>Summary (TL;DR)</strong></h2>
+<ul>
+<li>Fixed-term ERC-20 Exchequer Note with a downside floor (max 75% drawdown) and prize-linked upside.</li>
+<li>At maturity, upside (if any) is split between (i) a baseline pro-rata upside paid to all holders and (ii) a configurable prize pool distributed by a provably fair on-chain drawing across 5 reward tiers.</li>
+<li>Top tier can pay up to a 10,000× tier multiplier of the unit prize (see Reward Tiers); every holder still receives at least the protection floor.</li>
+<li>Protection settles in LP tokens at maturity using a 72-hour VWAP to determine settlement amounts.</li>
+<li>Designed for already-launched tokens to run repeatable, time-boxed campaigns—think TGE magic without the sell pressure—while compounding deep, stable on-chain DEX liquidity as a deliberate, cumulative outcome.</li>
+</ul>
+<hr></hr>
+<h3 id="what-it-is">What it is</h3>
+<p>A Power PGT gives buyers a defined principal floor at maturity (capped at a 75% drawdown) and converts upside into two pieces: a baseline pro-rata upside for all holders and a jackpot-style prize pool paid to randomly selected winners across 5 tiers, with the highest tier using a 10,000× multiplier of the series’ unit prize. </p>
+<p>Issuance, collateralization, and drawings are on-chain and auditable. For established tokens, Power PGTs add event energy and net-new user acquisition without perpetual emissions, while each campaign deepens and stabilizes on-chain DEX liquidity.</p>
+<h4 id="who-its-for"><strong>Who it’s for</strong></h4>
+<ul>
+<li><strong>Issuers (projects &amp; treasuries)</strong>: <ul>
+<li>Best when the goal is event energy and net-new user acquisition</li>
+<li>Galvanize dormant audiences while keeping a capped, budgetable risk profile. Each cycle still compounds deep, stable on-chain DEX liquidity.</li>
+</ul>
+</li>
+<li><strong>Buyers (allocators &amp; users):</strong> <ul>
+<li>Participants who value a clear floor plus lottery-like upside. </li>
+<li>Great for community campaigns, smaller tickets, and attention-driven cohorts that respond to jackpots—while still protecting principal at maturity.</li>
+</ul>
+</li>
+</ul>
+<hr></hr>
+<h3 id="key-properties">Key Properties</h3>
+<ul>
+<li><strong>Term:</strong> Fixed maturity date (e.g., 3–12 months). Protection applies <strong>only at maturity</strong>.</li>
+<li><strong>Protection:</strong> Partial, up to <strong>75% drawdown</strong>. If the token is down <strong>≤ 75%</strong> at maturity, the holder redeems <strong>LP tokens worth the original principal</strong>. If the drawdown <strong>exceeds 75%</strong>, the holder bears losses beyond the floor but is still <strong>strictly better off than unprotected spot</strong> over the same move.</li>
+<li><strong>Upside:</strong> Split at maturity:<ul>
+<li>Baseline pro-rata upside to all holders, and</li>
+<li>Prize pool upside distributed by on-chain drawing across 5 reward tiers (top tier uses a 10,000× multiplier of the unit prize).</li>
+</ul>
+</li>
+<li><strong>Settlement asset:</strong> <ul>
+<li>Floor pays in LP tokens backed by on-chain collateral (holder may withdraw to constituents).</li>
+<li>Baseline upside and prize payouts settle in TOKEN.</li>
+</ul>
+</li>
+<li><strong>Price measure:</strong> <strong>72‑hour VWAP</strong> ending at the maturity timestamp to reduce manipulation risk.</li>
+<li><strong>Collateral structure:</strong> Two token tranches from treasury: <strong>(A) LP tranche</strong> to pair with buyer USDC, <strong>(B) Reserve tranche</strong> to fund upside.</li>
+<li><strong>Liquidity outcome:</strong> Each note adds to deep, stable on-chain DEX liquidity as a designed, cumulative consequence of the collateral plan.</li>
+</ul>
+<hr></hr>
+<h3 id="creation-mechanism">Creation Mechanism</h3>
+<ol>
+<li><strong>Issue Notes (ERC‑20).</strong> Project publishes terms and sells Power PGT to buyers.</li>
+<li><strong>Form LP</strong> for the floor. Pair buyer stablecoins/ETH with treasury tokens to create project-owned LP that funds the floor (on-chain escrow).</li>
+<li><strong>Define upside split.</strong> Specify the prize-pool shares (0–100%) of upside accrual and the baseline share (1−s); set reward tiers, multipliers, winner counts, and weighting rules.</li>
+<li><strong>Post Collateral.</strong> LP tokens are escrowed on‑chain to <strong>back the floor</strong>.</li>
+<li><strong>Accrue Rewards during the term.</strong> As price appreciation accumulates relative to the reference, the protocol accounts for baseline upside and allocates s·(upside) to the prize pool per the published rules.</li>
+<li><strong>Settle at Maturity.</strong> Use the 72-hour VWAP to determine drawdown (for floor) and realized upside (for baseline + prize pool). Run the on-chain drawing and pay winners; all holders receive at least the floor.</li>
+</ol>
+<hr></hr>
+<h3 id="configurable-parameters-issuer-knobs">Configurable Parameters (Issuer “knobs”)</h3>
+<ul>
+<li><strong>Term</strong> (date/time)</li>
+<li><strong>Protection floor</strong> (any value <strong>up to</strong> the 75% drawdown limit)</li>
+<li><strong>Upside split: prize-pool share s and baseline share (1−s)</strong></li>
+<li><strong>Reward tiers: multipliers, number of winners per tier, tier weights</strong></li>
+<li><strong>Participation/cap rules for total upside accrual</strong></li>
+<li>AMM/pool selection for LP tranche</li>
+</ul>
+<hr></hr>
+<h3 id="payoff-logic-at-maturity">Payoff Logic at Maturity</h3>
+<p>Let P₀ be the reference price (at issuance or per terms) and Pₘ the 72-hour VWAP immediately prior to maturity.</p>
+<p><strong>A) Token up or flat (Pm ≥ P0)</strong></p>
+<ol>
+<li>Baseline pro-rata upside: Each holder receives (1−s) × UpsideParticipation × Notional × max(0, (Pₘ−P₀)/P₀), allocated pro-rata.</li>
+<li>Prize pool: s × UpsideParticipation × Notional × max(0, (Pₘ−P₀)/P₀) × (TotalNotional) funds the pool. The on-chain drawing assigns winners across 5 tiers and pays each winner TierMultiplier × UnitPrize (see Reward Tiers; total paid is capped by the pool).</li>
+<li>Floor is not used (token did not draw down beyond the floor).</li>
+</ol>
+<p>B) Token down, drawdown <strong>≤ 75%</strong></p>
+<ul>
+<li><strong>Full principal protection.</strong> Holder redeems <strong>LP tokens worth the original principal</strong> (paid in LP), regardless of the exact LP value.</li>
+</ul>
+<p>C) Token down, drawdown <strong>&gt; 75%</strong></p>
+<ul>
+<li><strong>Protection capped.</strong> Holder redeems <strong>LP tokens per the protection schedule</strong>; any loss beyond the 75% floor is borne by the holder. Outcome remains <strong>strictly better than unprotected spot</strong> over the same move.</li>
+</ul>
+<blockquote>
+<p>Protection reassigns tail risk from buyer to issuer and is funded by the escrowed LP collateral. It does not create free money.</p>
+</blockquote>
+<hr></hr>
+<h3 id="reward-tiers-5-tier-structure-with-10000×-top-multiplier">Reward Tiers (5-tier structure with 10,000× top multiplier)</h3>
+<p>Tier multipliers scale a “unit prize” u so that the sum of all tier payouts does not exceed the prize pool. Let nᵢ be the number of winners and mᵢ the multiplier for tier i. The protocol computes:</p>
+<p>u = PrizePool / (Σᵢ nᵢ·mᵢ)</p>
+<p>Each winner in tier i receives payout = mᵢ · u (paid in the series’ payout asset).\
+Example multipliers and counts (illustrative; issuers configure these):</p>
+<p>• Tier 1 — Jackpot: m₁ = 10,000×, n₁ = 1\
+• Tier 2 — Major: m₂ = 1,000×, n₂ = 5\
+• Tier 3 — Large: m₃ = 100×, n₃ = 50\
+• Tier 4 — Medium: m₄ = 10×, n₄ = 200\
+• Tier 5 — Starter: m₅ = 2×, n₅ = 500</p>
+<h3 id="numerical-walkthrough-illustrative">Numerical Walkthrough (illustrative)</h3>
+<h4 id="setup">Setup</h4>
+<ul>
+<li>Notes sold: <strong>100,000</strong></li>
+<li>Price per note: <strong>100 USDC</strong></li>
+<li>Token starts at <strong>$1.00</strong> and ends at <strong>$1.80</strong> at maturity (<strong>+80%</strong>)</li>
+<li>Participation: <strong>100%</strong></li>
+<li>Floor: <strong>50%</strong> (you’re protected against drawdowns up to 75%)</li>
+<li>Five reward tiers (more than one winner at every tier):<ul>
+<li>Tier 1 (Jackpot): <strong>1</strong> winner × <strong>10,000×</strong></li>
+<li>Tier 2 (Major): <strong>20</strong> winners × <strong>1,000×</strong></li>
+<li>Tier 3 (Large): <strong>200</strong> winners × <strong>100×</strong></li>
+<li>Tier 4 (Medium): <strong>2,500</strong> winners × <strong>10×</strong></li>
+<li>Tier 5 (Starter): <strong>12,500</strong> winners × <strong>2×</strong></li>
+</ul>
+</li>
+</ul>
+<p>Total upside created by the rally</p>
+<ul>
+<li>Total notional = 100,000 notes × 100 USDC = <strong>10,000,000 USDC</strong></li>
+<li>Upside from price move = <strong>10,000,000 × 80% = 8,000,000 USDC</strong></li>
+</ul>
+<h4 id="option-a-—-100-prize-pool-no-baseline-payout">Option A — 100% prize pool (no baseline payout)</h4>
+<p>All of the <strong>8,000,000 USDC</strong> goes to the prize pool.</p>
+<ul>
+<li>Because the tier multipliers and winner counts add up neatly, the <strong>base prize</strong> works out to <strong>80 USDC</strong>.</li>
+<li>Each tier pays a multiple of that base prize:</li>
+</ul>
+<p>Per-winner prizes</p>
+<ul>
+<li><strong>Tier 1:</strong> 10,000 × 80 = <strong>800,000 USDC</strong> (1 winner)</li>
+<li><strong>Tier 2:</strong> 1,000 × 80 = <strong>80,000 USDC</strong> (20 winners)</li>
+<li><strong>Tier 3:</strong> 100 × 80 = <strong>8,000 USDC</strong> (200 winners)</li>
+<li><strong>Tier 4:</strong> 10 × 80 = <strong>800 USDC</strong> (2,500 winners)</li>
+<li><strong>Tier 5:</strong> 2 × 80 = <strong>160 USDC</strong> (12,500 winners)</li>
+</ul>
+<p>Sanity check: those payouts add up to the full <strong>8,000,000 USDC</strong> pool.\
+Key takeaway: a jackpot winner turns a <strong>100 USDC</strong> note into <strong>800,000 USDC</strong> (that’s the <strong>10,000×</strong> headline, scaled by the <strong>+80%</strong> rally).</p>
+<h4 id="option-b-—-50-prize-pool-50-baseline-everyone-gets-something">Option B — 50% prize pool, 50% baseline (everyone gets something)</h4>
+<p>Split the <strong>8,000,000 USDC</strong> upside evenly:</p>
+<ul>
+<li><strong>4,000,000 USDC</strong> → prize pool</li>
+<li><strong>4,000,000 USDC</strong> → baseline paid to <strong>everyone</strong></li>
+</ul>
+<p>Baseline (everyone):</p>
+<ul>
+<li>4,000,000 / 100,000 notes = <strong>40 USDC per note</strong></li>
+</ul>
+<p>Prize pool:</p>
+<ul>
+<li>New <strong>base prize</strong> is <strong>40 USDC</strong> (half of Option A because the pool is half as big)</li>
+</ul>
+<p>Per-winner prizes</p>
+<ul>
+<li><strong>Tier 1:</strong> 10,000 × 40 = <strong>400,000 USDC</strong> (1 winner)</li>
+<li><strong>Tier 2:</strong> 1,000 × 40 = <strong>40,000 USDC</strong> (20 winners)</li>
+<li><strong>Tier 3:</strong> 100 × 40 = <strong>4,000 USDC</strong> (200 winners)</li>
+<li><strong>Tier 4:</strong> 10 × 40 = <strong>400 USDC</strong> (2,500 winners)</li>
+<li><strong>Tier 5:</strong> 2 × 40 = <strong>80 USDC</strong> (12,500 winners)</li>
+</ul>
+<p>Sanity check: those prizes total <strong>4,000,000 USDC</strong>, and the other <strong>4,000,000 USDC</strong> is the <strong>40 USDC</strong> baseline to every note.\
+Key takeaway: the jackpot still maps cleanly to the <strong>10,000×</strong> headline scaled by the <strong>+80%</strong> rally and <strong>50%</strong> pool share → <strong>400,000 USDC</strong> on a 100 USDC note, while non-winners still collect the <strong>40 USDC</strong> baseline.</p>
+<hr></hr>
+<h3 id="risks--considerations">Risks &amp; Considerations</h3>
+<ul>
+<li>Residual tail risk: Losses beyond the 75% floor are borne by the holder.</li>
+<li>Prize variability: Prize outcomes are stochastic; expected value equals the configured share s of upside, but individual results vary. Realizing the full 10,000× top-tier payout requires a sufficiently large prize pool as shown above.</li>
+<li>Weighting &amp; fairness: Drawing uses published, auditable rules (e.g., stake/time weighting) and a provably fair randomness source; ensure users understand eligibility criteria.</li>
+<li>Smart-contract risk: Contracts are immutable/audited, but risk ≠ 0.</li>
+<li>Liquidity &amp; slippage: AMM/pool depth affects realized unwind when burning LP.</li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="protected-growth-token-pgt.html" class="navigation navigation-prev " aria-label="Previous page: Protected Growth Token(PGT)">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../research/whitepapers.html" class="navigation navigation-next " aria-label="Next page: Whitepapers">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Power Protected Growth Token (Power PGT)","level":"3.2","depth":1,"next":{"title":"Whitepapers","level":"4.1","depth":1,"path":"research/whitepapers.md","ref":"research/whitepapers.md","articles":[]},"previous":{"title":"Protected Growth Token(PGT)","level":"3.1","depth":1,"path":"note-types/protected-growth-token-pgt.md","ref":"note-types/protected-growth-token-pgt.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"note-types/power-protected-growth-token-power-pgt.md","mtime":"2025-10-27T02:43:32.253Z","type":"markdown"},"gitbook":{"version":"6.0.3","time":"2025-10-27T02:43:37.445Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/@honkit/honkit-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
