@@ -6,116 +6,273 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="Exchequer Finance Documentation">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+  <!-- Inter + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Docsify base theme -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+
   <style>
     /* ── Light theme ── */
     :root {
       --theme-color: #522D80;
-      --sidebar-nav-link-color: #030A27;
-      --sidebar-nav-link-color--active: #2563EB;
+      --sidebar-nav-link-color: #374151;
+      --sidebar-nav-link-color--active: #522D80;
       --sidebar-nav-link-font-weight--active: 600;
-      --doc-bg: #fff;
-      --doc-text: #2c3e50;
-      --doc-heading: #030A27;
+
+      --doc-bg: #ffffff;
+      --doc-text: #374151;
+      --doc-heading: #111827;
       --doc-link: #2563EB;
-      --doc-sidebar-bg: #F9FAFB;
-      --doc-sidebar-border: #e8e8e8;
-      --doc-code-bg: #f8f8f8;
-      --doc-border: #eee;
-      --doc-blockquote: #858585;
-      --doc-table-head-bg: #f8f8f8;
-      --doc-search-bg: #fff;
-      --doc-toggle-bg: transparent;
-      --doc-toggle-color: #6b7280;
+      --doc-sidebar-bg: #fafafa;
+      --doc-sidebar-border: #f0f0f0;
+      --doc-code-bg: #f6f8fa;
+      --doc-code-text: #1f2937;
+      --doc-border: #e5e7eb;
+      --doc-muted: #6b7280;
+      --doc-table-head-bg: #f9fafb;
     }
 
     /* ── Dark theme ── */
     html[data-theme="dark"] {
-      --theme-color: #7c4dbd;
-      --sidebar-nav-link-color: #c4c8d8;
-      --sidebar-nav-link-color--active: #9b6dd7;
-      --doc-bg: #0f1117;
-      --doc-text: #c4c8d8;
-      --doc-heading: #e4e5e9;
-      --doc-link: #9b6dd7;
-      --doc-sidebar-bg: #12131f;
-      --doc-sidebar-border: #1e2035;
-      --doc-code-bg: #1a1b2e;
-      --doc-border: #2e3044;
-      --doc-blockquote: #8b8fa3;
-      --doc-table-head-bg: #1a1b2e;
-      --doc-search-bg: #1a1b2e;
-      --doc-toggle-bg: rgba(255,255,255,0.05);
-      --doc-toggle-color: #c4c8d8;
+      --theme-color: #a78bfa;
+      --sidebar-nav-link-color: #d1d5db;
+      --sidebar-nav-link-color--active: #a78bfa;
+
+      --doc-bg: #0d1117;
+      --doc-text: #d1d5db;
+      --doc-heading: #f0f6fc;
+      --doc-link: #a78bfa;
+      --doc-sidebar-bg: #010409;
+      --doc-sidebar-border: #21262d;
+      --doc-code-bg: #161b22;
+      --doc-code-text: #d1d5db;
+      --doc-border: #21262d;
+      --doc-muted: #8b949e;
+      --doc-table-head-bg: #161b22;
     }
 
-    body { transition: background 0.3s; }
+    /* ── Base ── */
+    * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
-    .app-name-link img { max-width: 150px; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--doc-bg);
+      color: var(--doc-text);
+      transition: background 0.2s, color 0.2s;
+    }
 
-    /* Sidebar */
-    .sidebar { background-color: var(--doc-sidebar-bg) !important; border-right-color: var(--doc-sidebar-border) !important; transition: background-color 0.3s; }
-    body .sidebar-nav li a { color: var(--sidebar-nav-link-color); }
-    body .sidebar-nav li a:hover, body .sidebar-nav li a.active { color: var(--sidebar-nav-link-color--active); }
+    /* ── Sidebar ── */
+    .sidebar {
+      background: var(--doc-sidebar-bg) !important;
+      border-right: 1px solid var(--doc-sidebar-border) !important;
+      transition: background 0.2s;
+    }
 
-    /* Main content */
-    .content, .markdown-section { background: var(--doc-bg) !important; color: var(--doc-text) !important; transition: background 0.3s, color 0.3s; }
-    .markdown-section h1, .markdown-section h2, .markdown-section h3, .markdown-section h4 { color: var(--doc-heading) !important; }
-    .markdown-section a { color: var(--doc-link) !important; }
-    .markdown-section a:hover { color: var(--theme-color) !important; }
-    .markdown-section code { background: var(--doc-code-bg) !important; color: var(--doc-text) !important; }
-    .markdown-section pre { background: var(--doc-code-bg) !important; }
-    .markdown-section pre > code { color: var(--doc-text) !important; }
-    .markdown-section blockquote { border-left-color: var(--theme-color) !important; color: var(--doc-blockquote) !important; }
-    .markdown-section table th { background: var(--doc-table-head-bg) !important; }
-    .markdown-section table td, .markdown-section table th { border-color: var(--doc-border) !important; color: var(--doc-text) !important; }
-    .markdown-section hr { border-color: var(--doc-border) !important; }
+    .sidebar .app-name-link img { max-width: 130px; margin: 12px 0 4px; }
+    .sidebar-nav { font-size: 14px; line-height: 1.5; }
+    body .sidebar-nav li a { color: var(--sidebar-nav-link-color); transition: color 0.15s; }
+    body .sidebar-nav li a:hover,
+    body .sidebar-nav li a.active { color: var(--sidebar-nav-link-color--active); }
 
-    /* Search */
-    .search { border-color: var(--doc-border) !important; }
-    .search input { background: var(--doc-search-bg) !important; color: var(--doc-text) !important; border-color: var(--doc-border) !important; }
-    .search .matching-post { border-bottom-color: var(--doc-border) !important; }
-    .search .matching-post p { color: var(--doc-text) !important; }
+    .sidebar .search input {
+      font-family: 'Inter', sans-serif !important;
+      font-size: 14px !important;
+      background: var(--doc-bg) !important;
+      color: var(--doc-text) !important;
+      border: 1px solid var(--doc-border) !important;
+      border-radius: 6px !important;
+      padding: 8px 12px !important;
+    }
+    .sidebar .search input:focus { border-color: var(--theme-color) !important; outline: none; }
+    .sidebar .search .matching-post { border-bottom: 1px solid var(--doc-border) !important; }
+    .sidebar .search .matching-post p { color: var(--doc-text) !important; }
 
-    /* Pagination */
-    .docsify-pagination-container { border-top-color: var(--doc-border) !important; color: var(--doc-text) !important; }
+    /* ── Content area ── */
+    .content, .markdown-section {
+      background: var(--doc-bg) !important;
+      color: var(--doc-text) !important;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .markdown-section {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+      max-width: 800px;
+      padding: 32px 40px 48px !important;
+    }
+
+    /* ── Headings – clean, no bottom borders ── */
+    .markdown-section h1,
+    .markdown-section h2,
+    .markdown-section h3,
+    .markdown-section h4 {
+      font-family: 'Inter', sans-serif;
+      color: var(--doc-heading) !important;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+    }
+
+    .markdown-section h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      margin: 0 0 1.5rem;
+      border-bottom: none !important;
+    }
+
+    .markdown-section h2 {
+      font-size: 1.375rem;
+      font-weight: 600;
+      margin: 2.5rem 0 0.75rem;
+      border-bottom: none !important;
+    }
+
+    .markdown-section h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 2rem 0 0.5rem;
+    }
+
+    .markdown-section h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    /* ── Paragraphs ── */
+    .markdown-section p {
+      margin: 0 0 1.25rem;
+    }
+
+    /* ── Links ── */
+    .markdown-section a { color: var(--doc-link) !important; text-decoration: none; }
+    .markdown-section a:hover { text-decoration: underline; }
+
+    /* ── Bold text stays body color ── */
+    .markdown-section strong { font-weight: 600; color: var(--doc-heading) !important; }
+
+    /* ── Lists ── */
+    .markdown-section ul, .markdown-section ol { padding-left: 1.5em; margin: 0 0 1.25rem; }
+    .markdown-section li { margin: 0.35em 0; line-height: 1.75; }
+
+    /* ── Inline code ── */
+    .markdown-section code {
+      font-family: 'JetBrains Mono', 'Menlo', 'Consolas', monospace !important;
+      font-size: 0.85em !important;
+      background: var(--doc-code-bg) !important;
+      color: var(--doc-code-text) !important;
+      border: none !important;
+      border-radius: 4px !important;
+      padding: 0.2em 0.4em !important;
+    }
+
+    /* ── Code blocks ── */
+    .markdown-section pre {
+      background: var(--doc-code-bg) !important;
+      border: 1px solid var(--doc-border) !important;
+      border-radius: 6px !important;
+      padding: 16px 20px !important;
+      margin: 1.25rem 0 !important;
+      line-height: 1.55;
+    }
+
+    .markdown-section pre > code {
+      font-family: 'JetBrains Mono', 'Menlo', 'Consolas', monospace !important;
+      font-size: 0.85em !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      color: var(--doc-code-text) !important;
+    }
+
+    /* ── Blockquotes ── */
+    .markdown-section blockquote {
+      border-left: 3px solid var(--doc-border) !important;
+      color: var(--doc-muted) !important;
+      padding: 0.5em 1em !important;
+      margin: 1.25rem 0 !important;
+    }
+    .markdown-section blockquote p { margin: 0 !important; }
+
+    /* ── Tables ── */
+    .markdown-section table { width: 100%; margin: 1.25rem 0; font-size: 14px; }
+    .markdown-section table th {
+      background: var(--doc-table-head-bg) !important;
+      font-weight: 600;
+      text-align: left;
+      padding: 10px 14px !important;
+      border-bottom: 1px solid var(--doc-border) !important;
+      color: var(--doc-heading) !important;
+    }
+    .markdown-section table td {
+      padding: 10px 14px !important;
+      border-bottom: 1px solid var(--doc-border) !important;
+      color: var(--doc-text) !important;
+    }
+    .markdown-section table th, .markdown-section table td {
+      border-right: none !important;
+    }
+
+    /* ── HR ── */
+    .markdown-section hr { border: none !important; height: 1px; background: var(--doc-border); margin: 2rem 0 !important; }
+
+    /* ── Images ── */
+    .markdown-section img { max-width: 100%; border-radius: 4px; }
+
+    /* ── Pagination ── */
+    .docsify-pagination-container { border-top: 1px solid var(--doc-border) !important; margin-top: 2rem; }
     .pagination-item-label, .pagination-item-title { color: var(--doc-text) !important; }
 
-    /* Cover & background */
-    body { background: var(--doc-bg); }
+    /* ── Copy button ── */
+    .docsify-copy-code-button {
+      font-size: 12px !important;
+      color: var(--doc-muted) !important;
+    }
+
+    /* ── Background ── */
     main { background: var(--doc-bg) !important; }
 
-    /* Dark mode toggle button */
+    /* ── Theme toggle ── */
     .theme-toggle {
       position: fixed;
       bottom: 20px;
       right: 20px;
       z-index: 99;
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       border: 1px solid var(--doc-border);
-      background: var(--doc-toggle-bg);
-      color: var(--doc-toggle-color);
-      font-size: 20px;
+      background: var(--doc-bg);
+      color: var(--doc-muted);
+      font-size: 18px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.2s;
     }
-    .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 2px 12px rgba(0,0,0,0.2); }
+    .theme-toggle:hover { border-color: var(--theme-color); color: var(--theme-color); }
 
-    /* Docsify dark overrides for internal elements */
+    /* ── Dark overrides for Docsify internals ── */
     html[data-theme="dark"] .sidebar-toggle { background: var(--doc-sidebar-bg); }
     html[data-theme="dark"] .sidebar-toggle span { background-color: var(--doc-text); }
-    html[data-theme="dark"] .docsify-copy-code-button { color: var(--doc-text) !important; }
+    html[data-theme="dark"] .docsify-copy-code-button { color: var(--doc-muted) !important; }
     html[data-theme="dark"] .app-name-link { color: var(--doc-text); }
     html[data-theme="dark"] .github-corner svg { fill: var(--theme-color); }
+    .github-corner svg { fill: var(--theme-color); }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .markdown-section { padding: 20px 16px 32px !important; font-size: 15px; }
+      .theme-toggle { bottom: 14px; right: 14px; }
+    }
   </style>
+
   <script>
-    // Apply theme immediately to prevent flash
     (function() {
       var theme = localStorage.getItem('exfi_theme') || 'dark';
       document.documentElement.setAttribute('data-theme', theme);
@@ -125,9 +282,10 @@
 <body>
   <div id="app"></div>
   <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode"></button>
+
   <script>
     window.$docsify = {
-      name: '<img src="https://www.exchequer.fi/images/exchequer_logo.png" alt="Exchequer Finance" style="max-width:150px">',
+      name: '<img src="https://www.exchequer.fi/images/exchequer_logo.png" alt="Exchequer Finance" style="max-width:130px">',
       repo: 'https://github.com/exchequer-fi/Docs',
       loadSidebar: true,
       subMaxLevel: 3,
@@ -135,7 +293,7 @@
       search: {
         maxAge: 86400000,
         paths: 'auto',
-        placeholder: 'Search documentation',
+        placeholder: 'Search documentation…',
         noData: 'No results found',
         depth: 6,
         hideOtherSidebarContent: false
@@ -153,17 +311,24 @@
       }
     }
   </script>
+
   <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+
   <!-- Plugins -->
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
+
+  <!-- Syntax highlighting -->
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-javascript.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-solidity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-typescript.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+
   <!-- Theme toggle -->
   <script>
     (function() {
@@ -172,6 +337,7 @@
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('exfi_theme', theme);
         btn.textContent = theme === 'dark' ? '\u2600' : '\u263E';
+        btn.setAttribute('title', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
       }
       applyTheme(localStorage.getItem('exfi_theme') || 'dark');
       btn.addEventListener('click', function() {
