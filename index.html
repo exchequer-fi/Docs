@@ -7,40 +7,133 @@
   <meta name="description" content="Exchequer Finance Documentation">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
-  <!-- Custom theme styles -->
   <style>
+    /* ── Light theme ── */
     :root {
       --theme-color: #522D80;
       --sidebar-nav-link-color: #030A27;
       --sidebar-nav-link-color--active: #2563EB;
       --sidebar-nav-link-font-weight--active: 600;
+      --doc-bg: #fff;
+      --doc-text: #2c3e50;
+      --doc-heading: #030A27;
+      --doc-link: #2563EB;
+      --doc-sidebar-bg: #F9FAFB;
+      --doc-sidebar-border: #e8e8e8;
+      --doc-code-bg: #f8f8f8;
+      --doc-border: #eee;
+      --doc-blockquote: #858585;
+      --doc-table-head-bg: #f8f8f8;
+      --doc-search-bg: #fff;
+      --doc-toggle-bg: transparent;
+      --doc-toggle-color: #6b7280;
     }
-    .app-name-link img {
-      max-width: 150px;
+
+    /* ── Dark theme ── */
+    html[data-theme="dark"] {
+      --theme-color: #7c4dbd;
+      --sidebar-nav-link-color: #c4c8d8;
+      --sidebar-nav-link-color--active: #9b6dd7;
+      --doc-bg: #0f1117;
+      --doc-text: #c4c8d8;
+      --doc-heading: #e4e5e9;
+      --doc-link: #9b6dd7;
+      --doc-sidebar-bg: #12131f;
+      --doc-sidebar-border: #1e2035;
+      --doc-code-bg: #1a1b2e;
+      --doc-border: #2e3044;
+      --doc-blockquote: #8b8fa3;
+      --doc-table-head-bg: #1a1b2e;
+      --doc-search-bg: #1a1b2e;
+      --doc-toggle-bg: rgba(255,255,255,0.05);
+      --doc-toggle-color: #c4c8d8;
     }
-    .sidebar {
-      background-color: #F9FAFB;
+
+    body { transition: background 0.3s; }
+
+    .app-name-link img { max-width: 150px; }
+
+    /* Sidebar */
+    .sidebar { background-color: var(--doc-sidebar-bg) !important; border-right-color: var(--doc-sidebar-border) !important; transition: background-color 0.3s; }
+    body .sidebar-nav li a { color: var(--sidebar-nav-link-color); }
+    body .sidebar-nav li a:hover, body .sidebar-nav li a.active { color: var(--sidebar-nav-link-color--active); }
+
+    /* Main content */
+    .content, .markdown-section { background: var(--doc-bg) !important; color: var(--doc-text) !important; transition: background 0.3s, color 0.3s; }
+    .markdown-section h1, .markdown-section h2, .markdown-section h3, .markdown-section h4 { color: var(--doc-heading) !important; }
+    .markdown-section a { color: var(--doc-link) !important; }
+    .markdown-section a:hover { color: var(--theme-color) !important; }
+    .markdown-section code { background: var(--doc-code-bg) !important; color: var(--doc-text) !important; }
+    .markdown-section pre { background: var(--doc-code-bg) !important; }
+    .markdown-section pre > code { color: var(--doc-text) !important; }
+    .markdown-section blockquote { border-left-color: var(--theme-color) !important; color: var(--doc-blockquote) !important; }
+    .markdown-section table th { background: var(--doc-table-head-bg) !important; }
+    .markdown-section table td, .markdown-section table th { border-color: var(--doc-border) !important; color: var(--doc-text) !important; }
+    .markdown-section hr { border-color: var(--doc-border) !important; }
+
+    /* Search */
+    .search { border-color: var(--doc-border) !important; }
+    .search input { background: var(--doc-search-bg) !important; color: var(--doc-text) !important; border-color: var(--doc-border) !important; }
+    .search .matching-post { border-bottom-color: var(--doc-border) !important; }
+    .search .matching-post p { color: var(--doc-text) !important; }
+
+    /* Pagination */
+    .docsify-pagination-container { border-top-color: var(--doc-border) !important; color: var(--doc-text) !important; }
+    .pagination-item-label, .pagination-item-title { color: var(--doc-text) !important; }
+
+    /* Cover & background */
+    body { background: var(--doc-bg); }
+    main { background: var(--doc-bg) !important; }
+
+    /* Dark mode toggle button */
+    .theme-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 99;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--doc-border);
+      background: var(--doc-toggle-bg);
+      color: var(--doc-toggle-color);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    .markdown-section h1, .markdown-section h2 {
-      color: #030A27;
-    }
-    .markdown-section a {
-      color: #2563EB;
-    }
+    .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 2px 12px rgba(0,0,0,0.2); }
+
+    /* Docsify dark overrides for internal elements */
+    html[data-theme="dark"] .sidebar-toggle { background: var(--doc-sidebar-bg); }
+    html[data-theme="dark"] .sidebar-toggle span { background-color: var(--doc-text); }
+    html[data-theme="dark"] .docsify-copy-code-button { color: var(--doc-text) !important; }
+    html[data-theme="dark"] .app-name-link { color: var(--doc-text); }
+    html[data-theme="dark"] .github-corner svg { fill: var(--theme-color); }
   </style>
+  <script>
+    // Apply theme immediately to prevent flash
+    (function() {
+      var theme = localStorage.getItem('exfi_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
 </head>
 <body>
   <div id="app"></div>
+  <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode"></button>
   <script>
     window.$docsify = {
-      name: 'Exchequer Finance',
+      name: '<img src="https://www.exchequer.fi/images/exchequer_logo.png" alt="Exchequer Finance" style="max-width:150px">',
       repo: 'https://github.com/exchequer-fi/Docs',
-      logo: '/.gitbook/assets/ExFi_facebook_whale.png',
       loadSidebar: true,
       subMaxLevel: 3,
       auto2top: true,
       search: {
-        maxAge: 86400000, // Expiration time, one day
+        maxAge: 86400000,
         paths: 'auto',
         placeholder: 'Search documentation',
         noData: 'No results found',
@@ -71,5 +164,21 @@
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-javascript.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-solidity.min.js"></script>
+  <!-- Theme toggle -->
+  <script>
+    (function() {
+      var btn = document.getElementById('theme-toggle');
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('exfi_theme', theme);
+        btn.textContent = theme === 'dark' ? '\u2600' : '\u263E';
+      }
+      applyTheme(localStorage.getItem('exfi_theme') || 'dark');
+      btn.addEventListener('click', function() {
+        var current = document.documentElement.getAttribute('data-theme');
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+      });
+    })();
+  </script>
 </body>
 </html>
