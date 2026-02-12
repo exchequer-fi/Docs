@@ -6,93 +6,529 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="Exchequer Finance Documentation">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+  <!-- Fonts: Inter (sans), JetBrains Mono (mono), Source Serif 4 (serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Docsify base theme (overridden below) -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+
   <style>
-    /* ── Light theme ── */
+    /* ═══════════════════════════════════════════════════
+       EXCHEQUER DOCS – Brand Styleguide Implementation
+       Fonts: Inter · JetBrains Mono · Source Serif 4
+       ═══════════════════════════════════════════════════ */
+
+    /* ── Light theme tokens ── */
     :root {
-      --theme-color: #522D80;
-      --sidebar-nav-link-color: #030A27;
-      --sidebar-nav-link-color--active: #2563EB;
+      /* Brand palette */
+      --ex-hero-purple: #522D80;
+      --ex-deep-navy: #030A27;
+      --ex-bright-blue: #2563EB;
+      --ex-lime-green: #22C55E;
+      --ex-accent-yellow: #F2C94C;
+      --ex-podcast-teal: #17BEBB;
+      --ex-light-gray: #F9FAFB;
+      --ex-dark-gray: #1E293B;
+
+      /* Semantic tokens – Light */
+      --background: hsl(0, 0%, 100%);
+      --foreground: hsl(222.2, 84%, 4.9%);
+      --card: hsl(0, 0%, 100%);
+      --card-foreground: hsl(222.2, 84%, 4.9%);
+      --primary: hsl(221.2, 83.2%, 53.3%);
+      --primary-foreground: hsl(210, 40%, 98%);
+      --secondary: hsl(210, 40%, 96.1%);
+      --secondary-foreground: hsl(222.2, 47.4%, 11.2%);
+      --muted: hsl(210, 40%, 96.1%);
+      --muted-foreground: hsl(215.4, 16.3%, 46.9%);
+      --accent: hsl(210, 40%, 96.1%);
+      --accent-foreground: hsl(222.2, 47.4%, 11.2%);
+      --border: hsl(214.3, 31.8%, 91.4%);
+      --ring: hsl(221.2, 83.2%, 53.3%);
+      --radius: 0.5rem;
+
+      /* Docsify overrides */
+      --theme-color: var(--ex-hero-purple);
+      --sidebar-nav-link-color: var(--ex-deep-navy);
+      --sidebar-nav-link-color--active: var(--ex-bright-blue);
       --sidebar-nav-link-font-weight--active: 600;
-      --doc-bg: #fff;
-      --doc-text: #2c3e50;
-      --doc-heading: #030A27;
-      --doc-link: #2563EB;
-      --doc-sidebar-bg: #F9FAFB;
-      --doc-sidebar-border: #e8e8e8;
-      --doc-code-bg: #f8f8f8;
-      --doc-border: #eee;
-      --doc-blockquote: #858585;
-      --doc-table-head-bg: #f8f8f8;
-      --doc-search-bg: #fff;
-      --doc-toggle-bg: transparent;
-      --doc-toggle-color: #6b7280;
+
+      /* Doc tokens */
+      --doc-bg: var(--background);
+      --doc-text: var(--foreground);
+      --doc-heading: var(--ex-deep-navy);
+      --doc-link: var(--ex-bright-blue);
+      --doc-link-hover: var(--ex-hero-purple);
+      --doc-sidebar-bg: var(--ex-light-gray);
+      --doc-sidebar-border: var(--border);
+      --doc-code-bg: hsl(210, 40%, 96.1%);
+      --doc-code-text: var(--ex-deep-navy);
+      --doc-code-border: var(--border);
+      --doc-border: var(--border);
+      --doc-blockquote-text: var(--muted-foreground);
+      --doc-blockquote-border: var(--ex-hero-purple);
+      --doc-table-head-bg: var(--ex-light-gray);
+      --doc-table-stripe: hsl(210, 40%, 98%);
+      --doc-search-bg: var(--background);
+      --doc-toggle-bg: var(--secondary);
+      --doc-toggle-color: var(--muted-foreground);
+      --doc-toggle-hover: var(--ex-hero-purple);
+      --doc-tip-bg: hsl(142, 76%, 96%);
+      --doc-tip-border: var(--ex-lime-green);
+      --doc-warn-bg: hsl(48, 96%, 96%);
+      --doc-warn-border: var(--ex-accent-yellow);
     }
 
-    /* ── Dark theme ── */
+    /* ── Dark theme tokens ── */
     html[data-theme="dark"] {
-      --theme-color: #7c4dbd;
-      --sidebar-nav-link-color: #c4c8d8;
+      --background: hsl(222.2, 84%, 4.9%);
+      --foreground: hsl(210, 40%, 98%);
+      --card: hsl(222.2, 84%, 4.9%);
+      --card-foreground: hsl(210, 40%, 98%);
+      --primary: hsl(217.2, 91.2%, 59.8%);
+      --primary-foreground: hsl(222.2, 47.4%, 11.2%);
+      --secondary: hsl(217.2, 32.6%, 17.5%);
+      --secondary-foreground: hsl(210, 40%, 98%);
+      --muted: hsl(217.2, 32.6%, 17.5%);
+      --muted-foreground: hsl(215, 20.2%, 65.1%);
+      --accent: hsl(217.2, 32.6%, 17.5%);
+      --accent-foreground: hsl(210, 40%, 98%);
+      --border: hsl(217.2, 32.6%, 17.5%);
+      --ring: hsl(224.3, 76.3%, 48%);
+
+      --theme-color: #9b6dd7;
+      --sidebar-nav-link-color: hsl(215, 20.2%, 75%);
       --sidebar-nav-link-color--active: #9b6dd7;
-      --doc-bg: #0f1117;
-      --doc-text: #c4c8d8;
-      --doc-heading: #e4e5e9;
-      --doc-link: #9b6dd7;
-      --doc-sidebar-bg: #12131f;
-      --doc-sidebar-border: #1e2035;
-      --doc-code-bg: #1a1b2e;
-      --doc-border: #2e3044;
-      --doc-blockquote: #8b8fa3;
-      --doc-table-head-bg: #1a1b2e;
-      --doc-search-bg: #1a1b2e;
-      --doc-toggle-bg: rgba(255,255,255,0.05);
-      --doc-toggle-color: #c4c8d8;
+
+      --doc-bg: var(--background);
+      --doc-text: var(--foreground);
+      --doc-heading: hsl(210, 40%, 96%);
+      --doc-link: hsl(217.2, 91.2%, 69.8%);
+      --doc-link-hover: #9b6dd7;
+      --doc-sidebar-bg: hsl(222.2, 70%, 6.5%);
+      --doc-sidebar-border: var(--border);
+      --doc-code-bg: hsl(217.2, 32.6%, 12%);
+      --doc-code-text: hsl(210, 40%, 90%);
+      --doc-code-border: hsl(217.2, 32.6%, 20%);
+      --doc-border: var(--border);
+      --doc-blockquote-text: var(--muted-foreground);
+      --doc-blockquote-border: #9b6dd7;
+      --doc-table-head-bg: hsl(217.2, 32.6%, 12%);
+      --doc-table-stripe: hsl(217.2, 32.6%, 8%);
+      --doc-search-bg: hsl(217.2, 32.6%, 12%);
+      --doc-toggle-bg: var(--secondary);
+      --doc-toggle-color: var(--muted-foreground);
+      --doc-toggle-hover: #9b6dd7;
+      --doc-tip-bg: hsl(142, 50%, 10%);
+      --doc-tip-border: var(--ex-lime-green);
+      --doc-warn-bg: hsl(48, 50%, 10%);
+      --doc-warn-border: var(--ex-accent-yellow);
     }
 
-    body { transition: background 0.3s; }
+    /* ═══════════════════════════════════════
+       BASE TYPOGRAPHY
+       ═══════════════════════════════════════ */
 
-    .app-name-link img { max-width: 150px; }
+    * {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
 
-    /* Sidebar */
-    .sidebar { background-color: var(--doc-sidebar-bg) !important; border-right-color: var(--doc-sidebar-border) !important; transition: background-color 0.3s; }
-    body .sidebar-nav li a { color: var(--sidebar-nav-link-color); }
-    body .sidebar-nav li a:hover, body .sidebar-nav li a.active { color: var(--sidebar-nav-link-color--active); }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      letter-spacing: -0.011em;
+      background: var(--doc-bg);
+      color: var(--doc-text);
+      transition: background 0.3s ease, color 0.3s ease;
+    }
 
-    /* Main content */
-    .content, .markdown-section { background: var(--doc-bg) !important; color: var(--doc-text) !important; transition: background 0.3s, color 0.3s; }
-    .markdown-section h1, .markdown-section h2, .markdown-section h3, .markdown-section h4 { color: var(--doc-heading) !important; }
-    .markdown-section a { color: var(--doc-link) !important; }
-    .markdown-section a:hover { color: var(--theme-color) !important; }
-    .markdown-section code { background: var(--doc-code-bg) !important; color: var(--doc-text) !important; }
-    .markdown-section pre { background: var(--doc-code-bg) !important; }
-    .markdown-section pre > code { color: var(--doc-text) !important; }
-    .markdown-section blockquote { border-left-color: var(--theme-color) !important; color: var(--doc-blockquote) !important; }
-    .markdown-section table th { background: var(--doc-table-head-bg) !important; }
-    .markdown-section table td, .markdown-section table th { border-color: var(--doc-border) !important; color: var(--doc-text) !important; }
-    .markdown-section hr { border-color: var(--doc-border) !important; }
+    /* ═══════════════════════════════════════
+       SIDEBAR
+       ═══════════════════════════════════════ */
 
-    /* Search */
-    .search { border-color: var(--doc-border) !important; }
-    .search input { background: var(--doc-search-bg) !important; color: var(--doc-text) !important; border-color: var(--doc-border) !important; }
-    .search .matching-post { border-bottom-color: var(--doc-border) !important; }
-    .search .matching-post p { color: var(--doc-text) !important; }
+    .sidebar {
+      background-color: var(--doc-sidebar-bg) !important;
+      border-right: 1px solid var(--doc-sidebar-border) !important;
+      transition: background-color 0.3s ease;
+      font-family: 'Inter', sans-serif;
+    }
 
-    /* Pagination */
-    .docsify-pagination-container { border-top-color: var(--doc-border) !important; color: var(--doc-text) !important; }
-    .pagination-item-label, .pagination-item-title { color: var(--doc-text) !important; }
+    .sidebar .app-name-link img {
+      max-width: 140px;
+      margin: 16px 0 8px;
+    }
 
-    /* Cover & background */
-    body { background: var(--doc-bg); }
+    .sidebar-nav {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    body .sidebar-nav li a {
+      color: var(--sidebar-nav-link-color);
+      font-weight: 400;
+      transition: color 0.2s ease;
+      padding: 4px 0;
+    }
+
+    body .sidebar-nav li a:hover {
+      color: var(--sidebar-nav-link-color--active);
+      text-decoration: none;
+    }
+
+    body .sidebar-nav li a.active {
+      color: var(--sidebar-nav-link-color--active);
+      font-weight: 600;
+      border-right: 2px solid var(--theme-color);
+    }
+
+    .sidebar-nav li > p {
+      font-weight: 600 !important;
+      font-size: 13px !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.05em !important;
+      color: var(--doc-blockquote-text) !important;
+      margin: 20px 0 6px !important;
+    }
+
+    .sidebar .search {
+      border-bottom: 1px solid var(--doc-border) !important;
+      margin-bottom: 12px;
+    }
+
+    .sidebar .search input {
+      font-family: 'Inter', sans-serif !important;
+      font-size: 14px !important;
+      background: var(--doc-search-bg) !important;
+      color: var(--doc-text) !important;
+      border: 1px solid var(--doc-border) !important;
+      border-radius: var(--radius) !important;
+      padding: 8px 12px !important;
+      transition: border-color 0.2s ease;
+    }
+
+    .sidebar .search input:focus {
+      border-color: var(--ring) !important;
+      outline: none;
+      box-shadow: 0 0 0 2px hsla(221, 83%, 53%, 0.15);
+    }
+
+    .sidebar .search .matching-post {
+      border-bottom: 1px solid var(--doc-border) !important;
+    }
+
+    .sidebar .search .matching-post p {
+      color: var(--doc-text) !important;
+      font-size: 13px;
+    }
+
+    /* ═══════════════════════════════════════
+       MAIN CONTENT
+       ═══════════════════════════════════════ */
+
+    .content,
+    .markdown-section {
+      background: var(--doc-bg) !important;
+      color: var(--doc-text) !important;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .markdown-section {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 820px;
+      padding: 40px 45px 60px !important;
+    }
+
+    /* ── Headings ── */
+    .markdown-section h1,
+    .markdown-section h2,
+    .markdown-section h3,
+    .markdown-section h4,
+    .markdown-section h5,
+    .markdown-section h6 {
+      font-family: 'Inter', sans-serif;
+      color: var(--doc-heading) !important;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+    }
+
+    .markdown-section h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 0 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--doc-border) !important;
+    }
+
+    .markdown-section h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2.5rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--doc-border) !important;
+    }
+
+    .markdown-section h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 2rem 0 0.75rem;
+    }
+
+    .markdown-section h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    /* ── Paragraphs ── */
+    .markdown-section p {
+      margin: 0 0 1.25rem;
+      line-height: 1.7;
+    }
+
+    /* ── Links ── */
+    .markdown-section a {
+      color: var(--doc-link) !important;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+      border-bottom: 1px solid transparent;
+    }
+
+    .markdown-section a:hover {
+      color: var(--doc-link-hover) !important;
+      border-bottom-color: var(--doc-link-hover);
+    }
+
+    /* ── Inline code ── */
+    .markdown-section code {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+      font-size: 0.875em !important;
+      font-weight: 500;
+      background: var(--doc-code-bg) !important;
+      color: var(--doc-code-text) !important;
+      border: 1px solid var(--doc-code-border) !important;
+      border-radius: calc(var(--radius) * 0.6) !important;
+      padding: 0.15em 0.4em !important;
+      white-space: nowrap;
+    }
+
+    /* ── Code blocks ── */
+    .markdown-section pre {
+      background: var(--doc-code-bg) !important;
+      border: 1px solid var(--doc-code-border) !important;
+      border-radius: var(--radius) !important;
+      padding: 1.25em 1.5em !important;
+      margin: 1.5rem 0 !important;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+
+    .markdown-section pre > code {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+      font-size: 0.85em !important;
+      font-weight: 400;
+      color: var(--doc-code-text) !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      white-space: pre;
+      line-height: 1.6;
+    }
+
+    /* ── Blockquotes ── */
+    .markdown-section blockquote {
+      border-left: 4px solid var(--doc-blockquote-border) !important;
+      color: var(--doc-blockquote-text) !important;
+      background: var(--doc-code-bg);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1em 1.25em !important;
+      margin: 1.5rem 0 !important;
+      font-style: italic;
+    }
+
+    .markdown-section blockquote p {
+      margin: 0 !important;
+    }
+
+    /* ── Lists ── */
+    .markdown-section ul,
+    .markdown-section ol {
+      padding-left: 1.5em;
+      margin: 0 0 1.25rem;
+    }
+
+    .markdown-section li {
+      margin: 0.4em 0;
+      line-height: 1.7;
+    }
+
+    .markdown-section li > p {
+      margin: 0.3em 0;
+    }
+
+    /* ── Tables ── */
+    .markdown-section table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--doc-border) !important;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 1.5rem 0;
+      font-size: 0.9em;
+    }
+
+    .markdown-section table th {
+      background: var(--doc-table-head-bg) !important;
+      color: var(--doc-heading) !important;
+      font-weight: 600;
+      text-align: left;
+      padding: 12px 16px !important;
+      border-bottom: 2px solid var(--doc-border) !important;
+      border-right: 1px solid var(--doc-border) !important;
+      font-size: 0.85em;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .markdown-section table th:last-child {
+      border-right: none !important;
+    }
+
+    .markdown-section table td {
+      padding: 10px 16px !important;
+      border-bottom: 1px solid var(--doc-border) !important;
+      border-right: 1px solid var(--doc-border) !important;
+      color: var(--doc-text) !important;
+    }
+
+    .markdown-section table td:last-child {
+      border-right: none !important;
+    }
+
+    .markdown-section table tr:last-child td {
+      border-bottom: none !important;
+    }
+
+    .markdown-section table tr:nth-child(even) td {
+      background: var(--doc-table-stripe);
+    }
+
+    /* ── Horizontal rule ── */
+    .markdown-section hr {
+      border: none !important;
+      height: 1px;
+      background: var(--doc-border);
+      margin: 2.5rem 0 !important;
+    }
+
+    /* ── Strong & emphasis ── */
+    .markdown-section strong {
+      font-weight: 600;
+      color: var(--doc-heading) !important;
+    }
+
+    .markdown-section em {
+      font-style: italic;
+    }
+
+    /* ── Images ── */
+    .markdown-section img {
+      border-radius: var(--radius);
+      max-width: 100%;
+    }
+
+    /* ═══════════════════════════════════════
+       DOCSIFY TIPS (blockquote extensions)
+       ═══════════════════════════════════════ */
+
+    .markdown-section blockquote > p:first-child strong:first-child {
+      font-style: normal;
+    }
+
+    /* ═══════════════════════════════════════
+       PAGINATION
+       ═══════════════════════════════════════ */
+
+    .docsify-pagination-container {
+      border-top: 1px solid var(--doc-border) !important;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+    }
+
+    .pagination-item {
+      border: 1px solid var(--doc-border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .pagination-item:hover {
+      border-color: var(--theme-color);
+      box-shadow: 0 2px 8px rgba(82, 45, 128, 0.1);
+    }
+
+    .pagination-item-label {
+      color: var(--doc-blockquote-text) !important;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .pagination-item-title {
+      color: var(--doc-heading) !important;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    /* ═══════════════════════════════════════
+       COPY CODE BUTTON
+       ═══════════════════════════════════════ */
+
+    .docsify-copy-code-button {
+      font-family: 'Inter', sans-serif !important;
+      font-size: 12px !important;
+      font-weight: 500;
+      background: var(--doc-code-bg) !important;
+      color: var(--doc-blockquote-text) !important;
+      border: 1px solid var(--doc-code-border) !important;
+      border-radius: calc(var(--radius) * 0.6) !important;
+      padding: 2px 10px !important;
+      transition: all 0.2s ease;
+    }
+
+    .docsify-copy-code-button:hover {
+      color: var(--doc-heading) !important;
+      border-color: var(--theme-color) !important;
+    }
+
+    /* ═══════════════════════════════════════
+       BACKGROUND & LAYOUT
+       ═══════════════════════════════════════ */
+
     main { background: var(--doc-bg) !important; }
 
-    /* Dark mode toggle button */
+    /* ═══════════════════════════════════════
+       DARK MODE TOGGLE
+       ═══════════════════════════════════════ */
+
     .theme-toggle {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 24px;
+      right: 24px;
       z-index: 99;
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       border: 1px solid var(--doc-border);
       background: var(--doc-toggle-bg);
@@ -102,18 +538,108 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
-    .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 2px 12px rgba(0,0,0,0.2); }
 
-    /* Docsify dark overrides for internal elements */
-    html[data-theme="dark"] .sidebar-toggle { background: var(--doc-sidebar-bg); }
-    html[data-theme="dark"] .sidebar-toggle span { background-color: var(--doc-text); }
-    html[data-theme="dark"] .docsify-copy-code-button { color: var(--doc-text) !important; }
-    html[data-theme="dark"] .app-name-link { color: var(--doc-text); }
-    html[data-theme="dark"] .github-corner svg { fill: var(--theme-color); }
+    .theme-toggle:hover {
+      transform: scale(1.1);
+      color: var(--doc-toggle-hover);
+      border-color: var(--doc-toggle-hover);
+      box-shadow: 0 4px 16px rgba(82, 45, 128, 0.15);
+    }
+
+    /* ═══════════════════════════════════════
+       DOCSIFY DARK OVERRIDES
+       ═══════════════════════════════════════ */
+
+    html[data-theme="dark"] .sidebar-toggle {
+      background: var(--doc-sidebar-bg);
+    }
+
+    html[data-theme="dark"] .sidebar-toggle span {
+      background-color: var(--doc-text);
+    }
+
+    html[data-theme="dark"] .docsify-copy-code-button {
+      color: var(--doc-blockquote-text) !important;
+    }
+
+    html[data-theme="dark"] .app-name-link {
+      color: var(--doc-text);
+    }
+
+    html[data-theme="dark"] .github-corner svg {
+      fill: var(--theme-color);
+    }
+
+    /* GitHub corner link */
+    .github-corner svg {
+      fill: var(--ex-hero-purple);
+      transition: fill 0.3s ease;
+    }
+
+    /* ═══════════════════════════════════════
+       SCROLLBAR
+       ═══════════════════════════════════════ */
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--doc-border);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--muted-foreground);
+    }
+
+    /* ═══════════════════════════════════════
+       SELECTION
+       ═══════════════════════════════════════ */
+
+    ::selection {
+      background: hsla(262, 48%, 34%, 0.2);
+      color: inherit;
+    }
+
+    html[data-theme="dark"] ::selection {
+      background: hsla(262, 48%, 60%, 0.3);
+    }
+
+    /* ═══════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════ */
+
+    @media (max-width: 768px) {
+      .markdown-section {
+        padding: 24px 20px 40px !important;
+        font-size: 15px;
+      }
+
+      .markdown-section h1 { font-size: 1.65rem; }
+      .markdown-section h2 { font-size: 1.3rem; }
+      .markdown-section h3 { font-size: 1.1rem; }
+
+      .theme-toggle {
+        bottom: 16px;
+        right: 16px;
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+      }
+    }
   </style>
+
   <script>
     // Apply theme immediately to prevent flash
     (function() {
@@ -125,9 +651,10 @@
 <body>
   <div id="app"></div>
   <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode"></button>
+
   <script>
     window.$docsify = {
-      name: '<img src="https://www.exchequer.fi/images/exchequer_logo.png" alt="Exchequer Finance" style="max-width:150px">',
+      name: '<img src="https://www.exchequer.fi/images/exchequer_logo.png" alt="Exchequer Finance" style="max-width:140px">',
       repo: 'https://github.com/exchequer-fi/Docs',
       loadSidebar: true,
       subMaxLevel: 3,
@@ -135,7 +662,7 @@
       search: {
         maxAge: 86400000,
         paths: 'auto',
-        placeholder: 'Search documentation',
+        placeholder: 'Search documentation…',
         noData: 'No results found',
         depth: 6,
         hideOtherSidebarContent: false
@@ -153,17 +680,24 @@
       }
     }
   </script>
+
   <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+
   <!-- Plugins -->
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
+
+  <!-- Syntax highlighting -->
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-javascript.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-solidity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-typescript.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+
   <!-- Theme toggle -->
   <script>
     (function() {
@@ -171,7 +705,8 @@
       function applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('exfi_theme', theme);
-        btn.textContent = theme === 'dark' ? '\u2600' : '\u263E';
+        btn.textContent = theme === 'dark' ? '\u2600\uFE0F' : '\uD83C\uDF19';
+        btn.setAttribute('title', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
       }
       applyTheme(localStorage.getItem('exfi_theme') || 'dark');
       btn.addEventListener('click', function() {
