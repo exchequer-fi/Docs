@@ -1,61 +1,37 @@
-name: Deploy HonKit to GitHub Pages (Source on Main, Deploy to gh-pages)
+name: Deploy Docs to GitHub Pages
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push events but only for your main source branch
   push:
-    branches:
-      - main # IMPORTANT: This workflow now triggers on pushes to the 'main' branch.
-             # 'main' should contain your HonKit source files (Markdown, package.json, etc.).
-
-  # Allows you to run this workflow manually from the Actions tab on GitHub
+    branches: [main]
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-  # This workflow contains a single job called "build-and-deploy"
-  build-and-deploy:
-    # The type of runner that the job will run on
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-
-    # Permissions needed by the job
-    permissions:
-      contents: write # Allow the job to write to the repository (to push to the gh-pages branch)
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Step 1: Checks-out your source branch ('main') under $GITHUB_WORKSPACE
-      - name: Checkout main (source) repository
+      - name: Checkout
         uses: actions/checkout@v4
-        # This will checkout the 'main' branch because the workflow is triggered by a push to 'main'.
 
-      # Step 2: Sets up Node.js in the runner environment
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          node-version: '20' # Using Node.js version 20. You can use '18' or other LTS versions.
-          cache: 'npm' # Caches npm dependencies to speed up future builds
+          path: '.'
 
-      # Step 3: Installs your project dependencies (including HonKit)
-      - name: Install dependencies
-        run: npm ci # 'npm ci' is generally recommended for CI environments for faster, more reliable installs than 'npm install'
-
-      # Step 4: Builds your HonKit site
-      # This assumes you have a script "docs:build": "honkit build" in your package.json
-      - name: Build HonKit site
-        run: npm run docs:build
-
-      # Step 5: Deploys the built site (from the _book directory) to the 'gh-pages' branch
-      - name: Deploy to gh-pages branch
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_book # The directory HonKit builds to
-          publish_branch: gh-pages # <<< CHANGED: Deploy to the 'gh-pages' branch
-          # user_name: 'github-actions[bot]' # Optional: Name of the committer
-          # user_email: 'github-actions[bot]@users.noreply.github.com' # Optional: Email of the committer
-          # cname: your.customdomain.com # Optional: if you use a custom domain, uncomment and set this
-          # allow_empty_commit: false # Default is false; set to true if you want to push even if no changes
-          # keep_files: false # Default is false. If true, existing files on 'gh-pages' not in _book won't be removed.
-                             # Usually for a clean site deployment, false is desired.
-
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

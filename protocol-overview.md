@@ -18,10 +18,3 @@ The Exchequer protocol consists of several key components:
 1. **Smart Contracts**: Core protocol logic implemented on-chain
 2. **APIs**: Interfaces for integration with external systems
 3. **User Interfaces**: Tools for interacting with the protocol
-
-## Getting Started
-
-To start using the Exchequer protocol, check out the [Integration Guide](/integrate-with-exchequer/README.md).
-\`\`\`
-
-Let's create a GitHub Actions workflow file to automatically deploy your Docsify site to GitHub Pages:
