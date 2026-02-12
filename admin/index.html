@@ -210,7 +210,7 @@
 <div id="auth-screen">
   <button class="btn-icon auth-theme-toggle" id="auth-theme-toggle" title="Toggle dark mode">&#9790;</button>
   <div class="auth-card">
-    <img src="../.gitbook/assets/ExFi_facebook_whale.png" alt="Exchequer Finance" class="logo" />
+    <img src="https://www.exchequer.fi/images/exchequer_logo.png" alt="Exchequer Finance" class="logo" />
     <h1>Exchequer Docs Editor</h1>
     <p class="subtitle">Connect with your GitHub token to edit documentation with a visual editor. Changes commit directly to your repo.</p>
     <div id="auth-error" class="error"></div>
@@ -233,7 +233,7 @@
 <div id="editor-screen">
   <div id="top-bar">
     <button class="btn-icon" id="toggle-sidebar" title="Toggle sidebar">&#9776;</button>
-    <span class="brand"><img src="../.gitbook/assets/ExFi_facebook_whale.png" alt="" class="logo-sm" />Exchequer Docs</span>
+    <span class="brand"><img src="https://www.exchequer.fi/images/exchequer_logo.png" alt="" class="logo-sm" />Exchequer Docs</span>
     <span class="file-path" id="file-path">No file selected</span>
     <span class="dirty-dot" id="dirty-dot" title="Unsaved changes">&#9679;</span>
     <span class="spacer"></span>
@@ -323,7 +323,7 @@
   function initTheme() {
     const saved = localStorage.getItem('exfi_theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const theme = saved || (prefersDark ? 'dark' : 'light');
+    const theme = saved || 'dark';
     applyTheme(theme);
   }
 
