@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exchequer Docs Editor</title>
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/3.2.2/toastui-editor.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #1a1a2e; height: 100vh; overflow: hidden; }
+    a { color: #522D80; text-decoration: none; }
+
+    /* ── Auth Screen ── */
+    #auth-screen { display: flex; align-items: center; justify-content: center; height: 100vh; background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #e8e0fd 100%); }
+    .auth-card { background: #fff; border-radius: 16px; padding: 48px; max-width: 440px; width: 90%; box-shadow: 0 4px 24px rgba(82,45,128,0.10); text-align: center; }
+    .auth-card h1 { font-size: 24px; font-weight: 700; color: #522D80; margin-bottom: 8px; }
+    .auth-card .subtitle { color: #666; font-size: 14px; margin-bottom: 32px; line-height: 1.5; }
+    .auth-card input { width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 15px; outline: none; transition: border-color 0.2s; margin-bottom: 16px; }
+    .auth-card input:focus { border-color: #522D80; }
+    .auth-card .error { color: #dc2626; font-size: 13px; margin-bottom: 12px; display: none; }
+    .auth-card details { text-align: left; margin-top: 24px; font-size: 13px; color: #666; }
+    .auth-card details summary { cursor: pointer; color: #522D80; font-weight: 500; margin-bottom: 8px; }
+    .auth-card details ol { padding-left: 20px; line-height: 1.8; }
+    .auth-card details code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+
+    /* ── Buttons ── */
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary { background: #522D80; color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: #3d1f63; }
+    .btn-success { background: #16a34a; color: #fff; }
+    .btn-success:hover:not(:disabled) { background: #15803d; }
+    .btn-secondary { background: #f3f4f6; color: #374151; }
+    .btn-secondary:hover:not(:disabled) { background: #e5e7eb; }
+    .btn-danger { background: #dc2626; color: #fff; }
+    .btn-danger:hover:not(:disabled) { background: #b91c1c; }
+    .btn-full { width: 100%; justify-content: center; padding: 14px; font-size: 15px; }
+    .btn-icon { padding: 8px; background: none; border: none; cursor: pointer; border-radius: 6px; color: #6b7280; font-size: 18px; }
+    .btn-icon:hover { background: #f3f4f6; color: #1a1a2e; }
+
+    /* ── Editor Screen ── */
+    #editor-screen { display: none; height: 100vh; flex-direction: column; }
+
+    /* ── Top Bar ── */
+    #top-bar { height: 56px; background: #fff; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; padding: 0 16px; gap: 12px; flex-shrink: 0; z-index: 10; }
+    #top-bar .brand { font-weight: 700; font-size: 16px; color: #522D80; white-space: nowrap; }
+    #top-bar .spacer { flex: 1; }
+    #top-bar .file-path { font-size: 13px; color: #6b7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 300px; }
+    #top-bar .dirty-dot { color: #f59e0b; margin-left: 4px; display: none; font-size: 20px; line-height: 1; }
+    #top-bar .actions { display: flex; gap: 8px; align-items: center; }
+
+    /* ── Workspace ── */
+    #workspace { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── Sidebar ── */
+    #sidebar { width: 280px; background: #1a1b2e; color: #c4c8d8; display: flex; flex-direction: column; flex-shrink: 0; transition: margin-left 0.3s; overflow: hidden; }
+    #sidebar.collapsed { margin-left: -280px; }
+    #sidebar .sidebar-header { padding: 20px 16px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: #8b8fa3; font-weight: 600; }
+    #sidebar .file-tree { flex: 1; overflow-y: auto; padding-bottom: 16px; }
+    #sidebar .tree-group { margin-bottom: 4px; }
+    #sidebar .tree-group-label { padding: 8px 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #6b7085; font-weight: 600; }
+    #sidebar .tree-item { padding: 8px 16px 8px 24px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.15s; border-left: 3px solid transparent; }
+    #sidebar .tree-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+    #sidebar .tree-item.active { background: rgba(82,45,128,0.2); color: #fff; border-left-color: #522D80; }
+    #sidebar .tree-item .icon { font-size: 14px; opacity: 0.6; flex-shrink: 0; }
+    #sidebar .tree-item .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #sidebar .tree-item.nested { padding-left: 40px; }
+    #sidebar .sidebar-footer { padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+
+    /* ── Main Editor Area ── */
+    #main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #fff; }
+    #empty-state { flex: 1; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 15px; }
+    #editor-wrapper { flex: 1; overflow: hidden; display: none; }
+    #editor-wrapper .toastui-editor-defaultUI { height: 100% !important; border: none; }
+    #editor-wrapper .toastui-editor-defaultUI .toastui-editor-toolbar { border-bottom: 1px solid #e5e7eb; }
+
+    /* ── Modals ── */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: #fff; border-radius: 12px; padding: 32px; max-width: 480px; width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+    .modal h2 { font-size: 18px; margin-bottom: 20px; }
+    .modal label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; margin-top: 16px; }
+    .modal label:first-of-type { margin-top: 0; }
+    .modal input, .modal select { width: 100%; padding: 10px 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px; outline: none; }
+    .modal input:focus, .modal select:focus { border-color: #522D80; }
+    .modal .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 24px; }
+
+    /* ── Toast ── */
+    #toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 500; color: #fff; z-index: 200; transform: translateY(80px); opacity: 0; transition: all 0.3s; pointer-events: none; }
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.success { background: #16a34a; }
+    #toast.error { background: #dc2626; }
+    #toast.info { background: #522D80; }
+
+    /* ── Loading ── */
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      #sidebar { position: fixed; left: 0; top: 56px; bottom: 0; z-index: 20; }
+      #sidebar.collapsed { margin-left: -280px; }
+      #top-bar .file-path { max-width: 150px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════ Auth Screen ════════════════════ -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <h1>Exchequer Docs Editor</h1>
+    <p class="subtitle">Connect with your GitHub token to edit documentation with a visual editor. Changes commit directly to your repo.</p>
+    <div id="auth-error" class="error"></div>
+    <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+    <button class="btn btn-primary btn-full" id="connect-btn">Connect to GitHub</button>
+    <details>
+      <summary>How to create a Personal Access Token</summary>
+      <ol>
+        <li>Go to <strong>GitHub Settings</strong> &rarr; <strong>Developer settings</strong> &rarr; <strong>Personal access tokens</strong> &rarr; <strong>Fine-grained tokens</strong></li>
+        <li>Click <strong>Generate new token</strong></li>
+        <li>Set <strong>Repository access</strong> to <code>exchequer-fi/Docs</code></li>
+        <li>Under <strong>Permissions</strong>, grant <strong>Contents: Read and write</strong></li>
+        <li>Generate and paste the token above</li>
+      </ol>
+    </details>
+  </div>
+</div>
+
+<!-- ════════════════════ Editor Screen ════════════════════ -->
+<div id="editor-screen">
+  <div id="top-bar">
+    <button class="btn-icon" id="toggle-sidebar" title="Toggle sidebar">&#9776;</button>
+    <span class="brand">Exchequer Docs</span>
+    <span class="file-path" id="file-path">No file selected</span>
+    <span class="dirty-dot" id="dirty-dot" title="Unsaved changes">&#9679;</span>
+    <span class="spacer"></span>
+    <div class="actions">
+      <button class="btn btn-success" id="save-btn" disabled title="Save (Ctrl+S)">Save</button>
+      <button class="btn btn-secondary" id="new-btn" title="New page">+ New</button>
+      <button class="btn btn-secondary" id="delete-btn" disabled title="Delete page">Delete</button>
+      <button class="btn-icon" id="settings-btn" title="Settings">&#9881;</button>
+    </div>
+  </div>
+
+  <div id="workspace">
+    <aside id="sidebar">
+      <div class="sidebar-header">Documentation</div>
+      <div class="file-tree" id="file-tree"></div>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary" style="width:100%; font-size: 13px;" id="edit-nav-btn">Edit Navigation</button>
+      </div>
+    </aside>
+    <main id="main-area">
+      <div id="empty-state">Select a file from the sidebar to start editing</div>
+      <div id="editor-wrapper">
+        <div id="editor"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ════════════════════ New Page Modal ════════════════════ -->
+<div class="modal-overlay" id="new-modal">
+  <div class="modal">
+    <h2>Create New Page</h2>
+    <label>Page Title</label>
+    <input type="text" id="new-title" placeholder="My New Page" />
+    <label>Folder</label>
+    <select id="new-folder">
+      <option value="">/ (root)</option>
+    </select>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('new-modal')">Cancel</button>
+      <button class="btn btn-primary" id="create-btn">Create Page</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ Delete Confirmation Modal ════════════════════ -->
+<div class="modal-overlay" id="delete-modal">
+  <div class="modal">
+    <h2>Delete Page</h2>
+    <p id="delete-msg" style="color: #6b7280; line-height: 1.6;"></p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('delete-modal')">Cancel</button>
+      <button class="btn btn-danger" id="confirm-delete-btn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ Settings Modal ════════════════════ -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal">
+    <h2>Settings</h2>
+    <label>GitHub Token</label>
+    <input type="password" id="settings-token" />
+    <label>Repository (owner/name)</label>
+    <input type="text" id="settings-repo" />
+    <label>Branch</label>
+    <input type="text" id="settings-branch" />
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="logout-btn" style="margin-right:auto;">Logout</button>
+      <button class="btn btn-secondary" onclick="closeModal('settings-modal')">Cancel</button>
+      <button class="btn btn-primary" id="save-settings-btn">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ Toast ════════════════════ -->
+<div id="toast"></div>
+
+<!-- ════════════════════ Scripts ════════════════════ -->
+<script src="https://uicdn.toast.com/editor/3.2.2/toastui-editor-all.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // ── State ──
+  const state = {
+    token: localStorage.getItem('exfi_token') || '',
+    repo: localStorage.getItem('exfi_repo') || 'exchequer-fi/Docs',
+    branch: localStorage.getItem('exfi_branch') || 'main',
+    files: [],         // [{path, sha, type}]
+    folders: [],       // unique folder names
+    summaryEntries: [], // parsed from SUMMARY.md
+    currentFile: null,  // {path, sha, content}
+    editor: null,
+    dirty: false,
+    saving: false
+  };
+
+  // ── DOM refs ──
+  const $ = (id) => document.getElementById(id);
+  const authScreen = $('auth-screen');
+  const editorScreen = $('editor-screen');
+  const fileTreeEl = $('file-tree');
+  const editorWrapper = $('editor-wrapper');
+  const emptyState = $('empty-state');
+  const filePath = $('file-path');
+  const dirtyDot = $('dirty-dot');
+  const saveBtn = $('save-btn');
+  const deleteBtn = $('delete-btn');
+  const toastEl = $('toast');
+
+  // ── GitHub API ──
+  async function api(endpoint, options = {}) {
+    const url = endpoint.startsWith('http') ? endpoint : `https://api.github.com/repos/${state.repo}/${endpoint}`;
+    const res = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${state.token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        ...(options.headers || {})
+      },
+      ...options
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.message || `GitHub API error: ${res.status}`);
+    }
+    if (res.status === 204) return null;
+    return res.json();
+  }
+
+  async function verifyToken() {
+    const data = await api(`contents/README.md?ref=${state.branch}`);
+    return !!data;
+  }
+
+  async function loadFileTree() {
+    const data = await api(`git/trees/${state.branch}?recursive=1`);
+    state.files = data.tree
+      .filter(f => f.type === 'blob' && f.path.endsWith('.md'))
+      .map(f => ({ path: f.path, sha: f.sha }));
+
+    // Collect unique folders
+    const folderSet = new Set();
+    state.files.forEach(f => {
+      const parts = f.path.split('/');
+      if (parts.length > 1) folderSet.add(parts.slice(0, -1).join('/'));
+    });
+    state.folders = [...folderSet].sort();
+  }
+
+  async function loadSummary() {
+    try {
+      const data = await api(`contents/SUMMARY.md?ref=${state.branch}`);
+      const content = decodeBase64(data.content);
+      state.summaryEntries = parseSummary(content);
+    } catch (e) {
+      state.summaryEntries = [];
+    }
+  }
+
+  function parseSummary(md) {
+    const entries = [];
+    let group = null;
+    for (const line of md.split('\n')) {
+      const gm = line.match(/^## (.+)$/);
+      if (gm) { group = gm[1]; continue; }
+      const lm = line.match(/\*\s+\[(.+?)\]\((.+?)\)/);
+      if (lm) entries.push({ title: lm[1], path: lm[2], group });
+    }
+    return entries;
+  }
+
+  async function loadFile(path) {
+    const data = await api(`contents/${encodeURIComponent(path)}?ref=${state.branch}`);
+    return { path: data.path, sha: data.sha, content: decodeBase64(data.content) };
+  }
+
+  async function saveFile(path, content, sha) {
+    const body = {
+      message: `Update ${path}`,
+      content: encodeBase64(content),
+      branch: state.branch
+    };
+    if (sha) body.sha = sha;
+    return api(`contents/${encodeURIComponent(path)}`, {
+      method: 'PUT',
+      body: JSON.stringify(body)
+    });
+  }
+
+  async function deleteFile(path, sha) {
+    return api(`contents/${encodeURIComponent(path)}`, {
+      method: 'DELETE',
+      body: JSON.stringify({
+        message: `Delete ${path}`,
+        sha,
+        branch: state.branch
+      })
+    });
+  }
+
+  // ── Base64 helpers (UTF-8 safe) ──
+  function decodeBase64(b64) {
+    const bin = atob(b64.replace(/\n/g, ''));
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+
+  function encodeBase64(str) {
+    const bytes = new TextEncoder().encode(str);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary);
+  }
+
+  // ── UI: File Tree ──
+  function renderFileTree() {
+    fileTreeEl.innerHTML = '';
+
+    // Build ordered list from SUMMARY entries, then append any files not in SUMMARY
+    const rendered = new Set();
+    let currentGroup = null;
+
+    for (const entry of state.summaryEntries) {
+      if (entry.group && entry.group !== currentGroup) {
+        currentGroup = entry.group;
+        const groupEl = document.createElement('div');
+        groupEl.className = 'tree-group-label';
+        groupEl.textContent = currentGroup;
+        fileTreeEl.appendChild(groupEl);
+      }
+      const fileInfo = state.files.find(f => f.path === entry.path);
+      if (!fileInfo) continue;
+
+      rendered.add(entry.path);
+      const isNested = entry.path.includes('/');
+      const item = createTreeItem(entry.title, entry.path, isNested);
+      fileTreeEl.appendChild(item);
+    }
+
+    // Remaining files not in SUMMARY
+    const remaining = state.files.filter(f => !rendered.has(f.path) && f.path !== 'SUMMARY.md' && f.path !== '_sidebar.md');
+    if (remaining.length > 0) {
+      const label = document.createElement('div');
+      label.className = 'tree-group-label';
+      label.textContent = 'Other Files';
+      fileTreeEl.appendChild(label);
+      for (const f of remaining) {
+        const name = f.path.split('/').pop().replace('.md', '').replace(/-/g, ' ');
+        const item = createTreeItem(name, f.path, false);
+        fileTreeEl.appendChild(item);
+      }
+    }
+
+    // Populate folder dropdown for "New Page"
+    const folderSelect = $('new-folder');
+    folderSelect.innerHTML = '<option value="">/ (root)</option>';
+    for (const folder of state.folders) {
+      const opt = document.createElement('option');
+      opt.value = folder;
+      opt.textContent = '/' + folder;
+      folderSelect.appendChild(opt);
+    }
+  }
+
+  function createTreeItem(title, path, nested) {
+    const div = document.createElement('div');
+    div.className = 'tree-item' + (nested ? ' nested' : '');
+    if (state.currentFile && state.currentFile.path === path) div.classList.add('active');
+    div.innerHTML = `<span class="icon">\u{1F4C4}</span><span class="name">${escapeHtml(title)}</span>`;
+    div.addEventListener('click', () => openFile(path));
+    return div;
+  }
+
+  // ── UI: Editor ──
+  function initEditor() {
+    state.editor = new toastui.Editor({
+      el: $('editor'),
+      height: '100%',
+      initialEditType: 'wysiwyg',
+      previewStyle: 'vertical',
+      usageStatistics: false,
+      toolbarItems: [
+        ['heading', 'bold', 'italic', 'strike'],
+        ['hr', 'quote'],
+        ['ul', 'ol', 'task'],
+        ['table', 'link'],
+        ['code', 'codeblock'],
+        ['scrollSync']
+      ],
+      hooks: {
+        addImageBlobHook: async (blob, callback) => {
+          try {
+            toast('Uploading image...', 'info');
+            const name = `${Date.now()}-${blob.name || 'image.png'}`;
+            const path = `.gitbook/assets/${name}`;
+            const reader = new FileReader();
+            reader.onload = async () => {
+              const b64 = reader.result.split(',')[1];
+              await api(`contents/${encodeURIComponent(path)}`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                  message: `Upload image ${name}`,
+                  content: b64,
+                  branch: state.branch
+                })
+              });
+              callback(`/.gitbook/assets/${name}`, name);
+              toast('Image uploaded', 'success');
+            };
+            reader.readAsDataURL(blob);
+          } catch (e) {
+            toast('Image upload failed: ' + e.message, 'error');
+          }
+        }
+      }
+    });
+
+    state.editor.on('change', () => {
+      if (!state.currentFile) return;
+      const current = state.editor.getMarkdown();
+      if (current !== state.currentFile.content) {
+        setDirty(true);
+      } else {
+        setDirty(false);
+      }
+    });
+  }
+
+  function setDirty(dirty) {
+    state.dirty = dirty;
+    dirtyDot.style.display = dirty ? 'inline' : 'none';
+    saveBtn.disabled = !dirty || state.saving;
+  }
+
+  async function openFile(path) {
+    if (state.dirty && !confirm('You have unsaved changes. Discard them?')) return;
+
+    try {
+      emptyState.style.display = 'none';
+      editorWrapper.style.display = 'block';
+      filePath.textContent = path;
+
+      const file = await loadFile(path);
+      state.currentFile = file;
+      state.editor.setMarkdown(file.content, false);
+      setDirty(false);
+
+      deleteBtn.disabled = (path === 'README.md');
+      renderFileTree(); // update active state
+    } catch (e) {
+      toast('Failed to load file: ' + e.message, 'error');
+    }
+  }
+
+  async function save() {
+    if (!state.currentFile || !state.dirty || state.saving) return;
+    state.saving = true;
+    saveBtn.innerHTML = '<span class="spinner"></span> Saving';
+    saveBtn.disabled = true;
+
+    try {
+      const content = state.editor.getMarkdown();
+      const result = await saveFile(state.currentFile.path, content, state.currentFile.sha);
+      state.currentFile.sha = result.content.sha;
+      state.currentFile.content = content;
+      setDirty(false);
+      toast('Saved successfully', 'success');
+    } catch (e) {
+      if (e.message.includes('409') || e.message.toLowerCase().includes('conflict')) {
+        toast('Conflict: file was modified externally. Reload and try again.', 'error');
+      } else {
+        toast('Save failed: ' + e.message, 'error');
+      }
+    } finally {
+      state.saving = false;
+      saveBtn.innerHTML = 'Save';
+      if (state.dirty) saveBtn.disabled = false;
+    }
+  }
+
+  // ── Actions ──
+  async function createPage() {
+    const title = $('new-title').value.trim();
+    if (!title) { toast('Enter a page title', 'error'); return; }
+
+    const folder = $('new-folder').value;
+    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const path = folder ? `${folder}/${slug}.md` : `${slug}.md`;
+
+    // Check for existing file
+    if (state.files.some(f => f.path === path)) {
+      toast('A file already exists at this path', 'error');
+      return;
+    }
+
+    try {
+      const content = `# ${title}\n\nStart writing here.\n`;
+      await saveFile(path, content, null);
+      closeModal('new-modal');
+      $('new-title').value = '';
+      toast('Page created', 'success');
+      await reload();
+      openFile(path);
+    } catch (e) {
+      toast('Failed to create page: ' + e.message, 'error');
+    }
+  }
+
+  async function confirmDelete() {
+    if (!state.currentFile) return;
+    try {
+      await deleteFile(state.currentFile.path, state.currentFile.sha);
+      closeModal('delete-modal');
+      state.currentFile = null;
+      editorWrapper.style.display = 'none';
+      emptyState.style.display = 'flex';
+      filePath.textContent = 'No file selected';
+      deleteBtn.disabled = true;
+      setDirty(false);
+      toast('Page deleted', 'success');
+      await reload();
+    } catch (e) {
+      toast('Delete failed: ' + e.message, 'error');
+    }
+  }
+
+  async function reload() {
+    await Promise.all([loadFileTree(), loadSummary()]);
+    renderFileTree();
+  }
+
+  // ── Auth ──
+  async function connect() {
+    const token = $('token-input').value.trim();
+    if (!token) { showAuthError('Please enter a token'); return; }
+
+    const btn = $('connect-btn');
+    btn.innerHTML = '<span class="spinner"></span> Connecting...';
+    btn.disabled = true;
+
+    state.token = token;
+    try {
+      await verifyToken();
+      localStorage.setItem('exfi_token', token);
+      localStorage.setItem('exfi_repo', state.repo);
+      localStorage.setItem('exfi_branch', state.branch);
+      await startEditor();
+    } catch (e) {
+      showAuthError('Connection failed. Check your token and permissions.');
+      state.token = '';
+    } finally {
+      btn.innerHTML = 'Connect to GitHub';
+      btn.disabled = false;
+    }
+  }
+
+  function showAuthError(msg) {
+    const el = $('auth-error');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  async function startEditor() {
+    authScreen.style.display = 'none';
+    editorScreen.style.display = 'flex';
+
+    if (!state.editor) initEditor();
+
+    await reload();
+  }
+
+  function logout() {
+    localStorage.removeItem('exfi_token');
+    state.token = '';
+    state.currentFile = null;
+    authScreen.style.display = 'flex';
+    editorScreen.style.display = 'none';
+    closeModal('settings-modal');
+  }
+
+  // ── Modals ──
+  function openModal(id) { $(id).classList.add('open'); }
+  function closeModal(id) { $(id).classList.remove('open'); }
+  window.closeModal = closeModal; // for inline onclick
+
+  // ── Toast ──
+  let toastTimeout;
+  function toast(msg, type) {
+    toastEl.textContent = msg;
+    toastEl.className = 'show ' + type;
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => { toastEl.className = ''; }, 3500);
+  }
+
+  // ── Helpers ──
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // ── Event Listeners ──
+  $('connect-btn').addEventListener('click', connect);
+  $('token-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') connect(); });
+
+  $('toggle-sidebar').addEventListener('click', () => {
+    $('sidebar').classList.toggle('collapsed');
+  });
+
+  $('save-btn').addEventListener('click', save);
+
+  $('new-btn').addEventListener('click', () => openModal('new-modal'));
+  $('create-btn').addEventListener('click', createPage);
+  $('new-title').addEventListener('keydown', (e) => { if (e.key === 'Enter') createPage(); });
+
+  $('delete-btn').addEventListener('click', () => {
+    if (!state.currentFile) return;
+    $('delete-msg').textContent = `Are you sure you want to delete "${state.currentFile.path}"? This cannot be undone.`;
+    openModal('delete-modal');
+  });
+  $('confirm-delete-btn').addEventListener('click', confirmDelete);
+
+  $('settings-btn').addEventListener('click', () => {
+    $('settings-token').value = state.token;
+    $('settings-repo').value = state.repo;
+    $('settings-branch').value = state.branch;
+    openModal('settings-modal');
+  });
+
+  $('save-settings-btn').addEventListener('click', async () => {
+    const newToken = $('settings-token').value.trim();
+    const newRepo = $('settings-repo').value.trim();
+    const newBranch = $('settings-branch').value.trim();
+    if (!newToken || !newRepo || !newBranch) { toast('All fields required', 'error'); return; }
+
+    state.token = newToken;
+    state.repo = newRepo;
+    state.branch = newBranch;
+    localStorage.setItem('exfi_token', newToken);
+    localStorage.setItem('exfi_repo', newRepo);
+    localStorage.setItem('exfi_branch', newBranch);
+    closeModal('settings-modal');
+    toast('Settings saved', 'success');
+    await reload();
+  });
+
+  $('logout-btn').addEventListener('click', logout);
+
+  $('edit-nav-btn').addEventListener('click', () => openFile('_sidebar.md'));
+
+  // Ctrl+S / Cmd+S
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault();
+      save();
+    }
+  });
+
+  // Warn before leaving with unsaved changes
+  window.addEventListener('beforeunload', (e) => {
+    if (state.dirty) { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  // ── Auto-login if token exists ──
+  if (state.token) {
+    verifyToken()
+      .then(() => startEditor())
+      .catch(() => {
+        state.token = '';
+        localStorage.removeItem('exfi_token');
+      });
+  }
+})();
+</script>
+</body>
+</html>

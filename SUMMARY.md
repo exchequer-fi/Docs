@@ -1,6 +1,7 @@
 # Table of contents
 
 * [Exchequer Protocol Overview](README.md)
+* [Protocol Overview](protocol-overview.md)
 
 ## Protocol Concepts
 
