@@ -1,138 +1,257 @@
-# Protected Growth Token(PGT)
+# Protected Growth Tokens (PGT)
 
-## **Summary (TL;DR)**
+## TL;DR
 
-* Fixed-term ERC-20 Exchequer note with a downside floor (max 75% drawdown) and spot-equivalent upside participation.
-* **No coupon/yield** during the term; all value settles at maturity.
-* **No impermanent loss on the upside** — upside is delivered from a **reserved token tranche**, not from LP rebalancing.
-* **Protection settles in LP tokens** at maturity using a **72‑hour VWAP** to determine settlement amounts.
-* **Collateral structure:** per 100 USDC of notes sold, the issuer
-  * pairs **100 USDC + 100 TOKEN** in LP to fund the floor, and
-  * holds an **additional 100 TOKEN in reserve** to pay spot-equivalent upside.\
-    → Total on-chain collateral at issue ≈ **$300 notional** (at par), of which **$200** sits in LP and **$100** is a token reserve.
+A PGT is a fixed-term ERC-20 token with a downside floor (up to 75% protection) and spot-equivalent upside. No yield during the term — all value settles at maturity. Upside is delivered from a reserved token tranche (not from LP rebalancing), so there's no impermanent loss on the upside for holders.
 
-***
+---
 
-## What it is
+## How a PGT Works (Step by Step)
 
-A PGT gives buyers a defined principal floor at maturity (capped at a 75% drawdown) and **linear, spot-equivalent** upside without the rebalancing drag of AMM LPs. Issuance and collateralization are entirely on-chain, with transparent parameters and auditable collateral. &#x20;
+We'll walk through the full lifecycle using the demo's default values: a $1.00 token, $1M total liquidity, 50% downside protection, 15% assumed yield, and a 12-month term.
 
-For already-launched tokens, it enables repeatable, time-boxed campaigns—think TGE magic without the sell pressure—that reignite attention and acquisition while compounding deep, stable on-chain DEX liquidity as a designed consequence.
+### Step 1: User & Project Deposits
 
-## Who it’s for
+Users deposit stablecoins. The project matches with tokens worth **2× the user deposit**.
 
-* **Issuers (projects & treasuries)**.&#x20;
-  * Best for clean, easy-to-explain “floor + upside” campaigns that convert cautious users and conviction holders without emissions. Predictable risk budget (term, floor ≤75%, participation/cap).&#x20;
-  * Ideal around roadmap moments where clarity beats spectacle. Avoids IL on the upside; each cycle compounds deep, stable on-chain DEX liquidity as a designed outcome.
-* **Buyers (allocators & users)**.&#x20;
-  * Long-term believers and funds who prefer defined exposure with linear upside and a stated worst-case at maturity.&#x20;
-  * Suitable for larger tickets newcomers who want a simple, auditable payoff.&#x20;
-  * High signal for wallets sizing into positions with an explicit drawdown limit.
+| Participant | Deposit | Value |
+|---|---|---|
+| Users deposit | 500,000 USDC | $500,000 |
+| Project contributes | 1,000,000 tokens @ $1.00 | $1,000,000 |
+| **Total raised** | | **$1,500,000 in assets** |
 
-***
+The project contributes twice the user amount. This is the core economic mechanism — the project is subsidizing the downside with its own tokens.
+
+![PGT Flowchart — User & Project Deposits](/.gitbook/assets/pgt-flowchart-deposits.png)
+*The deposit step: users provide USDC, the project matches with 2× the value in tokens.*
+
+### Step 2: Collateral Is Split Into Two Pieces
+
+The combined assets are split into two tranches with distinct jobs:
+
+**Tranche A — LP Position (funds the floor)**
+500,000 tokens + 500,000 USDC are paired into a full-range liquidity position on a DEX.
+> LP Position value: $1,000,000
+> This is the collateral that backs the downside protection.
+
+**Tranche B — Upside Payout Reserve**
+The remaining 500,000 tokens are held separately in reserve.
+> Reserve value: $500,000 (at $1.00/token)
+> These tokens are used to pay upside if the token appreciates. Because they're held off-LP, there's no impermanent loss on the upside.
+
+| Tranche | Contents | Value | Purpose |
+|---|---|---|---|
+| A — LP Position | 500K tokens + 500K USDC | $1,000,000 | Funds downside protection |
+| B — Upside Reserve | 500K tokens | $500,000 | Pays upside at maturity |
+| **Total collateral** | | **$1,500,000** | |
+
+![PGT Flowchart — LP Position + Upside Reserve](/.gitbook/assets/pgt-flowchart-collateral-split.png)
+*Collateral splits into two pieces: the LP position (green, funds the floor) and the upside reserve (purple, pays appreciation).*
+
+### Step 3: PGTs Are Issued to Users
+
+Users receive PGT tokens (ERC-20). Each PGT is backed by:
+
+- **Downside protection** provided through the LP Position (2× user principal = $1,000,000)
+- **Upside exposure** provided through the Upside Payout Reserve (500,000 tokens)
+
+The PGT is the user's claim on both of these at maturity.
+
+![PGT Flowchart — PGTs Issued](/.gitbook/assets/pgt-flowchart-issued.png)
+*PGTs are backed by both the LP position (downside protection) and the upside reserve (upside exposure).*
+
+### Step 4: LP Position Earns Yield
+
+For the full 12-month term, the LP position earns trading fees on the DEX. At 15% APR:
+
+| Metric | Value |
+|---|---|
+| LP Position | $1,000,000 |
+| Yield Rate | 15% APR |
+| Protection Level | 50% |
+| Term | 12 months |
+| **Projected yield** | **$150,000** |
+
+Users remain downside protected throughout the term with full upside exposure. The yield accrues to the LP position and benefits the project at redemption.
+
+![PGT Flowchart — LP Yield Period](/.gitbook/assets/pgt-flowchart-yield.png)
+*During the term, the LP position earns trading fees while users remain protected.*
+
+### Step 5: Maturity & Redemption
+
+At the end of the 12-month term, the PGT settles based on the token price at maturity (measured by a 72-hour volume-weighted average price to resist manipulation).
+
+Three scenarios:
+
+---
+
+#### Scenario A: Token price stayed flat ($1.00 → $1.00)
+
+**User receives:**
+- $500,000 in LP tokens (their principal back, fully protected)
+- No upside (price didn't go up)
+
+**Project receives:**
+- 500,000 reserved tokens back (unused — no upside was due)
+- Remaining LP position: $500,000 (total LP $1M minus user's $500K)
+- LP yield: +$150,000
+- **Project total: $1,150,000** (vs. $1,000,000 committed → net gain of $150K)
+
+![PGT Redemption — Flat Price](/.gitbook/assets/pgt-redemption-flat.png)
+*At $1.00 (no change): user gets principal back, project gets LP + yield.*
+
+---
+
+#### Scenario B: Token price went up ($1.00 → $1.50, +50%)
+
+**User receives:**
+- Upside payout from the reserve (their $500K principal participates in the +50% move)
+- $500,000 principal + $250,000 upside = **$750,000 total value**
+
+**Project receives:**
+- Remaining reserve tokens (after paying user upside)
+- LP position + yield
+- Net outcome depends on participation rate and cap settings
+
+![PGT Redemption — Price Up](/.gitbook/assets/pgt-redemption-up.png)
+*At $1.50 (+50%): user receives upside from the reserve on top of principal.*
+
+---
+
+#### Scenario C: Token price dropped ($1.00 → $0.50, -50%)
+
+**User receives:**
+- $500,000 in LP tokens — **full principal protected** (the drop is within the 50% protection floor)
+- The LP tokens may have rebalanced (more tokens, less USDC) but their market value equals the user's original principal
+
+**Project receives:**
+- 500,000 reserved tokens back (no upside was due)
+- Remaining LP position (reduced in value due to the token drop)
+- LP yield: +$150,000
+- The project absorbs the downside — this is the protection working as designed
+
+![PGT Redemption — Price Down (Protected)](/.gitbook/assets/pgt-redemption-down-protected.png)
+*At $0.50 (-50%): user's principal is fully protected — they receive $500K in LP tokens.*
+
+---
+
+#### Scenario D: Token dropped beyond the protection floor ($1.00 → $0.20, -80%)
+
+If the token drops more than the protection percentage (50% in this example), the user begins to take losses beyond the floor. They still receive LP tokens and are strictly better off than holding unprotected spot, but they're no longer fully principal-protected.
+
+With 75% protection (the maximum setting), the user would be fully protected against drops of up to 75%.
+
+---
+
+## The Payoff Chart
+
+The demo includes a live payoff chart that compares three strategies across all possible token prices at maturity:
+
+1. **PGT** — the floor creates a kinked payoff: protected on the downside, linear participation on the upside
+2. **Standard LP** — the classic AMM curve with impermanent loss drag
+3. **Token Holding** — pure spot exposure with no protection
+
+The PGT line is above the Standard LP line on the upside (because upside comes from the reserve, not LP rebalancing) and above both lines on the downside (because of the protection floor).
+
+![PGT Payoff Profile at Maturity](/.gitbook/assets/pgt-payoff-chart.png)
+*The PGT payoff (blue) is protected on the downside and tracks upside without impermanent loss — outperforming both a standard LP position and pure token holding across most scenarios.*
+
+---
+
+## What It Costs the Project
+
+From the project's perspective, here's the full cost picture (using the demo defaults):
+
+| Item | Amount | Notes |
+|---|---|---|
+| Tokens committed | 1,000,000 tokens | Locked for 12 months |
+| USDC required from project | $0 | Users provide the USDC side |
+| Principal protection cost | $0 (if price stays flat or goes up) | Cost materializes only if the token drops |
+| LP yield earned | +$150,000 | At 15% APR on the $1M LP position |
+
+**If the token stays flat:** Project gets back $1,150,000 ($1M principal + $150K yield). Net gain: +$150K for 12 months of deep on-chain liquidity.
+
+**If the token goes up:** Project returns some reserve tokens as upside to users but benefits from appreciation on remaining tokens and LP position.
+
+**If the token drops 50%:** Users are made whole. The project's LP position has declined in value (this is the cost of the protection). But the project still earns yield on the LP during the term.
+
+![PGT Project Dashboard](/.gitbook/assets/pgt-project-dashboard.png)
+*The project dashboard view: total onchain liquidity secured, project costs (tokens locked + protection cost), and final balances at maturity.*
+
+---
 
 ## Key Properties
 
-* **Term:** Fixed maturity (e.g., 3–12 months).
-* **Protection:** Partial principal protection up to a 75% drawdown. If the token is down ≤ 75% vs reference at maturity, the holder redeems LP worth original principal; losses beyond 75% are borne by the holder (see Payoff Logic).
-* **Upside:** **Spot-equivalent** (issuer-set participation, e.g., 100%, 125%) with optional cap; **funded from the reserved token tranche** (not via LP).
-* **Yield:** None during the term (zero coupon).
-* **Settlement assets:**
-  * **Floor** pays in LP tokens backed by on-chain collateral (holder may withdraw to constituents).
-  * **Upside** is delivered from the **reserved TOKEN** based on the 72-hour VWAP.
-* **Price measure:** 72-hour VWAP ending at the maturity timestamp to reduce manipulation risk.
-* **Collateral structure:** Two token tranches from treasury: **(A) LP tranche** to pair with buyer USDC, **(B) Reserve tranche** to fund upside.
-* **Liquidity outcome:** Each note adds to deep, stable on-chain DEX liquidity as a designed, cumulative consequence of the collateral plan.
+| Property | Value |
+|---|---|
+| Term | Fixed maturity (typically 3–12 months) |
+| Protection | Partial, up to 75% drawdown floor |
+| Upside | Spot-equivalent, from reserved token tranche (no IL on upside) |
+| Yield during term | None for the user (zero coupon); LP yield accrues to the position |
+| Settlement asset | Floor: LP tokens. Upside: tokens from reserve |
+| Price at maturity | 72-hour VWAP (volume-weighted average price) |
+| Collateral | Fully on-chain, auditable, escrowed in protocol contracts |
+| Token standard | ERC-20 |
 
-***
+---
 
-## Creation Mechanism
+## Configurable Parameters (What Projects Control)
 
-1. **Issue Notes (ERC-20).** Project publishes terms and sells PGT to buyers.
-2. **Form LP for the floor (Tranche A).** Pair buyer **USDC 1:1 with TOKEN** to create project-owned LP that funds the floor.
-3. **Set aside a reserved token tranche for upside (Tranche B).** Hold an **equal-sized TOKEN batch** off-LP to deliver **spot-equivalent upside** at maturity (participation per terms). This avoids upside IL because the upside isn’t sourced from a rebalancing LP.
-4. **On-chain escrow.** LP and reserve tokens are locked in protocol contracts, fully auditable.
-5. **Settle at maturity.** Redemption follows the Payoff Logic using the 72-hour VWAP.
+When issuing a PGT campaign, the project sets:
 
-***
+- **Term** — maturity date (e.g., 6 months, 12 months)
+- **Protection floor** — how much downside protection, up to 75%
+- **Upside participation** — how much of the token appreciation users get (e.g., 100%, 125%)
+- **Optional upside cap** — maximum upside per PGT
+- **AMM/pool selection** — which DEX and pool for the LP position
+- **Rollover offer** — optional new series at or before maturity
 
-## Configurable Parameters (Issuer “knobs”)
+---
 
-* Term (maturity date/time)
-* Protection floor (up to the 75% drawdown limit)
-* Upside participation (e.g., 100%, 125%) and optional cap
-* AMM/pool selection for LP tranche
-* **Reserve sizing policy** (default: reserve TOKEN sized for 100% participation)
-* Optional rollover offer at or prior to maturity
+## Who PGTs Are For
 
-***
+**For projects/issuers:**
+Best for clean, easy-to-explain "floor + upside" campaigns. Predictable cost. Ideal around roadmap moments where clarity beats spectacle. Each campaign compounds deep, stable on-chain DEX liquidity.
 
-## Payoff Logic at Maturity
+**For buyers/holders:**
+Best for conviction holders, funds, and cautious allocators who want defined exposure — upside participation with a stated worst case. Suitable for larger tickets and users who prefer a simple, auditable payoff over lottery mechanics.
 
-Let **P₀** be the reference price (VWAP at issuance or specified reference) and **Pₘ** the 72-hour VWAP immediately prior to maturity.
+---
 
-**A) Drawdown ≤ 75% (Pₘ ≥ 0.25·P₀)**
+## Formal Payoff Logic
 
-* **Floor:** Holder redeems **LP worth original principal** (paid in LP).
-* **Upside:** If **Pₘ ≥ P₀**, deliver **spot-equivalent upside** from the reserved TOKEN per participation and any cap; if **Pₘ < P₀**, no upside is due.
+For readers who want the precise math:
 
-**B) Drawdown > 75% (Pₘ < 0.25·P₀)**
+Let **P₀** = reference price at issuance, **Pₘ** = 72-hour VWAP at maturity.
 
-* **Floor is capped.** Holder redeems LP per the protection schedule and absorbs losses beyond the 75% floor. Outcome remains strictly better than unprotected spot for the same move.
-* Reserve tokens were earmarked for upside; if none is due, they are released per terms after settlement.
+**If token is up or flat (Pₘ ≥ P₀):**
+User receives spot-equivalent upside from the reserve at the participation rate.
+Upside = Participation × Notional × (Pₘ − P₀) / P₀
+Delivered in tokens from Tranche B.
 
-> The floor reallocates tail risk from buyer to issuer and is funded by on-chain collateral. Upside is delivered from a **non-LP reserve**, so the buyer’s upside is linear and **not subject to IL**.
+**If token is down, drawdown ≤ protection % (e.g., ≤50%):**
+User receives LP tokens worth original principal (full principal protection).
+No upside is due. Reserve tokens are released back to the project.
 
-***
+**If token is down, drawdown > protection % (e.g., >50% with 50% floor):**
+Protection is capped at the floor. User receives LP tokens per the protection schedule.
+Loss beyond the floor is borne by the user, but outcome is strictly better than unprotected spot.
 
-## Numerical Walkthrough (Illustrative)
+**If token is down, drawdown > 75% (maximum possible floor):**
+Even with the highest protection setting, losses beyond 75% pass through to the user.
 
-**Setup**
+---
 
-* Buyer deposits **100 USDC**.
-* Project posts **200 TOKEN at $1.00** from treasury, split into:
-  * **Tranche A (100 TOKEN)** → paired with **100 USDC** to form LP for the floor.
-  * **Tranche B (100 TOKEN)** → held **in reserve** to pay upside.
-* **Total initial collateral ≈ $300** (LP ≈ $200 + reserve ≈ $100).
+## Risks
 
-**Case 1 — 75% drawdown (TOKEN = $0.25 at maturity)**\
-Constant-product rebalancing ⇒ LP ≈ **200 TOKEN + 50 USDC** (≈ **$100** total).
+- **Residual tail risk:** Losses beyond the protection floor are borne by the holder.
+- **Smart-contract risk:** Contracts are immutable and audited, but risk is never zero.
+- **Liquidity/slippage:** AMM pool depth affects the realized value when burning LP tokens at redemption.
+- **LP yield is not guaranteed:** The assumed yield depends on actual DEX trading volume and fees.
 
-* **Redemption:** Holder receives **LP worth $100** → full principal back (in LP).
-* **Upside:** None (Pₘ < P₀). Reserve is unused and released per terms.
+---
 
-**Case 2 — 50% drawdown (TOKEN = $0.50)**\
-LP value ≈ **$141.4**.
+## Next
 
-* **Redemption:** **Full principal back in LP ($100)** (drawdown ≤ 75%).
-* **Upside:** None (Pₘ < P₀). Reserve is unused and released per terms.
-
-**Case 3 — 90% drawdown (TOKEN = $0.10)**\
-LP value ≈ **$63.2**.
-
-* **Redemption:** Holder receives LP per schedule; loss beyond the 75% floor is borne by holder.
-* **Upside:** None. Reserve unused; released per terms.
-
-**Case 4 — 50% up (TOKEN = $1.50)**
-
-* **Floor:** Not needed.
-* **Upside (100% participation, uncapped):** Spot-equivalent payoff on 100 USDC is **$150**.
-  * Deliver **$50 of upside** from the reserve at $1.50 ⇒ **33.33 TOKEN** from Tranche B.
-  * Holder’s net economic outcome matches **linear spot** without taking IL on the upside.
-
-_(Exact amounts depend on pool, fee tier, and final VWAP; participation/caps alter the reserve usage.)_
-
-## Redemption & Rollover
-
-* **Price input:** 72-hour VWAP immediately prior to maturity.
-* **Settlement assets:**
-  * **Floor:** LP tokens backed by collateral (holder may burn LP for constituents).
-  * **Upside:** Delivered from the **reserved TOKEN** (or cash-settled per terms).
-* **Rollover (optional):** Issuer can offer a new series; holders may roll or redeem.
-
-## Risks & Considerations
-
-* **Residual tail risk:** Losses beyond the 75% floor are borne by the holder.
-* **IL avoidance applies to upside only:** The upside is reserve-funded; the LP tranche is exclusively for the floor.
-* **Smart-contract risk:** Contracts are immutable/audited, but risk ≠ 0.
-* **Liquidity & slippage:** AMM/pool depth affects realized unwind when burning LP.
+> [Power PGT — jackpot-style upside variant](/note-types/power-protected-growth-token-power-pgt)
+> [Protocol Mechanics — collateralization, settlement, and architecture](/protocol-mechanics)

@@ -1,179 +1,178 @@
 # Power Protected Growth Token (Power PGT)
 
-## **Summary (TL;DR)**
+## TL;DR
 
-* Fixed-term ERC-20 Exchequer Note with a downside floor (max 75% drawdown) and prize-linked upside.
-* At maturity, upside (if any) is split between (i) a baseline pro-rata upside paid to all holders and (ii) a configurable prize pool distributed by a provably fair on-chain drawing across 5 reward tiers.
-* Top tier can pay up to a 10,000× tier multiplier of the unit prize (see Reward Tiers); every holder still receives at least the protection floor.
-* Protection settles in LP tokens at maturity using a 72-hour VWAP to determine settlement amounts.
-* Designed for already-launched tokens to run repeatable, time-boxed campaigns—think TGE magic without the sell pressure—while compounding deep, stable on-chain DEX liquidity as a deliberate, cumulative outcome.
+A Power PGT has the same downside protection floor as a regular PGT (up to 75%), but delivers upside differently: instead of linear participation, gains are split between a **baseline payout to all holders** and a **prize pool distributed by on-chain drawing** across 5 reward tiers. The top tier can pay up to **10,000× the base prize**. Every holder still gets at least the protection floor.
 
-***
+Power PGTs are designed for community campaigns, attention-driven acquisition, and moments where gamified upside converts new users that a standard floor-plus-spot offer wouldn't reach.
 
-### What it is
+---
 
-A Power PGT gives buyers a defined principal floor at maturity (capped at a 75% drawdown) and converts upside into two pieces: a baseline pro-rata upside for all holders and a jackpot-style prize pool paid to randomly selected winners across 5 tiers, with the highest tier using a 10,000× multiplier of the series’ unit prize.&#x20;
+## How a Power PGT Works
 
-Issuance, collateralization, and drawings are on-chain and auditable. For established tokens, Power PGTs add event energy and net-new user acquisition without perpetual emissions, while each campaign deepens and stabilizes on-chain DEX liquidity.
+The structure is identical to a regular PGT through the first four steps — user deposits, project matches with 2× tokens, LP position + reserve are created, LP earns yield during the term. The difference is entirely in **how upside is distributed at maturity**.
 
-#### **Who it’s for**
+### Same as PGT:
+1. Users deposit USDC. Project matches with tokens (2× user value).
+2. Assets split into LP Position (floor) + Upside Reserve.
+3. Users receive Power PGT tokens (ERC-20).
+4. LP earns yield for the full term.
 
-* **Issuers (projects & treasuries)**:&#x20;
-  * Best when the goal is event energy and net-new user acquisition
-  * Galvanize dormant audiences while keeping a capped, budgetable risk profile. Each cycle still compounds deep, stable on-chain DEX liquidity.
-* **Buyers (allocators & users):**&#x20;
-  * Participants who value a clear floor plus lottery-like upside.&#x20;
-  * Great for community campaigns, smaller tickets, and attention-driven cohorts that respond to jackpots—while still protecting principal at maturity.
+### Different from PGT — Upside Distribution:
 
-***
+At maturity, if the token went up, the upside is split into two pieces:
 
-### Key Properties
+**Baseline pro-rata upside** — a share paid equally to every holder, proportional to their holdings. This ensures non-winners still benefit from appreciation beyond just the floor.
 
-* **Term:** Fixed maturity date (e.g., 3–12 months). Protection applies **only at maturity**.
-* **Protection:** Partial, up to **75% drawdown**. If the token is down **≤ 75%** at maturity, the holder redeems **LP tokens worth the original principal**. If the drawdown **exceeds 75%**, the holder bears losses beyond the floor but is still **strictly better off than unprotected spot** over the same move.
-* **Upside:** Split at maturity:
-  * Baseline pro-rata upside to all holders, and
-  * Prize pool upside distributed by on-chain drawing across 5 reward tiers (top tier uses a 10,000× multiplier of the unit prize).
-* **Settlement asset:**&#x20;
-  * Floor pays in LP tokens backed by on-chain collateral (holder may withdraw to constituents).
-  * Baseline upside and prize payouts settle in TOKEN.
-* **Price measure:** **72‑hour VWAP** ending at the maturity timestamp to reduce manipulation risk.
-* **Collateral structure:** Two token tranches from treasury: **(A) LP tranche** to pair with buyer USDC, **(B) Reserve tranche** to fund upside.
-* **Liquidity outcome:** Each note adds to deep, stable on-chain DEX liquidity as a designed, cumulative consequence of the collateral plan.
+**Prize pool** — the remaining share is pooled and distributed by a provably fair on-chain drawing across 5 reward tiers, with multipliers ranging from 2× to 10,000× the base unit prize.
 
-***
+The **issuer configures the split** — anywhere from 100% prize pool (maximum jackpot energy) to 50/50 or any other ratio.
 
-### Creation Mechanism
+---
 
-1. **Issue Notes (ERC‑20).** Project publishes terms and sells Power PGT to buyers.
-2. **Form LP** for the floor. Pair buyer stablecoins/ETH with treasury tokens to create project-owned LP that funds the floor (on-chain escrow).
-3. **Define upside split.** Specify the prize-pool shares (0–100%) of upside accrual and the baseline share (1−s); set reward tiers, multipliers, winner counts, and weighting rules.
-4. **Post Collateral.** LP tokens are escrowed on‑chain to **back the floor**.
-5. **Accrue Rewards during the term.** As price appreciation accumulates relative to the reference, the protocol accounts for baseline upside and allocates s·(upside) to the prize pool per the published rules.
-6. **Settle at Maturity.** Use the 72-hour VWAP to determine drawdown (for floor) and realized upside (for baseline + prize pool). Run the on-chain drawing and pay winners; all holders receive at least the floor.
+## The 5-Tier Reward Structure
 
-***
+When the token appreciates, the prize pool is divided across 5 tiers. Each tier has a multiplier and a number of winners:
 
-### Configurable Parameters (Issuer “knobs”)
+| Tier | Name | Multiplier | Example Winners |
+|---|---|---|---|
+| 1 | Jackpot | 10,000× | 1 |
+| 2 | Major | 1,000× | 20 |
+| 3 | Large | 100× | 200 |
+| 4 | Medium | 10× | 2,500 |
+| 5 | Starter | 2× | 12,500 |
 
-* **Term** (date/time)
-* **Protection floor** (any value **up to** the 75% drawdown limit)
-* **Upside split: prize-pool share s and baseline share (1−s)**
-* **Reward tiers: multipliers, number of winners per tier, tier weights**
-* **Participation/cap rules for total upside accrual**
-* AMM/pool selection for LP tranche
+The protocol computes a **unit prize** (u) such that all tier payouts sum exactly to the prize pool:
 
-***
+**u = Prize Pool ÷ (sum of all tiers' winners × multipliers)**
 
-### Payoff Logic at Maturity
+Each winner in tier *i* receives: **multiplier × u**
 
-Let P₀ be the reference price (at issuance or per terms) and Pₘ the 72-hour VWAP immediately prior to maturity.
+The issuer configures the exact tier structure — multipliers, winner counts, and weighting rules are all adjustable.
 
-**A) Token up or flat (Pm ≥ P0)**
+---
 
-1. Baseline pro-rata upside: Each holder receives (1−s) × UpsideParticipation × Notional × max(0, (Pₘ−P₀)/P₀), allocated pro-rata.
-2. Prize pool: s × UpsideParticipation × Notional × max(0, (Pₘ−P₀)/P₀) × (TotalNotional) funds the pool. The on-chain drawing assigns winners across 5 tiers and pays each winner TierMultiplier × UnitPrize (see Reward Tiers; total paid is capped by the pool).
-3. Floor is not used (token did not draw down beyond the floor).
+## Numerical Walkthrough
 
-B) Token down, drawdown **≤ 75%**
+### Setup
 
-* **Full principal protection.** Holder redeems **LP tokens worth the original principal** (paid in LP), regardless of the exact LP value.
+| Parameter | Value |
+|---|---|
+| Notes sold | 100,000 |
+| Price per note | 100 USDC |
+| Total notional | $10,000,000 |
+| Token start price | $1.00 |
+| Token end price | $1.80 (+80%) |
+| Protection floor | 50% |
+| Participation | 100% |
 
-C) Token down, drawdown **> 75%**
+**Total upside = $10,000,000 × 80% = $8,000,000**
 
-* **Protection capped.** Holder redeems **LP tokens per the protection schedule**; any loss beyond the 75% floor is borne by the holder. Outcome remains **strictly better than unprotected spot** over the same move.
+### Option A: 100% Prize Pool (Maximum Jackpot)
 
-> Protection reassigns tail risk from buyer to issuer and is funded by the escrowed LP collateral. It does not create free money.
+All $8,000,000 goes to the prize pool. No baseline payout.
 
-***
+Unit prize = $8,000,000 ÷ 100,000 = **$80**
 
-### Reward Tiers (5-tier structure with 10,000× top multiplier)
+| Tier | Multiplier | Per Winner | Winners | Tier Total |
+|---|---|---|---|---|
+| 1 — Jackpot | 10,000× | **$800,000** | 1 | $800,000 |
+| 2 — Major | 1,000× | **$80,000** | 20 | $1,600,000 |
+| 3 — Large | 100× | **$8,000** | 200 | $1,600,000 |
+| 4 — Medium | 10× | **$800** | 2,500 | $2,000,000 |
+| 5 — Starter | 2× | **$160** | 12,500 | $2,000,000 |
+| | | | **Total** | **$8,000,000** ✓ |
 
-Tier multipliers scale a “unit prize” u so that the sum of all tier payouts does not exceed the prize pool. Let nᵢ be the number of winners and mᵢ the multiplier for tier i. The protocol computes:
+A jackpot winner turns a **$100 note into $800,000** — that's the 10,000× headline, scaled by the 80% rally.
 
-u = PrizePool / (Σᵢ nᵢ·mᵢ)
+### Option B: 50/50 Split (Everyone Gets Something)
 
-Each winner in tier i receives payout = mᵢ · u (paid in the series’ payout asset).\
-Example multipliers and counts (illustrative; issuers configure these):
+$4,000,000 → prize pool / $4,000,000 → baseline to everyone
 
-• Tier 1 — Jackpot: m₁ = 10,000×, n₁ = 1\
-• Tier 2 — Major: m₂ = 1,000×, n₂ = 5\
-• Tier 3 — Large: m₃ = 100×, n₃ = 50\
-• Tier 4 — Medium: m₄ = 10×, n₄ = 200\
-• Tier 5 — Starter: m₅ = 2×, n₅ = 500
+**Baseline per note:** $4,000,000 ÷ 100,000 = **$40 per note** (on top of the protection floor)
 
-### Numerical Walkthrough (illustrative)
+**Prize pool unit prize:** $4,000,000 ÷ 100,000 = **$40**
 
-#### Setup
+| Tier | Multiplier | Per Winner | Winners | Tier Total |
+|---|---|---|---|---|
+| 1 — Jackpot | 10,000× | **$400,000** | 1 | $400,000 |
+| 2 — Major | 1,000× | **$40,000** | 20 | $800,000 |
+| 3 — Large | 100× | **$4,000** | 200 | $800,000 |
+| 4 — Medium | 10× | **$400** | 2,500 | $1,000,000 |
+| 5 — Starter | 2× | **$80** | 12,500 | $1,000,000 |
+| | | | **Total** | **$4,000,000** ✓ |
 
-* Notes sold: **100,000**
-* Price per note: **100 USDC**
-* Token starts at **$1.00** and ends at **$1.80** at maturity (**+80%**)
-* Participation: **100%**
-* Floor: **50%** (you’re protected against drawdowns up to 75%)
-* Five reward tiers (more than one winner at every tier):
-  * Tier 1 (Jackpot): **1** winner × **10,000×**
-  * Tier 2 (Major): **20** winners × **1,000×**
-  * Tier 3 (Large): **200** winners × **100×**
-  * Tier 4 (Medium): **2,500** winners × **10×**
-  * Tier 5 (Starter): **12,500** winners × **2×**
+Every non-winner still gets **$100 principal + $40 baseline = $140** on their $100 note. The jackpot winner gets **$400,000 + $40 baseline = $400,040**.
 
-Total upside created by the rally
+---
 
-* Total notional = 100,000 notes × 100 USDC = **10,000,000 USDC**
-* Upside from price move = **10,000,000 × 80% = 8,000,000 USDC**
+## Downside Scenarios (Same as PGT)
 
-#### Option A — 100% prize pool (no baseline payout)
+The downside protection works identically to a standard PGT:
 
-All of the **8,000,000 USDC** goes to the prize pool.
+**Token drops within the protection floor (e.g., -40% with 50% floor):**
+Every holder receives LP tokens worth their original principal. Full protection. No prize pool (no upside to distribute).
 
-* Because the tier multipliers and winner counts add up neatly, the **base prize** works out to **80 USDC**.
-* Each tier pays a multiple of that base prize:
+**Token drops beyond the protection floor (e.g., -60% with 50% floor):**
+Protection is capped at 50%. Holders receive LP tokens per the protection schedule and absorb losses beyond the floor.
 
-Per-winner prizes
+**Token drops beyond 75% (maximum possible floor):**
+Even the highest protection setting can't prevent losses beyond a 75% drop. But holders are still strictly better off than unprotected spot.
 
-* **Tier 1:** 10,000 × 80 = **800,000 USDC** (1 winner)
-* **Tier 2:** 1,000 × 80 = **80,000 USDC** (20 winners)
-* **Tier 3:** 100 × 80 = **8,000 USDC** (200 winners)
-* **Tier 4:** 10 × 80 = **800 USDC** (2,500 winners)
-* **Tier 5:** 2 × 80 = **160 USDC** (12,500 winners)
+---
 
-Sanity check: those payouts add up to the full **8,000,000 USDC** pool.\
-Key takeaway: a jackpot winner turns a **100 USDC** note into **800,000 USDC** (that’s the **10,000×** headline, scaled by the **+80%** rally).
+## When to Use Power PGT vs. PGT
 
-#### Option B — 50% prize pool, 50% baseline (everyone gets something)
+| | PGT | Power PGT |
+|---|---|---|
+| **Upside delivery** | Linear, proportional | Jackpot-style drawing + optional baseline |
+| **Best for** | Conviction holders, funds, larger tickets | Community campaigns, smaller tickets, viral moments |
+| **Narrative** | "Floor + clean upside" | "Floor + chance to win big" |
+| **Complexity** | Simple | Moderate (prize tiers need explanation) |
+| **When to use** | Roadmap milestones, institutional-facing campaigns | Seasonal events, attention-driven growth, reactivating dormant holders |
 
-Split the **8,000,000 USDC** upside evenly:
+Projects can alternate between PGT and Power PGT across campaigns based on market conditions and goals.
 
-* **4,000,000 USDC** → prize pool
-* **4,000,000 USDC** → baseline paid to **everyone**
+---
 
-Baseline (everyone):
+## Configurable Parameters (What Projects Control)
 
-* 4,000,000 / 100,000 notes = **40 USDC per note**
+Everything from PGT, plus:
 
-Prize pool:
+- **Prize pool share (s)** — what percentage of upside goes to the prize pool vs. baseline
+- **Reward tiers** — multipliers, number of winners per tier
+- **Tier weights** — rules for how winners are selected (e.g., stake-weighted, time-weighted)
+- **Randomness source** — provably fair on-chain randomness for the drawing
 
-* New **base prize** is **40 USDC** (half of Option A because the pool is half as big)
+---
 
-Per-winner prizes
+## Formal Payoff Logic
 
-* **Tier 1:** 10,000 × 40 = **400,000 USDC** (1 winner)
-* **Tier 2:** 1,000 × 40 = **40,000 USDC** (20 winners)
-* **Tier 3:** 100 × 40 = **4,000 USDC** (200 winners)
-* **Tier 4:** 10 × 40 = **400 USDC** (2,500 winners)
-* **Tier 5:** 2 × 40 = **80 USDC** (12,500 winners)
+Let **P₀** = reference price, **Pₘ** = 72-hour VWAP at maturity, **s** = prize-pool share.
 
-Sanity check: those prizes total **4,000,000 USDC**, and the other **4,000,000 USDC** is the **40 USDC** baseline to every note.\
-Key takeaway: the jackpot still maps cleanly to the **10,000×** headline scaled by the **+80%** rally and **50%** pool share → **400,000 USDC** on a 100 USDC note, while non-winners still collect the **40 USDC** baseline.
+**If token is up or flat (Pₘ ≥ P₀):**
+- Baseline payout per holder: (1 − s) × Participation × Notional × (Pₘ − P₀) / P₀
+- Prize pool: s × Participation × Notional × (Pₘ − P₀) / P₀ × TotalNotional
+- Prize winners receive TierMultiplier × UnitPrize (capped by pool)
 
-***
+**If token is down, drawdown ≤ protection %:**
+Full principal protection in LP tokens. No upside, no prize pool.
 
-### Risks & Considerations
+**If token is down, drawdown > protection %:**
+Capped protection. Losses beyond the floor pass through.
 
-* Residual tail risk: Losses beyond the 75% floor are borne by the holder.
-* Prize variability: Prize outcomes are stochastic; expected value equals the configured share s of upside, but individual results vary. Realizing the full 10,000× top-tier payout requires a sufficiently large prize pool as shown above.
-* Weighting & fairness: Drawing uses published, auditable rules (e.g., stake/time weighting) and a provably fair randomness source; ensure users understand eligibility criteria.
-* Smart-contract risk: Contracts are immutable/audited, but risk ≠ 0.
-* Liquidity & slippage: AMM/pool depth affects realized unwind when burning LP.
+---
 
+## Risks
+
+All PGT risks apply, plus:
+
+- **Prize variability:** Prize outcomes are probabilistic. Expected value equals the configured share of upside, but individual results vary widely. The 10,000× top-tier payout requires a sufficiently large prize pool (driven by total notional × price appreciation).
+- **Weighting fairness:** The drawing uses published, auditable rules and provably fair randomness. Users should understand eligibility criteria and weighting before purchasing.
+
+---
+
+## Next
+
+> [Protocol Mechanics — collateralization, settlement, and architecture](/protocol-mechanics)
+> [Research & Whitepapers](/research/whitepapers)
