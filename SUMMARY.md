@@ -2,12 +2,12 @@
 
 * [Welcome to Exchequer](README.md)
 
-## Note Types
+## Products
 
-* [Protected Growth Token (PGT)](note-types/protected-growth-token-pgt.md)
-* [Power Protected Growth Token (Power PGT)](note-types/power-protected-growth-token-power-pgt.md)
+* [Protected Growth Tokens (PGT)](note-types/protected-growth-token-pgt.md)
+* [Power PGT](note-types/power-protected-growth-token-power-pgt.md)
 
-## Protocol
+## Technical
 
 * [Protocol Mechanics](protocol-mechanics.md)
 
