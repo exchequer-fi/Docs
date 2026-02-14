@@ -265,6 +265,97 @@
     html[data-theme="dark"] .github-corner svg { fill: var(--theme-color); }
     .github-corner svg { fill: var(--theme-color); }
 
+    /* ── Dark mode: comprehensive text color overrides ──
+         The vue.css base theme hard-codes light-mode colors on many
+         elements. We must override them all for dark readability. ── */
+    html[data-theme="dark"] body,
+    html[data-theme="dark"] .content,
+    html[data-theme="dark"] .markdown-section,
+    html[data-theme="dark"] .markdown-section p,
+    html[data-theme="dark"] .markdown-section li,
+    html[data-theme="dark"] .markdown-section td,
+    html[data-theme="dark"] .markdown-section span,
+    html[data-theme="dark"] .markdown-section div {
+      color: #c9d1d9 !important;
+    }
+
+    html[data-theme="dark"] .markdown-section h1,
+    html[data-theme="dark"] .markdown-section h2,
+    html[data-theme="dark"] .markdown-section h3,
+    html[data-theme="dark"] .markdown-section h4,
+    html[data-theme="dark"] .markdown-section h5,
+    html[data-theme="dark"] .markdown-section h6,
+    html[data-theme="dark"] .markdown-section th,
+    html[data-theme="dark"] .markdown-section strong {
+      color: #f0f6fc !important;
+    }
+
+    html[data-theme="dark"] .markdown-section a {
+      color: #a78bfa !important;
+    }
+
+    html[data-theme="dark"] .markdown-section blockquote,
+    html[data-theme="dark"] .markdown-section blockquote p {
+      color: #8b949e !important;
+    }
+
+    html[data-theme="dark"] .markdown-section code {
+      color: #c9d1d9 !important;
+      background: #161b22 !important;
+    }
+
+    html[data-theme="dark"] .markdown-section pre {
+      background: #161b22 !important;
+      border-color: #21262d !important;
+    }
+
+    html[data-theme="dark"] .markdown-section pre code {
+      color: #c9d1d9 !important;
+      background: transparent !important;
+    }
+
+    html[data-theme="dark"] .markdown-section table {
+      border-collapse: collapse;
+    }
+    html[data-theme="dark"] .markdown-section table th {
+      background: #161b22 !important;
+      color: #f0f6fc !important;
+      border-bottom: 1px solid #21262d !important;
+    }
+    html[data-theme="dark"] .markdown-section table td {
+      color: #c9d1d9 !important;
+      border-bottom: 1px solid #21262d !important;
+    }
+
+    html[data-theme="dark"] .markdown-section hr {
+      background: #21262d !important;
+    }
+
+    html[data-theme="dark"] .markdown-section em {
+      color: #c9d1d9 !important;
+    }
+
+    /* Sidebar text in dark mode */
+    html[data-theme="dark"] .sidebar-nav,
+    html[data-theme="dark"] .sidebar-nav li,
+    html[data-theme="dark"] .sidebar-nav li > p,
+    html[data-theme="dark"] .sidebar-nav > ul > li > p {
+      color: #8b949e !important;
+      font-weight: 600;
+    }
+    html[data-theme="dark"] .sidebar-nav li a {
+      color: #c9d1d9 !important;
+    }
+    html[data-theme="dark"] .sidebar-nav li a:hover,
+    html[data-theme="dark"] .sidebar-nav li a.active {
+      color: #a78bfa !important;
+    }
+
+    /* ── Sidebar: keep all sections expanded (no accordion) ── */
+    .sidebar-nav > ul > li > ul {
+      display: block !important;
+    }
+
     /* ── Responsive ── */
     @media (max-width: 768px) {
       .markdown-section { padding: 20px 16px 32px !important; font-size: 15px; }
@@ -308,7 +399,25 @@
         nextText: 'Next',
         crossChapter: true,
         crossChapterText: true
-      }
+      },
+      plugins: [
+        function sidebarExpandPlugin(hook) {
+          hook.doneEach(function() {
+            // Force all sidebar sub-lists to stay open (no accordion)
+            var nested = document.querySelectorAll('.sidebar-nav > ul > li > ul');
+            for (var i = 0; i < nested.length; i++) {
+              nested[i].style.display = 'block';
+            }
+            var parents = document.querySelectorAll('.sidebar-nav > ul > li');
+            for (var j = 0; j < parents.length; j++) {
+              if (parents[j].querySelector('ul')) {
+                parents[j].classList.add('open');
+                parents[j].classList.remove('collapse');
+              }
+            }
+          });
+        }
+      ]
     }
   </script>
 
