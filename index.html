@@ -417,35 +417,46 @@
       },
       plugins: [
         function sidebarExpandPlugin(hook) {
+          var isExpanding = false;
+
           function expandAll() {
-            var lists = document.querySelectorAll('.sidebar-nav li ul, .sidebar-nav .app-sub-sidebar');
-            for (var i = 0; i < lists.length; i++) {
-              lists[i].style.display = 'block';
-            }
-            var items = document.querySelectorAll('.sidebar-nav li');
-            for (var j = 0; j < items.length; j++) {
-              items[j].classList.add('open');
-              items[j].classList.remove('collapse');
+            if (isExpanding) return;
+            isExpanding = true;
+            try {
+              var lists = document.querySelectorAll('.sidebar-nav li ul, .sidebar-nav .app-sub-sidebar');
+              for (var i = 0; i < lists.length; i++) {
+                if (lists[i].style.display === 'none') {
+                  lists[i].style.display = 'block';
+                }
+              }
+              var items = document.querySelectorAll('.sidebar-nav li');
+              for (var j = 0; j < items.length; j++) {
+                if (items[j].classList.contains('collapse')) {
+                  items[j].classList.remove('collapse');
+                  items[j].classList.add('open');
+                }
+              }
+            } finally {
+              isExpanding = false;
             }
           }
 
-          hook.doneEach(function() {
-            expandAll();
-            setTimeout(expandAll, 50);
-            setTimeout(expandAll, 200);
-          });
+          hook.doneEach(expandAll);
 
-          hook.ready(function() {
-            // After Docsify's own click handler collapses a section,
-            // immediately re-expand everything
-            var sidebar = document.querySelector('.sidebar');
-            if (sidebar) {
-              sidebar.addEventListener('click', function() {
-                setTimeout(expandAll, 0);
-                setTimeout(expandAll, 100);
-                setTimeout(expandAll, 300);
-              });
-            }
+          hook.mounted(function() {
+            // MutationObserver: catch every DOM/style/class change
+            // Docsify makes to the sidebar and immediately revert it
+            var nav = document.querySelector('.sidebar-nav');
+            if (!nav) return;
+            var observer = new MutationObserver(function() {
+              expandAll();
+            });
+            observer.observe(nav, {
+              childList: true,
+              subtree: true,
+              attributes: true,
+              attributeFilter: ['style', 'class']
+            });
           });
         }
       ]
