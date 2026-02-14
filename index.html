@@ -359,16 +359,14 @@
       color: #a78bfa !important;
     }
 
-    /* ── Sidebar: keep all sections expanded (no accordion) ── */
-    .sidebar-nav li ul,
-    .sidebar-nav li.collapse > ul,
+    /* ── Sidebar: keep all sections expanded (no accordion) ──
+         Docsify's core rule is: li.collapse > :not(a) { display: none }
+         We override that exact pattern to prevent any collapsing. ── */
+    li.collapse > :not(a) {
+      display: block !important;
+    }
     .sidebar-nav .app-sub-sidebar {
       display: block !important;
-      overflow: visible !important;
-      height: auto !important;
-      max-height: none !important;
-      opacity: 1 !important;
-      visibility: visible !important;
     }
 
     /* ── Responsive ── */
@@ -415,51 +413,7 @@
         crossChapter: true,
         crossChapterText: true
       },
-      plugins: [
-        function sidebarExpandPlugin(hook) {
-          var isExpanding = false;
-
-          function expandAll() {
-            if (isExpanding) return;
-            isExpanding = true;
-            try {
-              var lists = document.querySelectorAll('.sidebar-nav li ul, .sidebar-nav .app-sub-sidebar');
-              for (var i = 0; i < lists.length; i++) {
-                if (lists[i].style.display === 'none') {
-                  lists[i].style.display = 'block';
-                }
-              }
-              var items = document.querySelectorAll('.sidebar-nav li');
-              for (var j = 0; j < items.length; j++) {
-                if (items[j].classList.contains('collapse')) {
-                  items[j].classList.remove('collapse');
-                  items[j].classList.add('open');
-                }
-              }
-            } finally {
-              isExpanding = false;
-            }
-          }
-
-          hook.doneEach(expandAll);
-
-          hook.mounted(function() {
-            // MutationObserver: catch every DOM/style/class change
-            // Docsify makes to the sidebar and immediately revert it
-            var nav = document.querySelector('.sidebar-nav');
-            if (!nav) return;
-            var observer = new MutationObserver(function() {
-              expandAll();
-            });
-            observer.observe(nav, {
-              childList: true,
-              subtree: true,
-              attributes: true,
-              attributeFilter: ['style', 'class']
-            });
-          });
-        }
-      ]
+      plugins: []
     }
   </script>
 
