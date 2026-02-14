@@ -360,8 +360,15 @@
     }
 
     /* ── Sidebar: keep all sections expanded (no accordion) ── */
-    .sidebar-nav > ul > li > ul {
+    .sidebar-nav li ul,
+    .sidebar-nav li.collapse > ul,
+    .sidebar-nav .app-sub-sidebar {
       display: block !important;
+      overflow: visible !important;
+      height: auto !important;
+      max-height: none !important;
+      opacity: 1 !important;
+      visibility: visible !important;
     }
 
     /* ── Responsive ── */
@@ -410,18 +417,34 @@
       },
       plugins: [
         function sidebarExpandPlugin(hook) {
-          hook.doneEach(function() {
-            // Force all sidebar sub-lists to stay open (no accordion)
-            var nested = document.querySelectorAll('.sidebar-nav > ul > li > ul');
-            for (var i = 0; i < nested.length; i++) {
-              nested[i].style.display = 'block';
+          function expandAll() {
+            var lists = document.querySelectorAll('.sidebar-nav li ul, .sidebar-nav .app-sub-sidebar');
+            for (var i = 0; i < lists.length; i++) {
+              lists[i].style.display = 'block';
             }
-            var parents = document.querySelectorAll('.sidebar-nav > ul > li');
-            for (var j = 0; j < parents.length; j++) {
-              if (parents[j].querySelector('ul')) {
-                parents[j].classList.add('open');
-                parents[j].classList.remove('collapse');
-              }
+            var items = document.querySelectorAll('.sidebar-nav li');
+            for (var j = 0; j < items.length; j++) {
+              items[j].classList.add('open');
+              items[j].classList.remove('collapse');
+            }
+          }
+
+          hook.doneEach(function() {
+            expandAll();
+            setTimeout(expandAll, 50);
+            setTimeout(expandAll, 200);
+          });
+
+          hook.ready(function() {
+            // After Docsify's own click handler collapses a section,
+            // immediately re-expand everything
+            var sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+              sidebar.addEventListener('click', function() {
+                setTimeout(expandAll, 0);
+                setTimeout(expandAll, 100);
+                setTimeout(expandAll, 300);
+              });
             }
           });
         }
