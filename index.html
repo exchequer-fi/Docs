@@ -316,15 +316,23 @@
 
     html[data-theme="dark"] .markdown-section table {
       border-collapse: collapse;
+      border: 1px solid #21262d !important;
     }
     html[data-theme="dark"] .markdown-section table th {
       background: #161b22 !important;
       color: #f0f6fc !important;
-      border-bottom: 1px solid #21262d !important;
+      border: 1px solid #21262d !important;
+    }
+    html[data-theme="dark"] .markdown-section table tr {
+      background: transparent !important;
+    }
+    html[data-theme="dark"] .markdown-section table tr:nth-child(2n) {
+      background: #161b22 !important;
     }
     html[data-theme="dark"] .markdown-section table td {
       color: #c9d1d9 !important;
-      border-bottom: 1px solid #21262d !important;
+      background: transparent !important;
+      border: 1px solid #21262d !important;
     }
 
     html[data-theme="dark"] .markdown-section hr {
