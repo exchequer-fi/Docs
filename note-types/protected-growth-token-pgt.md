@@ -8,29 +8,29 @@ A PGT is a fixed-term ERC-20 token with a downside floor (up to 75% protection) 
 
 ## How a PGT Works (Step by Step)
 
-We'll walk through the full lifecycle using the demo's default values: a $1.00 token, $1M total liquidity, 50% downside protection, 15% assumed yield, and a 12-month term.
+We'll walk through the full lifecycle using the following example values: a $1.00 project token, $1M total liquidity, 50% downside protection, 15% assumed yield, and a 12-month term.
 
 ### Step 1: User & Project Deposits
 
-Users deposit stablecoins. The project matches with tokens worth **2× the user deposit**.
+Users deposit a designated token (e.g., ETH or a stablecoin — chosen by the project). The project matches with its own tokens worth **2× the user deposit**.
 
 | Participant | Deposit | Value |
 |---|---|---|
-| Users deposit | 500,000 USDC | $500,000 |
+| Users deposit | $500,000 (in the designated deposit token) | $500,000 |
 | Project contributes | 1,000,000 tokens @ $1.00 | $1,000,000 |
 | **Total raised** | | **$1,500,000 in assets** |
 
 The project contributes twice the user amount. This is the core economic mechanism — the project is subsidizing the downside with its own tokens.
 
 ![PGT Flowchart — User & Project Deposits](/.gitbook/assets/pgt-flowchart-deposits.png)
-*The deposit step: users provide USDC, the project matches with 2× the value in tokens.*
+*The deposit step: users provide the designated deposit token, the project matches with 2× the value in its own tokens.*
 
 ### Step 2: Collateral Is Split Into Two Pieces
 
 The combined assets are split into two tranches with distinct jobs:
 
 **Tranche A — LP Position (funds the floor)**
-500,000 tokens + 500,000 USDC are paired into a full-range liquidity position on a DEX.
+500,000 project tokens + $500,000 of the deposit token are paired into a full-range liquidity position on a DEX.
 > LP Position value: $1,000,000
 > This is the collateral that backs the downside protection.
 
@@ -41,7 +41,7 @@ The remaining 500,000 tokens are held separately in reserve.
 
 | Tranche | Contents | Value | Purpose |
 |---|---|---|---|
-| A — LP Position | 500K tokens + 500K USDC | $1,000,000 | Funds downside protection |
+| A — LP Position | 500K project tokens + 500K deposit tokens | $1,000,000 | Funds downside protection |
 | B — Upside Reserve | 500K tokens | $500,000 | Pays upside at maturity |
 | **Total collateral** | | **$1,500,000** | |
 
@@ -122,7 +122,7 @@ Three scenarios:
 
 **User receives:**
 - $500,000 in LP tokens — **full principal protected** (the drop is within the 50% protection floor)
-- The LP tokens may have rebalanced (more tokens, less USDC) but their market value equals the user's original principal
+- The LP tokens may have rebalanced (more project tokens, less of the deposit token) but their market value equals the user's original principal
 
 **Project receives:**
 - 500,000 reserved tokens back (no upside was due)
@@ -145,7 +145,7 @@ With 75% protection (the maximum setting), the user would be fully protected aga
 
 ## The Payoff Chart
 
-The demo includes a live payoff chart that compares three strategies across all possible token prices at maturity:
+The payoff chart below compares three strategies across all possible token prices at maturity:
 
 1. **PGT** — the floor creates a kinked payoff: protected on the downside, linear participation on the upside
 2. **Standard LP** — the classic AMM curve with impermanent loss drag
@@ -160,12 +160,12 @@ The PGT line is above the Standard LP line on the upside (because upside comes f
 
 ## What It Costs the Project
 
-From the project's perspective, here's the full cost picture (using the demo defaults):
+From the project's perspective, here's the full cost picture (using the example values above):
 
 | Item | Amount | Notes |
 |---|---|---|
 | Tokens committed | 1,000,000 tokens | Locked for 12 months |
-| USDC required from project | $0 | Users provide the USDC side |
+| Deposit tokens required from project | $0 | Users provide the deposit token side |
 | Principal protection cost | $0 (if price stays flat or goes up) | Cost materializes only if the token drops |
 | LP yield earned | +$150,000 | At 15% APR on the $1M LP position |
 

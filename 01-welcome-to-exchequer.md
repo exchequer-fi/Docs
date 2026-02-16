@@ -29,8 +29,8 @@ Here's the core idea in four steps:
 **Step 1 — The project sets the terms.**
 You choose: how much downside protection (up to 75%), how long the term lasts (e.g., 6 or 12 months), and what type of upside (linear or jackpot-style).
 
-**Step 2 — Users deposit stablecoins. The project matches with tokens.**
-When users buy PGTs, they deposit USDC. The project contributes its own tokens from treasury — specifically, **2x the user's deposit value in tokens**. Half goes into a liquidity pool (which funds the downside protection). The other half is set aside as a reserve to pay upside if the token goes up.
+**Step 2 — Users deposit tokens. The project matches with its own tokens.**
+When users buy PGTs, they deposit a designated token (e.g., ETH or a stablecoin — chosen by the project). The project contributes its own tokens from treasury — specifically, **2x the user's deposit value in tokens**. Half goes into a liquidity pool (which funds the downside protection). The other half is set aside as a reserve to pay upside if the token goes up.
 
 **Step 3 — The liquidity pool earns yield for the full term.**
 The combined LP position earns trading fees on-chain for the entire duration. The project benefits from deep, stable DEX liquidity as a direct consequence.
@@ -49,9 +49,9 @@ Say you're a project with a $1.00 token and you want to raise $1M in on-chain li
 
 | | Amount |
 |---|---|
-| **Users deposit** | $500,000 USDC |
+| **Users deposit** | $500,000 (in the designated deposit token) |
 | **Project contributes** | 1,000,000 tokens (worth $1,000,000) |
-| **LP position created** | $1,000,000 (500K USDC + 500K tokens) |
+| **LP position created** | $1,000,000 (500K deposit tokens + 500K project tokens) |
 | **Upside reserve** | 500,000 tokens held separately |
 | **Assumed LP yield** | 15% APR |
 | **Term** | 12 months |

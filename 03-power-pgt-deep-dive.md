@@ -13,7 +13,7 @@ Power PGTs are designed for community campaigns, attention-driven acquisition, a
 The structure is identical to a regular PGT through the first four steps — user deposits, project matches with 2× tokens, LP position + reserve are created, LP earns yield during the term. The difference is entirely in **how upside is distributed at maturity**.
 
 ### Same as PGT:
-1. Users deposit USDC. Project matches with tokens (2× user value).
+1. Users deposit a designated token (e.g., ETH or a stablecoin). Project matches with its own tokens (2× user value).
 2. Assets split into LP Position (floor) + Upside Reserve.
 3. Users receive Power PGT tokens (ERC-20).
 4. LP earns yield for the full term.
@@ -59,7 +59,7 @@ The issuer configures the exact tier structure — multipliers, winner counts, a
 | Parameter | Value |
 |---|---|
 | Notes sold | 100,000 |
-| Price per note | 100 USDC |
+| Price per note | $100 |
 | Total notional | $10,000,000 |
 | Token start price | $1.00 |
 | Token end price | $1.80 (+80%) |

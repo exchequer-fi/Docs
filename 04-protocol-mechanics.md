@@ -13,16 +13,16 @@ The protection floor isn't a promise — it's backed by on-chain collateral that
 When a PGT is issued, two types of collateral are escrowed on-chain:
 
 **Tranche A — LP Position (funds the floor)**
-User stablecoins and project tokens are paired into a full-range liquidity position on a DEX. This LP position is held in protocol contracts for the full term. At maturity, LP tokens from this position are used to pay the protection floor to users.
+User deposit tokens and project tokens are paired into a full-range liquidity position on a DEX. This LP position is held in protocol contracts for the full term. At maturity, LP tokens from this position are used to pay the protection floor to users.
 
 **Tranche B — Upside Payout Reserve (funds the upside)**
 An additional batch of project tokens is held off-LP in reserve. These tokens are used to deliver upside to users at maturity if the token appreciates. Holding them off-LP means the upside isn't subject to AMM rebalancing (no impermanent loss on the upside).
 
 ### Why the project contributes 2×
 
-For every dollar of USDC users deposit, the project contributes $2 worth of tokens. This is because:
+For every dollar users deposit, the project contributes $2 worth of its own tokens. This is because:
 
-- $1 of tokens goes into the LP alongside the user's $1 USDC (Tranche A)
+- $1 of tokens goes into the LP alongside the user's $1 deposit (Tranche A)
 - $1 of tokens goes into the upside reserve (Tranche B)
 
 This 2:1 ratio is what makes the math work — the LP position is large enough to fund the floor, and the reserve is large enough to pay full spot-equivalent upside.
@@ -43,7 +43,7 @@ Protection doesn't create free money — it reassigns tail risk from the buyer t
 
 This is the mechanism that makes the protection work. In a constant-product AMM (like Uniswap):
 
-When the token price drops, the LP position automatically rebalances — accumulating more tokens and releasing USDC. The total value of the LP position declines less than the token price because of this rebalancing effect.
+When the token price drops, the LP position automatically rebalances — accumulating more project tokens and releasing the deposit token. The total value of the LP position declines less than the token price because of this rebalancing effect.
 
 For moderate drops (within the protection floor), the LP position retains enough value to cover the user's original principal. The project effectively absorbs the loss through the decline in value of its contributed tokens.
 
@@ -76,7 +76,7 @@ Protection is capped. User redeems LP tokens per the protection schedule. Losses
 The protection floor always settles in **LP tokens**. Users receive LP tokens from the escrowed position, which they can:
 
 - **Hold** — continue earning trading fees as an LP
-- **Burn** — withdraw the underlying constituent tokens (project token + USDC) from the LP position
+- **Burn** — withdraw the underlying constituent tokens (project token + deposit token) from the LP position
 
 Upside settles in **project tokens** from the reserve tranche.
 
