@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PGT2 Payoff Chart</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/recharts@2/umd/Recharts.js"></script>
+  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-white m-0 p-4">
+  <div id="root"></div>
+  <script type="text/babel">
+    const {
+      LineChart, Line, XAxis, YAxis, CartesianGrid,
+      Tooltip, Legend, ResponsiveContainer, ReferenceLine,
+    } = Recharts;
+
+    function calcLpSpot(p, s0, n) {
+      if (s0 <= 0 || p < 0) return 0;
+      return n * Math.sqrt(p / s0);
+    }
+
+    function calcGrowthPayout(s1, s0, totalLiq, prot) {
+      const reservedTokens = totalLiq / (2 * s0);
+      const reservedVal = reservedTokens * s1;
+      const lpInit = totalLiq;
+      if (s1 > s0) return { principal: reservedVal, yield: 0, reservedVal };
+      const userLpShare = lpInit / 2;
+      const lpVal = calcLpSpot(s1, s0, lpInit) / 2;
+      if (lpVal >= userLpShare) return { principal: lpVal, yield: 0, reservedVal };
+      if (prot === 0) return { principal: lpVal, yield: 0, reservedVal };
+      const H = s0 * (1 - prot / 100);
+      if (s1 >= H) return { principal: userLpShare, yield: 0, reservedVal };
+      const lpH = calcLpSpot(H, s0, lpInit) / 2;
+      const gp = lpH > 0 ? (userLpShare / lpH) * lpVal : 0;
+      return { principal: gp, yield: 0, reservedVal };
+    }
+
+    function genCurve(s0, x, tau, y, prot) {
+      const totalLiq = s0 * x;
+      const initTokenInv = (x / 2) * s0;
+      const ub = s0 * 2;
+      const steps = 100;
+      const curve = [];
+      for (let i = 0; i <= steps; i++) {
+        const s1 = (i / steps) * ub;
+        const lpVal = calcLpSpot(s1, s0, totalLiq);
+        const p = calcGrowthPayout(s1, s0, totalLiq, prot);
+        const tokenHold = (s1 / s0) * initTokenInv;
+        curve.push({ s1, noteValue: p.principal + p.yield, lpValue: lpVal, tokenHoldingValue: tokenHold });
+      }
+      return curve;
+    }
+
+    const CustomTooltip = ({ active, payload, label }) => {
+      if (active && payload && payload.length) {
+        return (
+          <div style={{ padding: 8, background: '#fff', border: '1px solid #ddd', borderRadius: 6, fontSize: 13, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+            <p style={{ fontWeight: 700 }}>Ending Price: ${Number(label).toFixed(2)}</p>
+            {payload.map(pld => (
+              <p key={pld.dataKey} style={{ color: pld.color }}>
+                {pld.name}: ${Number(pld.value).toFixed(2)}
+              </p>
+            ))}
+          </div>
+        );
+      }
+      return null;
+    };
+
+    function PGT2PayoffChart() {
+      const s0 = 1, x = 1000000, tau = 12, y = 15, prot = 50, ep = 1;
+      const data = React.useMemo(() => genCurve(s0, x, tau, y, prot), []);
+      const fmtX = v => v < 1 ? `$${v.toFixed(3)}` : v < 10 ? `$${v.toFixed(2)}` : `$${v.toFixed(0)}`;
+
+      return (
+        <div className="w-full rounded-lg border border-gray-200 bg-white shadow-sm">
+          <div className="px-6 pt-5 pb-2">
+            <h3 className="text-lg font-semibold text-gray-900">PGT2 Payoff Profile at Maturity</h3>
+            <p className="text-sm text-gray-500">Compares PGT2 vs. standard LP vs. holding tokens directly.</p>
+          </div>
+          <div className="px-6 pb-6">
+            <div style={{ height: 384, width: '100%' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="s1" type="number" domain={['dataMin','dataMax']} tickFormatter={fmtX}
+                    label={{ value: 'Ending Token Price (S₁)', position: 'insideBottom', offset: -15 }} height={40} />
+                  <YAxis tickFormatter={v => `$${(v/1000).toFixed(0)}k`}
+                    label={{ value: 'Position Value', angle: -90, position: 'insideLeft' }} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend verticalAlign="top" />
+                  <Line type="monotone" dataKey="noteValue" name="PGT2" stroke="#522D80" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="lpValue" name="Standard LP" stroke="#2563EB" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="tokenHoldingValue" name="Token Holding" stroke="#1E293B" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                  <ReferenceLine x={ep} stroke="#22C55E" strokeDasharray="3 3"
+                    label={{ value: `S₁: $${ep.toFixed(2)}`, position: 'insideTopRight', fill: '#22C55E' }} />
+                  <ReferenceLine x={s0} stroke="#F2C94C" strokeDasharray="3 3"
+                    label={{ value: `S₀: $${s0.toFixed(2)}`, position: 'insideTopLeft', fill: '#F2C94C' }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<PGT2PayoffChart />);
+  </script>
+</body>
+</html>
