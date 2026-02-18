@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PGT Issuance Flowchart</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.26.10/babel.min.js"></script>
+</head>
+<body class="bg-white m-0 p-4">
+  <div id="root"></div>
+  <script type="text/babel">
+    function calcLpSpot(p, s0, n) { if (s0 <= 0 || p < 0) return 0; return n * Math.sqrt(p / s0); }
+
+    function calcSummary(s0, x, tau, y, prot, ep) {
+      const totalLiq = s0 * x;
+      const reservedTokens = x / 2;
+      const reservedVal = reservedTokens * ep;
+      const lpVal = calcLpSpot(ep, s0, totalLiq);
+      const totalYield = totalLiq * (y / 100) * (tau / 12);
+      if (ep > s0) return { userPrincipal: reservedVal, reservedVal, lpVal, projYield: totalYield };
+      const userLpShare = totalLiq / 2;
+      const userLpVal = lpVal / 2;
+      let userPrincipal;
+      if (userLpVal >= userLpShare) userPrincipal = userLpVal;
+      else if (prot === 0) userPrincipal = userLpVal;
+      else {
+        const H = s0 * (1 - prot / 100);
+        if (ep >= H) userPrincipal = userLpShare;
+        else { const lpH = calcLpSpot(H, s0, totalLiq) / 2; userPrincipal = lpH > 0 ? (userLpShare / lpH) * userLpVal : 0; }
+      }
+      return { userPrincipal, reservedVal, lpVal, projYield: totalYield };
+    }
+
+    const fmtUSD = v => v.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    const fmtUSD2 = v => v.toLocaleString(undefined, { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    const DownArrow = () => (
+      <svg height="36" width="24" style={{ margin: '0 auto', display: 'block' }}>
+        <path d="M12 0 v28" stroke="#A78BFA" strokeWidth="2" fill="none" />
+        <polygon points="12,28 8,20 16,20" fill="#A78BFA" />
+      </svg>
+    );
+
+    function PGTFlowchart() {
+      const s0 = 1, x = 1000000, tau = 12, y = 15, prot = 50;
+      const [ep, setEp] = React.useState(s0);
+      const usdcAmt = (s0 * x) / 2;
+      const lpVal = usdcAmt * 2;
+      const halfTokens = x / 2;
+      const summary = React.useMemo(() => calcSummary(s0, x, tau, y, prot, ep), [ep]);
+      const priceUp = ep > s0;
+      const pctChange = ((ep - s0) / s0) * 100;
+
+      return (
+        <div className="flex flex-col items-center gap-0 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+          {/* Deposits */}
+          <div className="flex justify-center w-full max-w-md">
+            <div className="bg-white border-2 border-gray-300 rounded-lg p-6 shadow-md w-full">
+              <div className="flex flex-col items-center">
+                <div className="text-base font-semibold text-gray-900 mb-4">User &amp; Project Deposits</div>
+                <div className="w-full space-y-3">
+                  <div className="flex justify-between"><span className="text-sm text-gray-600">User Deposits:</span><span className="text-lg font-bold">{fmtUSD(usdcAmt)} USDC</span></div>
+                  <div className="flex justify-between"><span className="text-sm text-gray-600">Project Matches:</span><span className="text-lg font-bold">{x.toLocaleString()} tokens</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <DownArrow />
+
+          {/* LP + Reserve */}
+          <div className="flex flex-row items-center justify-center gap-6 w-full max-w-3xl">
+            <div className="flex-1 bg-white border-2 border-green-600 rounded-lg p-6 shadow-md">
+              <div className="flex flex-col items-center">
+                <div className="text-sm font-medium text-gray-600 mb-2">LP Position Created</div>
+                <div className="text-xs font-semibold text-green-700 mb-2">Full Range Position</div>
+                <div className="text-2xl font-bold text-gray-900 mb-3">{fmtUSD(lpVal)}</div>
+                <div className="w-full space-y-1 text-xs text-gray-600">
+                  <div className="flex justify-between"><span>Tokens:</span><span className="font-semibold">{halfTokens.toLocaleString()}</span></div>
+                  <div className="flex justify-between"><span>USDC:</span><span className="font-semibold">{fmtUSD(usdcAmt)}</span></div>
+                </div>
+              </div>
+            </div>
+            <div className="text-2xl font-bold text-gray-400">+</div>
+            <div className="flex-1 bg-white border-2 border-purple-600 rounded-lg p-6 shadow-md">
+              <div className="flex flex-col items-center">
+                <div className="text-sm font-medium text-gray-600 mb-2">Upside Payout Reserve</div>
+                <div className="text-2xl font-bold text-gray-900 mb-1">{halfTokens.toLocaleString()}</div>
+                <div className="text-xs text-gray-500">tokens</div>
+              </div>
+            </div>
+          </div>
+          <DownArrow />
+
+          {/* PGT Issuance */}
+          <div className="flex justify-center w-full max-w-2xl">
+            <div className="bg-white border-2 border-yellow-500 rounded-lg p-6 shadow-md w-full">
+              <div className="flex flex-col items-center">
+                <div className="text-base font-semibold text-gray-900 mb-4">Users are issued PGTs</div>
+                <div className="w-full space-y-2 text-sm text-gray-700">
+                  <div className="text-center font-medium text-gray-600 mb-2">Backed by:</div>
+                  <div className="flex justify-between bg-gray-50 rounded px-3 py-2"><span>LP Position</span><span className="font-semibold">{fmtUSD(lpVal)}</span></div>
+                  <div className="flex justify-between bg-gray-50 rounded px-3 py-2"><span>Upside Payout Reserve</span><span className="font-semibold">{halfTokens.toLocaleString()} tokens</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <DownArrow />
+
+          {/* Yield earning */}
+          <div className="flex justify-center w-full max-w-2xl">
+            <div className="bg-white border-2 border-green-500 rounded-lg p-6 shadow-md w-full">
+              <div className="flex flex-col items-center">
+                <div className="text-base font-semibold text-gray-900 mb-4">LP Position Earns Yield for {tau} Months</div>
+                <div className="w-full space-y-3 text-sm">
+                  <div className="bg-green-50 rounded px-3 py-2 flex justify-between"><span>Yield Rate:</span><span className="font-semibold text-green-700">{y}% APR</span></div>
+                  <div className="bg-blue-50 rounded px-3 py-2 flex justify-between"><span>Downside Protection:</span><span className="font-semibold text-blue-700">{prot}%</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <DownArrow />
+
+          {/* Maturity + Slider */}
+          <div className="flex justify-center w-full max-w-4xl">
+            <div className="bg-white border-2 border-blue-500 rounded-lg p-6 shadow-md w-full">
+              <div className="flex flex-col items-center">
+                <div className="text-base font-semibold text-gray-900 mb-4">Maturity &amp; Redemption ({tau} Months)</div>
+                <div className="w-full bg-gradient-to-br from-slate-50 to-slate-100 border-2 border-slate-200 rounded-xl p-5 mb-6">
+                  <div className="text-center text-sm font-medium text-slate-600 mb-3">Token Price at Maturity</div>
+                  <div className="text-center mb-4">
+                    <span className="text-4xl font-bold text-gray-900">{fmtUSD2(ep)}</span>
+                    <span className={`ml-3 text-sm font-semibold px-3 py-1 rounded-full ${priceUp ? 'bg-green-100 text-green-700' : ep < s0 ? 'bg-red-100 text-red-700' : 'bg-slate-200 text-slate-600'}`}>
+                      {priceUp ? `+${pctChange.toFixed(1)}%` : ep < s0 ? `${pctChange.toFixed(1)}%` : 'No Change'}
+                    </span>
+                  </div>
+                  <input type="range" min={0} max={s0 * 2} step={s0 / 100} value={ep}
+                    onChange={e => setEp(Number(e.target.value))}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500" />
+                  <div className="flex justify-between text-xs text-slate-500 mt-2">
+                    <span>$0</span><span className="font-medium">Issue: ${s0.toFixed(2)}</span><span>${(s0 * 2).toFixed(2)}</span>
+                  </div>
+                </div>
+
+                <div className="w-full grid grid-cols-2 gap-4">
+                  <div className={`rounded-xl p-5 ${priceUp ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300' : 'bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300'}`}>
+                    <div className={`text-lg font-bold mb-3 ${priceUp ? 'text-green-700' : 'text-blue-700'}`}>User redeems:</div>
+                    {priceUp ? (
+                      <div className="space-y-2">
+                        <div className="text-2xl font-bold text-gray-900">{fmtUSD2(summary.reservedVal)}</div>
+                        <div className="text-sm text-gray-600">{halfTokens.toLocaleString()} reserved tokens</div>
+                        <div className="text-xs text-green-600 font-medium">Full upside captured</div>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <div className="text-2xl font-bold text-gray-900">{fmtUSD2(summary.userPrincipal)}</div>
+                        <div className="text-sm text-gray-600">of LP tokens ({prot}% protection)</div>
+                        <div className="text-xs text-blue-600 font-medium">Principal protected</div>
+                      </div>
+                    )}
+                  </div>
+                  <div className={`rounded-xl p-5 ${priceUp ? 'bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-300' : 'bg-gradient-to-br from-purple-50 to-violet-50 border-2 border-purple-300'}`}>
+                    <div className={`text-lg font-bold mb-3 ${priceUp ? 'text-blue-700' : 'text-purple-700'}`}>Project redeems:</div>
+                    {priceUp ? (
+                      <div className="space-y-3">
+                        <div><div className="text-sm text-gray-600 mb-1">LP Position</div><div className="text-xl font-bold text-gray-900">{fmtUSD2(summary.lpVal)}</div></div>
+                        {y > 0 && <div><div className="text-sm text-gray-600 mb-1">LP Yield</div><div className="text-xl font-bold text-green-600">+{fmtUSD2(summary.projYield)}</div></div>}
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <div><div className="text-sm text-gray-600 mb-1">Reserved Tokens</div><div className="text-lg font-bold text-gray-900">{halfTokens.toLocaleString()} tokens <span className="text-sm font-normal text-gray-500">({fmtUSD2(summary.reservedVal)})</span></div></div>
+                        <div><div className="text-sm text-gray-600 mb-1">LP (after user payout)</div><div className="text-lg font-bold text-gray-900">{fmtUSD2(summary.lpVal - summary.userPrincipal)}</div></div>
+                        {y > 0 && <div><div className="text-sm text-gray-600 mb-1">LP Yield</div><div className="text-lg font-bold text-green-600">+{fmtUSD2(summary.projYield)}</div></div>}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<PGTFlowchart />);
+  </script>
+</body>
+</html>

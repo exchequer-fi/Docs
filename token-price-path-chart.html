@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Token Price Path Chart</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/recharts@2/umd/Recharts.js"></script>
+  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-white m-0 p-4">
+  <div id="root"></div>
+  <script type="text/babel">
+    const {
+      LineChart, Line, XAxis, YAxis, CartesianGrid,
+      Tooltip, Legend, ResponsiveContainer,
+    } = Recharts;
+
+    function calcLpSpot(p, s0, n) {
+      if (s0 <= 0 || p < 0) return 0;
+      return n * Math.sqrt(p / s0);
+    }
+
+    function calcNoteCorePayoff(s1, s0, iv, protPct) {
+      if (protPct === 0) return calcLpSpot(s1, s0, iv);
+      const H = s0 * (1 - protPct / 100);
+      if (s1 >= H) return Math.max(iv, calcLpSpot(s1, s0, iv));
+      const lpH = calcLpSpot(H, s0, iv);
+      if (lpH <= 0) return 0;
+      return (iv / lpH) * calcLpSpot(s1, s0, iv);
+    }
+
+    function genPath(s0, ep, tenor, steps, tokensComm, yr, dp) {
+      steps = steps || 750;
+      tokensComm = tokensComm || 1000;
+      yr = yr || 0.15;
+      dp = dp || 0.5;
+      const data = [];
+      let price = s0;
+      const iv = s0 * tokensComm;
+      let seed = 42;
+      function srand() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+
+      for (let i = 0; i < steps; i++) {
+        const t = i / (steps - 1);
+        const time = t * tenor;
+        const target = s0 + (ep - s0) * t;
+        let maxVol = 0.4;
+        if (t < 0.0015) maxVol = 0.01;
+        const rf = (srand() * 2 - 1) * maxVol;
+        let blend = 0.1;
+        if (t > 0.97) blend = 0.3 + 0.7 * ((t - 0.97) / 0.03);
+        const np = price * (1 + rf * (1 - t));
+        price = np * (1 - blend) + target * blend;
+        price = Math.max(price, 0.01);
+        const lpSpot = calcLpSpot(price, s0, iv);
+        const yieldAcc = iv * yr * (time / tenor);
+        const lpSpotWithYield = lpSpot + yieldAcc;
+        const notePay = calcNoteCorePayoff(price, s0, iv, dp * 100);
+        const noteWithYield = notePay + yieldAcc;
+        data.push({ step: i, time, price, lpSpotWithYield, noteWithYield });
+      }
+      data[data.length - 1].price = ep;
+      return data;
+    }
+
+    function TokenPricePathChart() {
+      const s0 = 1, ep = 0.6, tenor = 12;
+      const data = React.useMemo(() => genPath(s0, ep, tenor), []);
+      const fmtC = v => typeof v !== 'number' || isNaN(v) ? '$--.--' : `$${v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+      return (
+        <div className="w-full rounded-lg border border-gray-200 bg-white shadow-sm">
+          <div className="px-6 pt-5 pb-2">
+            <h3 className="text-lg font-semibold text-gray-900">Simulated Token Price Path</h3>
+            <p className="text-sm text-gray-500">
+              Compares LP Spot (with yield) vs LP Note (with yield &amp; protection) over a {tenor}-month tenor.
+            </p>
+          </div>
+          <div className="px-6 pb-6">
+            <div style={{ height: 256, width: '100%' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={data} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                  <XAxis dataKey="time" type="number" domain={['dataMin','dataMax']}
+                    tick={{ fontSize: 12 }} label={{ value: 'Month', position: 'insideBottomRight', offset: 0 }} />
+                  <YAxis type="number"
+                    domain={[dm => Math.min(dm, s0 * 0.5), dm => Math.max(dm, s0 * 1.5)]}
+                    tickFormatter={fmtC} tick={{ fontSize: 12 }} />
+                  <Tooltip formatter={v => fmtC(v)} labelFormatter={l => `Month: ${l}`} />
+                  <Line type="monotone" dataKey="lpSpotWithYield" stroke="#3b82f6" strokeWidth={2} dot={false} name="LP Spot (with yield)" />
+                  <Line type="monotone" dataKey="noteWithYield" stroke="#facc15" strokeWidth={2} dot={false} name="LP Note (with yield & protection)" />
+                  <Legend verticalAlign="top" height={36} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<TokenPricePathChart />);
+  </script>
+</body>
+</html>

@@ -129,5 +129,5 @@ There is no off-chain component, no counterparty, and no trust assumption beyond
 
 ## Next
 
-→ [Research & Whitepapers — academic foundations](/research/whitepapers)
-→ [Back to PGT overview](/note-types/protected-growth-token-pgt)
+> [Research & Whitepapers — academic foundations](/research/whitepapers)
+> [Back to PGT overview](/note-types/protected-growth-token-pgt)
