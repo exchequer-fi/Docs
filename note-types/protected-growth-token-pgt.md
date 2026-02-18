@@ -83,6 +83,8 @@ At the end of the term, the PGT settles based on the token price at maturity (me
 
 ---
 
+<iframe src="pgt2-flowchart.html" width="100%" height="900" frameborder="0" style="border:none;border-radius:8px;margin:16px 0;"></iframe>
+
 #### Scenario A: Token price stayed flat ($1.00 → $1.00)
 
 **User receives:**
@@ -150,6 +152,12 @@ This is the worst case for the project: the LP collateral is fully depleted by t
 | Down -80% (beyond floor) | $0.20 | Protected to floor; partial loss on remainder | 500K reserve tokens (worth little at $0.20) + nothing from LP (fully consumed by protection payouts) |
 
 *All figures based on the example scenario: $500K user deposit, 1M project tokens at $1.00, 50% protection, 15% assumed APR, 12-month term.*
+
+<iframe src="pgt2-payoff-chart.html" width="100%" height="520" frameborder="0" style="border:none;border-radius:8px;margin:16px 0;"></iframe>
+
+*Simulated price path showing how PGT protection holds up vs. unprotected LP over time.*
+
+<iframe src="token-price-path-chart.html" width="100%" height="400" frameborder="0" style="border:none;border-radius:8px;margin:16px 0;"></iframe>
 
 ---
 
