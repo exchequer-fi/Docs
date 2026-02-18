@@ -155,10 +155,6 @@ This is the worst case for the project: the LP collateral is fully depleted by t
 
 <iframe src="pgt2-payoff-chart.html" width="100%" height="520" frameborder="0" style="border:none;border-radius:8px;margin:16px 0;"></iframe>
 
-*Simulated price path showing how PGT protection holds up vs. unprotected LP over time.*
-
-<iframe src="token-price-path-chart.html" width="100%" height="400" frameborder="0" style="border:none;border-radius:8px;margin:16px 0;"></iframe>
-
 ---
 
 ## Key Properties
