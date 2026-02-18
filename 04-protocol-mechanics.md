@@ -1,6 +1,6 @@
 # Protocol Mechanics
 
-This page covers how Exchequer works under the hood — collateralization, settlement, smart contract architecture, and the AMM design. You should read the [PGT](/note-types/protected-growth-token-pgt) or [Power PGT](/note-types/power-protected-growth-token-power-pgt) pages first to understand the product before diving into mechanics.
+This page covers how Exchequer works under the hood — collateralization, settlement, smart contract architecture, and the AMM design. You should read the [PGT](/note-types/protected-growth-token-pgt) page first to understand the product before diving into mechanics.
 
 ---
 
@@ -59,11 +59,8 @@ At maturity, the settlement price is determined by the **72-hour volume-weighted
 
 ### Settlement logic
 
-**Token up or flat — PGT:**
-User receives spot-equivalent upside from the reserve (Tranche B) per the participation rate and any cap. Upside is delivered in tokens.
-
-**Token up or flat — Power PGT:**
-Baseline pro-rata upside to all holders, plus prize pool distribution via on-chain drawing. All settled in tokens.
+**Token up or flat:**
+User receives spot-equivalent upside from the reserve (Tranche B). Upside is delivered in tokens.
 
 **Token down, within the protection floor:**
 Full principal protection. User redeems LP tokens from Tranche A worth their original deposit. No upside is due — reserve tokens are released back to the project.
