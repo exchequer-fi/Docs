@@ -51,6 +51,34 @@ For severe drops (beyond the floor), the LP's cushioning effect isn't sufficient
 
 ---
 
+## Early Redemption
+
+Users can exit a PGT position before the maturity date at any time, for a 2% fee. What the user receives depends on whether the token price is above or below the initial price at the time of redemption.
+
+### Token price is above the initial price
+
+The user redeems their principal plus full upside from the reserve (Tranche B), minus the 2% fee. The upside reserve is available for early redemption whenever the token is trading above the initial price. This is equivalent to the upside the user would receive at maturity for the same price — they are simply claiming it earlier.
+
+### Token price is below the initial price
+
+The user redeems their pro-rata share of the LP position (Tranche A) at current market value, minus the 2% fee. The upside reserve is not touched.
+
+The protection floor does not apply. Downside protection is a maturity-date guarantee — it does not extend to early exits. If the token has dropped, the user receives the depreciated value of their LP share, not the protected principal.
+
+### What happens mechanically
+
+When a user redeems early:
+
+1. Their PGT is burned.
+2. If the token is above the initial price: the user's share of the LP position and the corresponding upside from the reserve are calculated. The 2% fee is deducted and the remainder is returned to the user.
+3. If the token is below the initial price: the user's pro-rata share of the LP position (Tranche A) is withdrawn at current market value. The 2% fee is deducted and the remainder is returned.
+
+### Fee distribution
+
+Of the 2% early redemption fee, 80% goes to the issuing project and 20% goes to Exchequer.
+
+---
+
 ## Settlement at Maturity
 
 ### Price determination: 72-hour VWAP
@@ -86,6 +114,33 @@ Issuers can offer a rollover into a new series before or at maturity:
 
 ---
 
+## Protocol Fees
+
+There are zero fees on issuance and zero fees on redemption at maturity. Projects and users pay nothing to create or settle PGTs.
+
+Exchequer's revenue comes from two sources, both taken from yield and fees generated during the campaign — never from principal or collateral.
+
+### LP trading fee share
+
+Exchequer takes **10% of the trading fees** earned by the LP position over the term. The remaining 90% goes to the issuing project at maturity.
+
+For example: if a $1,000,000 LP position earns $150,000 in trading fees over 12 months, Exchequer receives $15,000 and the project receives $135,000.
+
+### Early redemption fee share
+
+When a user exits early, a **2% fee** is charged on the redemption proceeds. Of that fee, **20% goes to Exchequer** and **80% goes to the issuing project**.
+
+### Summary
+
+| Event | Fee | Who pays | Exchequer share | Project share |
+|---|---|---|---|---|
+| Issuance | None | — | — | — |
+| Redemption at maturity | None | — | — | — |
+| LP trading fees (over term) | 10% of fees | Deducted from yield | 10% | 90% |
+| Early redemption | 2% of proceeds | User | 20% of the 2% | 80% of the 2% |
+
+---
+
 ## Smart Contract Architecture
 
 ### Persistent, non-upgradeable contracts
@@ -101,6 +156,10 @@ This design prioritizes:
 ### Permissionless issuance and settlement
 
 Any ERC-20 project can issue PGTs without permission from Exchequer. Settlement is automatic at maturity based on the on-chain VWAP oracle. No human intervention is required at any point in the lifecycle.
+
+### Security & Audits
+
+All Exchequer smart contracts will undergo independent third-party audits before mainnet launch. Audit reports will be published in full and linked here once completed. The immutable, non-upgradeable contract design means the audited code is the code that runs in production — there are no upgrade paths that could introduce unaudited changes post-deployment.
 
 ---
 
