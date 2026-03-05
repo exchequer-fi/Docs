@@ -71,6 +71,18 @@ For the full 12-month term, the LP position earns trading fees on the DEX. This 
 
 Users remain downside protected throughout the term with full upside exposure at maturity.
 
+### Early Exit (Before Maturity)
+
+PGTs are designed to be held to maturity — that's when the protection floor applies. However, users who need to exit early can do so through early redemption at any time, for a 2% fee.
+
+**What the user receives depends on the token price at the time of redemption:**
+
+**Token is above the initial price:** The user receives their principal plus full upside from the reserve — the same upside they would receive at maturity for that price level — minus the 2% early redemption fee. The upside reserve is available for redemption whenever the token is above the initial price.
+
+**Token is below the initial price:** The user receives the current market value of their underlying LP position, minus the 2% fee. The protection floor does not apply — downside protection is a maturity-date guarantee only. If the token has dropped 40% and the user exits early, they receive the current (depreciated) value, not the protected principal.
+
+In both cases, a 2% fee is deducted from the total redemption proceeds.
+
 ### Step 5: Maturity & Redemption
 
 At the end of the term, the PGT settles based on the token price at maturity (measured by a 72-hour VWAP to resist manipulation).
@@ -169,6 +181,7 @@ This is the worst case for the project: the LP collateral is fully depleted by t
 | Price at maturity | 72-hour VWAP (volume-weighted average price) |
 | Collateral | Fully on-chain, auditable, escrowed in protocol contracts |
 | Token standard | ERC-20 |
+| Early redemption | Available at any time. 2% fee. If token is above initial price: principal + full upside. If token is below initial price: current market value (no floor). |
 
 ---
 
@@ -187,6 +200,7 @@ When issuing a PGT campaign, the project sets:
 - **Residual tail risk:** Losses beyond the protection floor are borne by the holder.
 - **Smart-contract risk:** Contracts are immutable and audited, but risk is never zero. Do not put in more than you can afford to lose.
 - **Liquidity/slippage:** AMM pool depth affects the realized value of the LP tokens received at maturity. LP tokens are not automatically burned on redemption — the user controls when and how they exit the position.
+- **Early redemption risk:** Exiting before maturity when the token is below the initial price forfeits the downside protection. The user receives the current market value of their position minus a 2% fee — which may be less than their original principal. The protection floor only applies at maturity. If the token is above the initial price, the user receives full upside minus the fee.
 - **LP yield is not guaranteed:** The assumed yield depends on actual DEX trading volume and fees. Figures used in examples are illustrative only.
 
 ---
