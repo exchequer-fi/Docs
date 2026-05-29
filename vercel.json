@@ -2,8 +2,16 @@
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/:path((?!.*\\.).*)",
-      "destination": "/index.html"
+      "source": "/protocol-mechanics",
+      "destination": "/index"
+    },
+    {
+      "source": "/note-types/protected-growth-token-pgt",
+      "destination": "/index"
+    },
+    {
+      "source": "/research/whitepapers",
+      "destination": "/index"
     }
   ]
 }
