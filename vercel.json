@@ -1,6 +1,9 @@
 {
-  "installCommand": "npm ci",
-  "buildCommand": "npm run docs:build",
-  "outputDirectory": "_book",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/:path((?!.*\\.).*)",
+      "destination": "/index.html"
+    }
+  ]
 }
