@@ -2,8 +2,8 @@
 
 * [Welcome to Exchequer](/)
 * Products
-  * [Protected Growth Tokens (PGT)](/note-types/protected-growth-token-pgt.md)
+  * [Protected Growth Tokens (PGT)](/note-types/protected-growth-token-pgt)
 * Technical
-  * [Protocol Mechanics](/protocol-mechanics.md)
+  * [Protocol Mechanics](/protocol-mechanics)
 * Research
-  * [Whitepapers](/research/whitepapers.md)
+  * [Whitepapers](/research/whitepapers)

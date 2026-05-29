@@ -399,7 +399,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     window.$docsify = {
       allowHtml: true,
       name: '<img src=".gitbook/assets/exchequer_logo.png" alt="Exchequer Finance" style="max-width:130px">',
+      routerMode: 'history',
       loadSidebar: true,
+      alias: {
+        '/.*/_sidebar.md': '/_sidebar.md'
+      },
       subMaxLevel: 3,
       auto2top: true,
       search: {
