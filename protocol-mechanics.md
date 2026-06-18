@@ -1,192 +1,84 @@
-# Protocol Mechanics
+# Liquidity Preferred mechanics
 
-This page covers how Exchequer works under the hood — collateralization, settlement, smart contract architecture, and the AMM design. You should read the [PGT](/note-types/protected-growth-token-pgt) page first to understand the product before diving into mechanics.
+This page covers Liquidity Preferred collateral, LP rebalancing, settlement, fees, and contract design.
 
----
+## Collateral structure
 
-## How Downside Protection Is Collateralized
+Liquidity Preferred uses two collateral buckets.
 
-The protection floor isn't a promise — it's backed by on-chain collateral that's visible and auditable from the moment of issuance.
+| Bucket | Contents | Role |
+|---|---|---|
+| LP position | Buyer deposit plus project tokens in a full range AMM position | Funds the downside floor |
+| Upside reserve | Project tokens held outside the LP | Pays upside if the token appreciates |
 
-### The collateral structure
+The buyer deposits USDC or another asset selected by the issuer. The project contributes its own tokens. Part of those tokens pairs with the buyer deposit in the LP position. The rest sits in the reserve.
 
-When a PGT is issued, two types of collateral are escrowed on-chain:
+The LP position keeps value inside the structure when price falls. The reserve pays upside when the token appreciates.
 
-**Tranche A — LP Position (funds the floor)**
-User deposit tokens and project tokens are paired into a full-range liquidity position on a DEX. This LP position is held in protocol contracts for the full term. At maturity, LP tokens from this position are used to pay the protection floor to users.
+## Why the LP position funds the floor
 
-**Tranche B — Upside Payout Reserve (funds the upside)**
-An additional batch of project tokens is held off-LP in reserve. These tokens are used to deliver upside to users at maturity if the token appreciates. Holding them off-LP means the upside isn't subject to AMM rebalancing (no impermanent loss on the upside).
+In a constant product AMM, the LP position rebalances as price changes. When the project token falls, the LP accumulates more project tokens and releases more of the deposit asset. The LP value still falls, but inside the protected band it falls more slowly than a naked spot position.
 
-### Why the project contributes 2×
+That rebalancing effect is what funds the floor. If the token drawdown stays inside the selected protection level, the LP position can cover the holder's principal value at maturity. If the drawdown goes beyond the floor, the holder takes the loss past that protected band.
 
-For every dollar users deposit, the project contributes $2 worth of its own tokens. This is because:
+## Protection level
 
-- $1 of tokens goes into the LP alongside the user's $1 deposit (Tranche A)
-- $1 of tokens goes into the upside reserve (Tranche B)
+The issuer sets the protection level before launch. In these docs, Liquidity Preferred is modeled with protection up to 75%.
 
-This 2:1 ratio is what makes the math work — the LP position is large enough to fund the floor, and the reserve is large enough to pay full spot-equivalent upside.
+| Protection | Meaning at maturity |
+|---|---|
+| Token flat or up | Holder keeps upside through the reserve |
+| Token down inside the floor | Holder receives principal value in LP tokens |
+| Token down beyond the floor | Holder receives the remaining protected value and takes the excess loss |
 
-### The 75% protection cap
+The floor is a term of the issued position and is backed by collateral already committed to the structure.
 
-"75% protection" is the maximum floor any issuer can set. Here's what it means in practice:
+## Maturity settlement
 
-**Drawdown ≤ protection level:** User's principal is fully protected. At maturity, they redeem LP tokens whose market value equals their original deposit.
+Liquidity Preferred settles at maturity against a 72-hour VWAP of the underlying token.
 
-**Drawdown > protection level but ≤ 75%:** If the issuer set a lower floor (e.g., 50%), the user begins taking losses between 50% and 75%. With a 75% floor, they'd still be fully protected.
+| Scenario | Settlement |
+|---|---|
+| Price is flat or up | Holder receives principal plus upside from the reserve |
+| Price is down inside the floor | Holder receives principal value in LP tokens |
+| Price is down beyond the floor | Holder receives the remaining LP-backed value |
 
-**Drawdown > 75%:** Even at the maximum setting, losses beyond 75% pass through to the user. The redeemed LP tokens are still worth more than unprotected spot over the same move, but full principal recovery isn't guaranteed.
+The project receives the remaining LP position, unused reserve tokens, and trading fee yield after holder settlement and protocol fees.
 
-Protection doesn't create free money — it reassigns tail risk from the buyer to the issuer, with the cap stated up front.
+## Early redemption
 
-### How LP rebalancing creates the floor
+Protection applies at maturity. Before maturity, a holder can redeem early for a 2% fee.
 
-This is the mechanism that makes the protection work. In a constant-product AMM (like Uniswap):
+| Price at early redemption | Holder receives |
+|---|---|
+| Above initial price | Principal plus reserve upside, less the fee |
+| Below initial price | Current LP market value, less the fee |
 
-When the token price drops, the LP position automatically rebalances — accumulating more project tokens and releasing the deposit token. The total value of the LP position declines less than the token price because of this rebalancing effect.
+Early redemptions below the initial price settle at current LP market value. Of the 2% early-redemption fee, 80% goes to the project and 20% goes to Exchequer.
 
-For moderate drops (within the protection floor), the LP position retains enough value to cover the user's original principal. The project effectively absorbs the loss through the decline in value of its contributed tokens.
+## Trading fee yield
 
-For severe drops (beyond the floor), the LP's cushioning effect isn't sufficient to fully cover the principal, and the user begins taking losses.
+The LP position earns DEX trading fees while it is locked. Trading fee yield accrues to the project, with Exchequer taking 10% of LP trading fees.
 
----
+| Fee source | Split |
+|---|---|
+| LP trading fees | 90% project, 10% Exchequer |
+| Early redemption fee | 80% project, 20% Exchequer |
 
-## Early Redemption
+For example, if a campaign earns $150K in LP trading fees, $135K goes to the project and $15K goes to Exchequer.
 
-Users can exit a PGT position before the maturity date at any time, for a 2% fee. What the user receives depends on whether the token price is above or below the initial price at the time of redemption.
+## AMM support
 
-### Token price is above the initial price
+Liquidity Preferred is designed for major constant product AMMs, including Uniswap, Balancer, Curve, and Camelot. The issuer chooses the venue. The LP position is full range so it can support liquidity across the price path instead of only around the current tick.
 
-The user redeems their principal plus full upside from the reserve (Tranche B), minus the 2% fee. The upside reserve is available for early redemption whenever the token is trading above the initial price. This is equivalent to the upside the user would receive at maturity for the same price — they are simply claiming it earlier.
+## Contract design
 
-### Token price is below the initial price
+Contracts are immutable after deployment. They use no admin keys, proxies, or upgrade mechanisms. Once deployed, the logic cannot change.
 
-The user redeems their pro-rata share of the LP position (Tranche A) at current market value, minus the 2% fee. The upside reserve is not touched.
+Any ERC-20 project can issue through the protocol, subject to safety and liquidity prerequisites. Settlement is automatic at maturity through the configured oracle and contract terms.
 
-The protection floor does not apply. Downside protection is a maturity-date guarantee — it does not extend to early exits. If the token has dropped, the user receives the depreciated value of their LP share, not the protected principal.
+Contracts undergo independent third party audits before mainnet deployment. Audit reports are published in full.
 
-### What happens mechanically
+## Onchain visibility
 
-When a user redeems early:
-
-1. Their PGT is burned.
-2. If the token is above the initial price: the user's share of the LP position and the corresponding upside from the reserve are calculated. The 2% fee is deducted and the remainder is returned to the user.
-3. If the token is below the initial price: the user's pro-rata share of the LP position (Tranche A) is withdrawn at current market value. The 2% fee is deducted and the remainder is returned.
-
-### Fee distribution
-
-Of the 2% early redemption fee, 80% goes to the issuing project and 20% goes to Exchequer.
-
----
-
-## Settlement at Maturity
-
-### Price determination: 72-hour VWAP
-
-At maturity, the settlement price is determined by the **72-hour volume-weighted average price (VWAP)** of the project token immediately before the maturity timestamp. Using a 72-hour window (rather than a spot price) makes the settlement resistant to short-term price manipulation.
-
-### Settlement logic
-
-**Token up or flat:**
-User receives spot-equivalent upside from the reserve (Tranche B). Upside is delivered in tokens.
-
-**Token down, within the protection floor:**
-Full principal protection. User redeems LP tokens from Tranche A worth their original deposit. No upside is due — reserve tokens are released back to the project.
-
-**Token down, beyond the protection floor:**
-Protection is capped. User redeems LP tokens per the protection schedule. Losses beyond the floor are borne by the user.
-
-### Settlement assets
-
-The protection floor always settles in **LP tokens**. Users receive LP tokens from the escrowed position, which they can:
-
-- **Hold** — continue earning trading fees as an LP
-- **Burn** — withdraw the underlying constituent tokens (project token + deposit token) from the LP position
-
-Upside settles in **project tokens** from the reserve tranche.
-
-### Rollover (optional)
-
-Issuers can offer a rollover into a new series before or at maturity:
-
-- **Accept rollover:** The old note is burned and a new note is issued with updated terms (new floor, term, participation).
-- **Decline rollover:** Redeem under the standard settlement mechanics above.
-
----
-
-## Protocol Fees
-
-There are zero fees on issuance and zero fees on redemption at maturity. Projects and users pay nothing to create or settle PGTs.
-
-Exchequer's revenue comes from two sources, both taken from yield and fees generated during the campaign — never from principal or collateral.
-
-### LP trading fee share
-
-Exchequer takes **10% of the trading fees** earned by the LP position over the term. The remaining 90% goes to the issuing project at maturity.
-
-For example: if a $1,000,000 LP position earns $150,000 in trading fees over 12 months, Exchequer receives $15,000 and the project receives $135,000.
-
-### Early redemption fee share
-
-When a user exits early, a **2% fee** is charged on the redemption proceeds. Of that fee, **20% goes to Exchequer** and **80% goes to the issuing project**.
-
-### Summary
-
-| Event | Fee | Who pays | Exchequer share | Project share |
-|---|---|---|---|---|
-| Issuance | None | — | — | — |
-| Redemption at maturity | None | — | — | — |
-| LP trading fees (over term) | 10% of fees | Deducted from yield | 10% | 90% |
-| Early redemption | 2% of proceeds | User | 20% of the 2% | 80% of the 2% |
-
----
-
-## Smart Contract Architecture
-
-### Persistent, non-upgradeable contracts
-
-Exchequer's smart contracts are deployed as persistent, non-upgradeable code. There are no admin keys, proxy patterns, or upgrade mechanisms. Once deployed, the contract logic cannot be changed.
-
-This design prioritizes:
-
-- **Censorship resistance** — no party can freeze, modify, or interfere with notes after issuance
-- **Self-custody** — users hold their PGT tokens directly; no intermediary custody
-- **Auditability** — all collateral, parameters, and settlement logic is visible on-chain
-
-### Permissionless issuance and settlement
-
-Any ERC-20 project can issue PGTs without permission from Exchequer. Settlement is automatic at maturity based on the on-chain VWAP oracle. No human intervention is required at any point in the lifecycle.
-
-### Security & Audits
-
-All Exchequer smart contracts will undergo independent third-party audits before mainnet launch. Audit reports will be published in full and linked here once completed. The immutable, non-upgradeable contract design means the audited code is the code that runs in production — there are no upgrade paths that could introduce unaudited changes post-deployment.
-
----
-
-## AMM-Agnostic Design
-
-PGTs work alongside any major constant-product AMM — Uniswap, Balancer, Curve, Camelot, and others. The protocol is not tied to a specific DEX.
-
-The LP position created during issuance is placed on the issuer's chosen venue. Liquidity depth on that venue is a designed consequence of running PGT programs — each campaign adds to the pool, and repeated issuance compounds depth over time.
-
-Issuers can select different AMMs or pools across campaigns based on their liquidity strategy.
-
----
-
-## On-Chain Collateral Visibility
-
-All collateral is viewable on-chain at all times:
-
-- LP position address and value
-- Reserve token balance
-- Note terms (floor, participation, cap, maturity date)
-- Settlement parameters (VWAP oracle configuration)
-
-There is no off-chain component, no counterparty, and no trust assumption beyond the smart contract code itself.
-
----
-
-## Next
-
-→ [Research & Whitepapers — academic foundations](/research/whitepapers)
-→ [Back to PGT overview](/note-types/protected-growth-token-pgt)
+Collateral is visible onchain at all times. For Liquidity Preferred, this includes the LP position address, reserve balances, position terms, maturity, protection floor, and oracle settings.

@@ -1,91 +1,46 @@
 # Welcome to Exchequer
 
-## What is Exchequer?
+## Preferred tokens
 
-Exchequer lets crypto projects issue **Protected Growth Tokens (PGTs)**: a new type of token structure that gives holders downside protection and upside exposure over a fixed term. Think of it as a way to say to your community: *"Buy our token, and even if the price drops, you're protected up to a floor we set."*
+Preferred tokens are a crypto-native ownership instrument. They give holders defined terms, code-enforced backing, and exposure to a project's upside through an issued onchain position.
 
-Projects can use PGTs to run repeatable acquisition campaigns that attract new holders, retain existing users, and reward patient believers — while building deep on-chain liquidity. All without emissions, token loans, or CEX market-maker retainers.
+A preferred token can be backed by collateral, cash flow, recourse, supply constraints, or another enforceable structure. The category is broader than downside protection alone. It is a way to create backed ownership for crypto-native assets.
 
----
+Exchequer currently supports three primitives:
 
-## The Problem PGTs Solve
+- [Liquidity Preferred](/note-types/liquidity-preferred): buyers deposit USDC or another chosen asset, while the project adds token collateral to create locked DEX liquidity.
+- [Funding Preferred](/note-types/funding-preferred): buyers fund a raise and receive a protected, convertible position.
+- [Conviction Preferred](/note-types/conviction-preferred): existing holders convert common tokens into a protected position funded by treasury collateral.
 
-Every token project faces the same set of problems after TGE:
+Each primitive points the preferred-token structure at a different issuer need: liquidity, fundraising, or holder retention. The same design space can support other preferred-token structures.
 
-**New users won't buy your token** because they're afraid of the downside. They've seen too many tokens drop 50–80% and never recover. No amount of narrative changes the risk calculus for cautious allocators.
+## The problem
 
-**When the price drops, existing holders exit at a loss.** Those who would otherwise turn into true believers leave disappointed — projects lose them as both holders and users at exactly the wrong moment.
+Common-token issuance gives projects trader capital when they often need owner capital. The difference shows up quickly.
 
-**Mercenary capital sells into any liquidity event.**
+If a project wants to raise money, the standard route is usually an OTC or private token sale at a large discount. The discount is the buyer's payment for taking naked downside. It can also come back as sell pressure when the buyer hedges, sells, or locks in the spread.
 
-**Liquidity is expensive and fragile.** CEX market makers charge retainers and token loans. DEX emissions attract farmers who dump the moment yields compress. Non-protocol-owned liquidity is unreliable during times of stress — LPs disappear precisely when they're needed most. None of this builds lasting depth.
+Projects also face a holder reflexivity problem. When the token price falls, the people around the project read the same signal at the same time: employees, investors, users, supporters, and contributors. If everyone else may leave, leaving first becomes rational. The token becomes a coordination failure, not just a price chart.
 
-PGTs solve this by letting projects subsidize the downside risk directly, on their own terms, using their own treasury tokens as collateral.
+Preferred tokens change what people are holding. The project can define backing, term, protection, conversion, or other claims before issuance. Holders receive an instrument with defined terms.
 
----
+## Primitives at a glance
 
-## How It Works
+| | [Liquidity Preferred](/note-types/liquidity-preferred) | [Funding Preferred](/note-types/funding-preferred) | [Conviction Preferred](/note-types/conviction-preferred) |
+|---|---|---|---|
+| Use | Build protocol-owned liquidity | Raise capital | Retain an existing holder cohort |
+| Who enters | New buyers | Buyers in a raise | Existing holders |
+| Holder contribution | USDC or another chosen asset | Cash for the raise | Common tokens already held |
+| Maximum protection | Up to 75% | Up to 90% | Up to 90% |
+| Floor backing | Full range LP position | Project token collateral | Treasury token collateral |
+| Project result | Locked DEX liquidity and fees | Capital upfront | Less sell pressure from the cohort |
 
-Here's the core idea in four steps:
+## Where to go next
 
-**Step 1 — The project sets the terms.**
-Choose how much downside protection (up to 75%) and how long the term lasts (e.g., 6 or 12 months).
-
-**Step 2 — Users deposit tokens. The project matches with its own.**
-When users buy PGTs, they deposit a designated token (e.g., USDC or ETH — chosen by the project). The project contributes its own tokens from treasury — specifically, **2× the user's deposit value**. Half pairs with the user deposits to form a full-range liquidity pool on a DEX (this funds the downside protection). The other half is set aside as a reserve to pay upside if the token appreciates.
-
-**Step 3 — The liquidity pool earns yield for the full term.**
-The combined LP position earns trading fees on-chain for the entire duration. The project benefits from deep, stable DEX liquidity as a direct consequence.
-
-**Step 4 — At maturity, everyone settles.**
-- If the token price dropped: users are protected up to the floor. They get back their principal in LP tokens.
-- If the token price went up: users receive their upside from the reserve. The project gets back its LP position plus all yield earned.
-
----
-
-## A Concrete Example
-
-Say you're a project with a $1.00 token and you want to build $1M in on-chain liquidity through a 12-month PGT campaign with 50% downside protection.
-
-| | Amount |
+| Goal | Page |
 |---|---|
-| **Users deposit** | $500,000 USDC |
-| **Project contributes** | 1,000,000 tokens (worth $1,000,000) |
-| **LP position created** | $1,000,000 ($500K USDC + 500K project tokens) |
-| **Upside reserve** | 500,000 tokens held separately |
-| **Assumed LP yield** | 15% APR (example; actual yield depends on trading volume) |
-| **Term** | 12 months (example; terms of 3–12 months are available) |
-
-**What users get:** A PGT that protects against up to a 50% price drop. If the token goes to $0.50, they still get their $500K principal back in LP tokens at maturity. If the token goes up, they participate in the upside from the reserve, also paid out at maturity.
-
-**What the project gets:** $1,000,000 in locked, deep on-chain DEX liquidity for 12 months. Plus all LP yield (~$150,000 at 15% APR, accruing to the project at maturity). At maturity, the project redeems its LP position (after user payouts) plus any unused reserve tokens.
-
-**What it costs the project:** 1,000,000 tokens locked for 12 months. If the token stays flat or goes up, the project gets most of its tokens back plus yield. If the token drops significantly, the project's tokens absorb the loss — that is the protection working as designed.
-
----
-
-## Why Projects Choose PGTs
-
-Most token growth tools extract value from the project or push risk onto users. PGTs are different — they align incentives between the project and its community around a shared outcome.
-
-**Downside protection that converts buyers.** The single biggest barrier to token adoption is fear of loss. PGTs remove that barrier by giving buyers a defined worst case. This unlocks a class of cautious allocators — funds, protocols, and community members — who would never buy unprotected spot.
-
-**Retain holders through bear markets.** Protected holders don't panic-sell. They stay. And holders who stay through difficulty become your most loyal community members and advocates.
-
-**Deep, protocol-owned liquidity as a side effect.** Every PGT campaign creates locked DEX liquidity for the full term. Unlike emissions-driven liquidity that evaporates when yields compress, PGT liquidity is committed in advance and cannot be pulled. The project builds a thicker, more resilient order book with every campaign.
-
-**Predictable cost with meaningful upside.** The project commits a fixed number of tokens for a fixed term. There are no open-ended ongoing expenses. If the token appreciates, the project benefits too — it holds LP positions and reserve tokens throughout.
-
-**Repeatable campaigns that compound.** Run seasonal PGT programs — quarterly, around roadmap milestones, or during market dips when fear is highest and protection is most compelling. Each campaign layers on top of the last, deepening liquidity and expanding the protected holder base.
-
-**Fully on-chain and trustless.** No counterparties, no token loans, no CEX dependencies. Smart contracts are immutable and auditable. All collateral is verifiable on-chain at any time.
-
----
-
-## Next Steps
-
-| If you want to... | Read this |
-|---|---|
-| Understand PGT mechanics in detail with numbers | [Protected Growth Tokens (PGT)](/note-types/protected-growth-token-pgt) |
-| Understand the protocol's collateral and settlement design | [Protocol Mechanics](/protocol-mechanics) |
-| Read the academic foundations | [Research & Whitepapers](/research/whitepapers) |
+| Build protocol-owned liquidity | [Liquidity Preferred](/note-types/liquidity-preferred) |
+| Raise capital with defined buyer protection | [Funding Preferred](/note-types/funding-preferred) |
+| Keep holders through an unlock or drawdown | [Conviction Preferred](/note-types/conviction-preferred) |
+| Understand Liquidity Preferred collateral and settlement | [Liquidity Preferred mechanics](/protocol-mechanics) |
+| Read the research base | [Research and whitepapers](/research/whitepapers) |

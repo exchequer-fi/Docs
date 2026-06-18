@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "start": "node local-server.js",
+    "local:serve": "node local-server.js",
     "docs:build": "honkit build",
     "docs:serve": "honkit serve",
     "test": "echo \"Error: no test specified\" && exit 1"

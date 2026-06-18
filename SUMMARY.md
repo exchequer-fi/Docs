@@ -4,12 +4,14 @@
 
 ## Products
 
-* [Protected Growth Tokens (PGT)](note-types/protected-growth-token-pgt.md)
+* [Liquidity Preferred](note-types/liquidity-preferred.md)
+* [Funding Preferred](note-types/funding-preferred.md)
+* [Conviction Preferred](note-types/conviction-preferred.md)
 
 ## Technical
 
-* [Protocol Mechanics](protocol-mechanics.md)
+* [Liquidity Preferred mechanics](protocol-mechanics.md)
 
 ## Research
 
-* [Whitepapers](research/whitepapers.md)
+* [Research and whitepapers](research/whitepapers.md)
