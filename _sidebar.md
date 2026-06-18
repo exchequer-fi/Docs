@@ -2,8 +2,10 @@
 
 * [Welcome to Exchequer](/)
 * Products
-  * [Protected Growth Tokens (PGT)](/note-types/protected-growth-token-pgt)
+  * [Liquidity Preferred](/note-types/liquidity-preferred)
+  * [Funding Preferred](/note-types/funding-preferred)
+  * [Conviction Preferred](/note-types/conviction-preferred)
 * Technical
-  * [Protocol Mechanics](/protocol-mechanics)
+  * [Liquidity Preferred mechanics](/protocol-mechanics)
 * Research
-  * [Whitepapers](/research/whitepapers)
+  * [Research and whitepapers](/research/whitepapers)

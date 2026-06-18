@@ -1,31 +1,39 @@
-# Research & Whitepapers
+# Research and whitepapers
 
-The Exchequer protocol is built on a series of peer-reviewed papers that establish the mathematical foundations for LP-derivative instruments. These papers introduce the formal frameworks for LP forwards, LP options, and structured notes that underpin PGTs.
+These papers are the research base for Exchequer's LP instruments and protected token structures. They cover LP yield, LP risk, LP options, and protected-note construction.
 
----
+## Papers
 
-## Foundational Papers
+1. Evaluating Liquidity Provision Strategies for Automated Market Makers
 
-### 1. Evaluating Liquidity Provision Strategies for Automated Market Makers
-When does AMM yield truly beat holding the tokens directly? This paper derives the hurdle rate where expected trading fees offset the drag from impermanent loss.
-> [Read on SSRN](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4865295)
+   Derives the hurdle rate where expected trading fees offset impermanent loss. In the paper's framing, LP tokens carry a -sigma^2/8 convexity drag, so an LP must clear y > sigma^2/8 to outperform holding.
 
-### 2. The LP Forward Contract: Quantifying Liquidity-Position Risk in DeFi
-Introduces the first closed-form hedge for LP position risk. Strips out AMM yield to price the pure "LP spot" exposure via a forward contract — the foundational building block for hedging LP risk.
-> [Read on SSRN](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4867032)
+   SSRN: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4865295
 
-### 3. Liquidity Position Options: Transforming DeFi with Novel Risk-Management Primitives
-Introduces LP calls and puts with put-call parity for liquidity positions (closed-form Black-Scholes pricing after a power-½ transform). Enables impermanent loss caps, volatility trading, and the structured notes that become PGTs.
-> [Read on SSRN](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4867034)
+2. The LP Forward Contract: Quantifying Liquidity-Position Risk in DeFi
 
-### 4. A Novel Financial Instrument for DeFi: Liquidity Protection Notes
-Packages zero-coupon bonds with LP options (and optional yield) into a note format that funds up to 75% downside protection without inflationary token emissions. This is the paper that most directly describes the PGT mechanism.
-> [Read on SSRN](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4867036)
+   Separates LP yield from price exposure so impermanent loss can be priced as an explicit premium through Black-Scholes. The paper decomposes an LP position into a price risk leg and a yield leg.
 
----
+   SSRN: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4867032
 
-## Citing This Work
+3. Liquidity Position Options: Transforming DeFi with Novel Risk-Management Primitives
 
-If you reference or adapt these models in your own research, please cite the relevant SSRN paper and link to the Exchequer documentation hub: [docs.exchequer.fi](https://docs.exchequer.fi)
+   Defines LP calls and puts with put-call parity after a power 1/2 transform. This gives the framework for impermanent loss caps, volatility exposure, and LP-linked structured notes.
 
-For research collaborations: [exchequer.fi/contact](https://www.exchequer.fi/contact)
+   SSRN: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4867034
+
+4. A Novel Financial Instrument for DeFi: Liquidity Protection Notes
+
+   Packages a zero coupon bond with LP options into a note that funds downside protection through structured collateral.
+
+   SSRN: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4867036
+
+## How they connect
+
+The first paper asks when LPing beats holding. The second prices LP risk. The third turns that risk into options. The fourth packages those pieces into a protected note.
+
+Liquidity Preferred follows that path through a full range LP position and an upside reserve.
+
+## Citation
+
+If you reference or adapt these models, cite the relevant SSRN paper and link docs.exchequer.fi. For research collaborations, use exchequer.fi/contact.
