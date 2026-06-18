@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PGT Payoff Chart</title>
+  <title>Liquidity Preferred Payoff Chart</title>
   <link rel="icon" type="image/x-icon" href=".gitbook/assets/favicon.ico">
   <script src="https://cdn.tailwindcss.com"></script>
   <script crossorigin src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
@@ -87,8 +87,8 @@
       return (
         <div className="w-full rounded-lg border border-gray-200 bg-white shadow-sm">
           <div className="px-6 pt-5 pb-2">
-            <h3 className="text-lg font-semibold text-gray-900">PGT Payoff Profile at Maturity</h3>
-            <p className="text-sm text-gray-500">Compares PGT vs. standard LP vs. holding tokens directly.</p>
+            <h3 className="text-lg font-semibold text-gray-900">Liquidity Preferred Payoff Profile at Maturity</h3>
+            <p className="text-sm text-gray-500">Compares Liquidity Preferred vs. standard LP vs. holding tokens directly.</p>
           </div>
           <div className="px-6 pb-6">
             <div style={{ height: 384, width: '100%' }}>
@@ -101,7 +101,7 @@
                     label={{ value: 'Position Value', angle: -90, position: 'insideLeft' }} />
                   <Tooltip content={<CustomTooltip />} />
                   <Legend verticalAlign="top" />
-                  <Line type="monotone" dataKey="noteValue" name="PGT" stroke="#522D80" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="noteValue" name="Liquidity Preferred" stroke="#522D80" strokeWidth={2} dot={false} />
                   <Line type="monotone" dataKey="lpValue" name="Standard LP" stroke="#2563EB" strokeWidth={2} dot={false} />
                   <Line type="monotone" dataKey="tokenHoldingValue" name="Token Holding" stroke="#1E293B" strokeWidth={2} dot={false} strokeDasharray="5 5" />
                   <ReferenceLine x={ep} stroke="#22C55E" strokeDasharray="3 3"
