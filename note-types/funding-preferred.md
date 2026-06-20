@@ -8,14 +8,14 @@ The buyer has downside protection up to the selected floor, with a maximum of 90
 
 ## Example raise
 
-These numbers are illustrative: a $1.00 token issued at par, a $1,000 buyer ticket, 90% protection, and a 6-month vesting cliff.
+These numbers are illustrative: a $1.00 token issued at par, a $1,000 buyer ticket, 50% protection, and a 6-month vesting cliff.
 
 ### 1. Buyer funds the raise
 
 | Participant | Contribution | Value |
 |---|---|---|
 | Buyer | Cash | $1,000 to the project |
-| Project | Token collateral | 10,000 tokens at $1.00, escrowed |
+| Project | Token collateral | 2,000 tokens at $1.00, escrowed |
 
 ### 2. Project posts collateral
 
@@ -29,7 +29,7 @@ N = 1 / (1 - protection)
 | 75% | 4x |
 | 90% | 10x |
 
-At 90% protection, the project escrows 10,000 tokens for a $1,000 ticket. At the floor price, that collateral is worth the buyer's original principal.
+At 50% protection, the project escrows 2,000 tokens for a $1,000 ticket. At the floor price, that collateral is worth the buyer's original principal.
 
 ### 3. Token issuance
 
@@ -55,10 +55,10 @@ Settlement uses an oracle price for the common token. When the token is at or ab
 
 | Scenario | Token price | Buyer action | Buyer receives | Project outcome |
 |---|---|---|---|---|
-| Flat | $1.00 | Convert | 1,000 tokens worth $1,000 | Keeps $1,000 cash and recovers 9,000 collateral tokens |
-| Up 50% | $1.50 | Convert | 1,000 tokens worth $1,500 | Keeps $1,000 cash and recovers 9,000 collateral tokens |
-| Down 50% | $0.50 | Hold floor | $1,000 principal, settled in cash or collateral | Uses collateral for settlement and recovers the rest |
-| Down 95% | $0.05 | Hold | Collateral value of $500 | Most collateral is consumed |
+| Flat | $1.00 | Convert | 1,000 tokens worth $1,000 | Keeps $1,000 cash and recovers 1,000 collateral tokens |
+| Up 50% | $1.50 | Convert | 1,000 tokens worth $1,500 | Keeps $1,000 cash and recovers 1,000 collateral tokens |
+| Down 50% | $0.50 | Hold floor | $1,000 principal, settled in cash or collateral | Collateral is exactly enough at the floor price |
+| Down 95% | $0.05 | Hold | Collateral value of $100 | All collateral is consumed |
 
 ## Terms
 
